@@ -108,9 +108,16 @@ enriched with deep-sleep minutes. Stage codes + swim type confirmed empirically
     sleep→sleep_sessions + sleep_stage enrichment; stress/spo2/steps/TDEE/heart_rate→
     telemetry (steps & TDEE deduped per-day taking max); exercise(14001)→training swim.
 
-## Phase 4 — Training (basic)
-- [ ] **4.1 Sessions CRUD** — `POST /training` / `GET /training` for swim/gym sessions
-  (+ optional inline `sets[]`).
+## Phase 4 — Training (basic) ✅ DONE
+Verified round-trip on a throwaway DB: create gym+swim with inline sets, load
+auto-compute (60×8=480), list, type filter, get-by-id, 404 shape, 422 validation.
+28 tests pass.
+
+- [x] **4.1 Sessions CRUD** — `POST /api/v1/training` (session + inline `sets[]`),
+  `GET /api/v1/training` (filter by `type`/`from`/`to`/`limit`), `GET /training/{id}`.
+  router/service/repository/schemas. Service rule: session `load` auto-computed as
+  duration×rpe when omitted; `source='manual'`; naive ts assumed UTC. Catalog
+  resolution (exercise_id) + `POST /training/{id}/sets` + stats deferred to Phase 7.
 
 ## Phase 5 — Nutrition + image-svc bridge
 - [ ] **5.1 image-svc HTTP client** — httpx with timeout + retry; on ANY failure return
