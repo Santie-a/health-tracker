@@ -66,15 +66,23 @@ Built on Python 3.12 venv; 5 tests pass (liveness, request-id echo, error shape,
   `{detail, request_id}` shape, no stack trace to client), request-id middleware
   (`core/errors.py`), `GET /health` (liveness, no DB) + `GET /health/ready` (DB ping → 503).
 
-## Phase 1 — Persistence foundation
-- [ ] **1.1 ORM models** for existing schema across each domain's `models.py`
-  (telemetry, sleep_sessions, body_composition, training_sessions, training_sets,
-  meals, meal_items, recommendations). Match initdb exactly.
-- [ ] **1.2 Alembic setup** — async `env.py`; baseline migration that **stamps** the
-  existing initdb schema (don't recreate prod DBs). Migrations run on deploy (DEPLOY.md).
-- [ ] **1.3 Migration: strength + nutrition extensions** (db/TODO.md additions):
-  `exercises`, `exercise_muscles`, `foods`, `food_portions` + new `training_sets` /
-  `meal_items` columns. Schema only; endpoints land in Phases 6–7.
+## Phase 1 — Persistence foundation ✅ DONE
+Verified end-to-end against a throwaway Timescale container (initdb base → stamp 0001 →
+upgrade head → downgrade), with the hypertable surviving the migrations. Tests still 5/5.
+
+- [x] **1.1 ORM models** across each domain's `models.py` (telemetry/sleep/body_comp,
+  training sessions+sets+exercise catalog, meals+items+foods catalog, recommendations).
+  Shared `Base` in `core/db.py`; `app/models.py` aggregates metadata for Alembic.
+  Models reflect the FINAL post-migration state (12 tables).
+- [x] **1.2 Alembic setup** — async `env.py` reading `DATABASE_URL` from Settings;
+  baseline `0001` is an empty marker for the initdb base (stamp, don't recreate);
+  `migrations/README.md` documents stamp-vs-upgrade. Autogenerate intentionally NOT
+  used (hypertable/continuous-agg); migrations hand-written.
+- [x] **1.3 Migration `0002`: strength + nutrition extensions** — `exercises`,
+  `exercise_muscles`, `foods`, `food_portions` + nullable `training_sets` /
+  `meal_items` columns + FKs/indexes. Reversible.
+- [x] **1.4 Migration `0003`: swim/cardio session metrics** — `training_sessions` +=
+  nullable `kcal`, `avg_hr`, `max_hr`, `distance_m`, `source`. Reversible.
 
 ## Phase 2 — Shared nutrition core
 - [ ] **2.1 Extract `packages/nutrition_core/`** — move `usda.py` matcher + `macros.csv`
