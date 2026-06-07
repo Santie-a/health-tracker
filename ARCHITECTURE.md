@@ -13,35 +13,47 @@ Personal health-tracking app. Single user (you). Tracks training (swim AM, gym P
   box only needs to be on when you log a meal photo; everything else keeps running.
 - **Recommendations: rule-based first.** Deterministic heuristics over sleep/stress/
   training-load/nutrition. ML/optimization comes later once you have logged history.
-- **Server deployment: PC during dev, Pi5 in production.** Iterate fast on the PC, then
-  containerize for arm64 and run the gateway alongside Postgres on the Pi5. For a single
-  user the gateway's load is negligible (CRUD + one daily rule-based pass), so the Pi5
-  handles both with room to spare, and gateway->DB calls become localhost. The image
-  service is the only component that must stay on the PC (needs x86 + CUDA).
+- **Deployment: Pi5 is the always-on host; the PC is an on-demand accelerator.**
+  The Pi5 runs db + gateway + **frontend**, so the website is reachable 24/7 (LAN/VPN)
+  without the PC. Iterate on the PC during dev, then containerize for arm64 and run the
+  whole stack on the Pi5 (gateway->DB and frontend->gateway become localhost). For a
+  single user the load is negligible (CRUD + one daily rule-based pass), so the Pi5
+  handles it with room to spare. The **image service is the only thing on the PC**
+  (needs x86 + CUDA); turn the PC on only to log meal photos. When it's off, meal
+  logging degrades to manual entry and nothing else is affected. See DEPLOY.md.
 
 ## Component map
 
 ```
-                 ┌─────────────────────────┐
-                 │  Next frontend (PC)      │
-                 │  dashboard + logging UI  │
-                 └────────────┬─────────────┘
-                              │ HTTPS (single contract)
-                 ┌────────────▼─────────────┐
-                 │  Python API gateway       │   FastAPI
-                 │  - auth (single token)    │
-                 │  - DB access (CRUD)       │
-                 │  - recommendation engine  │
-                 │  - proxy to image service │
-                 │  - Samsung Health ingest  │
-                 └──────┬──────────────┬─────┘
-                        │              │
-        ┌───────────────▼──┐    ┌──────▼─────────────────┐
-        │ Postgres (Pi5)    │    │ Image/macro svc (5070) │  FastAPI + CUDA
-        │ in Docker         │    │ food detection -> macros│
-        │ + TimescaleDB ext │    └────────────────────────┘
-        └───────────────────┘
+  ┌───────────────────────── Raspberry Pi 5 (always on) ─────────────────────────┐
+  │              ┌─────────────────────────┐                                       │
+  │              │  Next frontend           │                                       │
+  │              │  dashboard + logging UI  │                                       │
+  │              └────────────┬─────────────┘                                       │
+  │                           │ localhost (single contract)                         │
+  │              ┌────────────▼─────────────┐                                       │
+  │              │  Python API gateway       │   FastAPI                            │
+  │              │  - auth (single token)    │                                       │
+  │              │  - DB access (CRUD)       │                                       │
+  │              │  - recommendation engine  │                                       │
+  │              │  - proxy to image service │                                       │
+  │              │  - Samsung Health ingest  │                                       │
+  │              └──────┬──────────────┬─────┘                                       │
+  │                     │ localhost    │                                             │
+  │       ┌─────────────▼────┐         │                                            │
+  │       │ Postgres          │         │                                            │
+  │       │ in Docker         │         │                                            │
+  │       │ + TimescaleDB ext │         │                                            │
+  │       └───────────────────┘         │ LAN/VPN (only when PC is on)               │
+  └─────────────────────────────────────┼──────────────────────────────────────────┘
+                                         │
+                          ┌──────────────▼─────────────┐
+                          │ Image/macro svc (PC, 5070) │  FastAPI + CUDA
+                          │ food detection -> macros    │  on-demand; off -> manual entry
+                          └────────────────────────────┘
 ```
+Browser/phone reaches the frontend on the Pi5 over the LAN/VPN. The PC hosts only the
+GPU image service and can stay off; the gateway degrades to manual entry when it's down.
 
 ## Why TimescaleDB over plain Postgres
 Your data is overwhelmingly time-series (per-minute/hourly telemetry). TimescaleDB is a Postgres extension — same SQL, same client, same deploy story (just a different Docker image) — but adds hypertables, automatic time partitioning, continuous aggregates (precomputed daily/weekly rollups), and retention policies. For "track telemetry over time and roll it up," it's a clear win and costs you nothing in complexity. Plain Postgres is the safe fallback if the ARM image gives you trouble on the Pi5; you can migrate the extension on later. SQLite is too limited for concurrent service access; InfluxDB would fragment your relational meal/training data away from your telemetry. Recommendation:

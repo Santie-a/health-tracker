@@ -3,7 +3,9 @@
 Personal health app: Samsung Health / Galaxy Watch 4 telemetry + training (swim AM,
 gym PM) + nutrition (with photo-based macro estimation) -> daily recommendations.
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for the topology and decisions.
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the topology and decisions, and
+[DEPLOY.md](./DEPLOY.md) for how it deploys (Pi5 hosts the site 24/7; the PC is an
+on-demand GPU box) and how `.env` is handled per machine.
 
 ## Components
 - `db/` — Postgres + TimescaleDB in Docker on a Raspberry Pi 5.
