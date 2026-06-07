@@ -10,6 +10,7 @@ fastapi>=0.115
 uvicorn[standard]>=0.30
 pydantic>=2.7
 pydantic-settings>=2.3
+python-multipart>=0.0.9  # UploadFile / multipart form parsing
 
 # --- database ---
 sqlalchemy[asyncio]>=2.0

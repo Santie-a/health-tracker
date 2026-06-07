@@ -22,6 +22,8 @@ from .core.config import get_settings
 from .core.db import create_engine, create_sessionmaker, ping
 from .core.errors import install_request_id_middleware, register_exception_handlers
 from .core.logging_config import configure_logging
+from .domains.ingest.router import router as ingest_router
+from .domains.telemetry.router import router as telemetry_router
 
 log = logging.getLogger("server")
 
@@ -77,9 +79,9 @@ def create_app() -> FastAPI:
         code = 200 if db_ok else 503
         return JSONResponse(status_code=code, content=body.model_dump())
 
-    # Domain routers register here as they land:
-    #   app.include_router(telemetry.router, prefix="/api/v1")
-    #   ...
+    # Domain routers (all under /api/v1).
+    app.include_router(telemetry_router, prefix="/api/v1")
+    app.include_router(ingest_router, prefix="/api/v1")
 
     return app
 

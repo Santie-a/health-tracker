@@ -90,30 +90,23 @@ upgrade head → downgrade), with the hypertable surviving the migrations. Tests
   imports; confirm image-svc tests still pass. image-svc keeps bundling its own data
   copy (network-independent).
 
-## Phase 3 — Telemetry + Samsung ingest
-- [ ] **3.1 Telemetry read path** — repository/service/router for
-  `GET /telemetry?metric=&from=&to=` (raw + rollups).
-- [ ] **3.2 Samsung Health ingest** — `POST /ingest/samsung`: parser per file type,
-  unit mapping, dedupe, source tag, idempotent upsert. Row-resilient (skip+log bad
-  rows, return ok/skipped counts). Document export steps. **Concrete file list +
-  mappings below.** Suggested sub-tasks (one parser each, shared CSV reader):
-  - [ ] **3.2.0 Shared Samsung CSV reader** — skip metadata line 1, header on line 2,
-    `utf-8-sig`; helper to combine local `start_time`/`day_time` + `time_offset` → UTC;
-    helper to read epoch-ms `day_time`. Row-resilient wrapper (skip+log+count).
-  - [ ] **3.2.1 weight → `body_composition`** (`health.weight`).
-  - [ ] **3.2.2 sleep → `sleep_sessions`** (`shealth.sleep`) + **stage enrichment**
-    from `health.sleep_stage` (join on `sleep_id`, aggregate stage codes → deep/rem/
-    light/awake min).
-  - [ ] **3.2.3 stress → `telemetry`** metric=`stress` (`shealth.stress`, `score`).
-  - [ ] **3.2.4 spo2 → `telemetry`** metric=`spo2` (`tracker.oxygen_saturation`).
-  - [ ] **3.2.5 steps → `telemetry`** metric=`steps` (`tracker.pedometer_day_summary`;
-    dedupe multiple device rows per `day_time`).
-  - [ ] **3.2.6 TDEE → `telemetry`** metric=`energy_expenditure`
-    (`calories_burned.details`: `rest_calorie + active_calorie`).
-  - [ ] **3.2.7 heart_rate → `telemetry`** metric=`heart_rate`
-    (`tracker.heart_rate`, ~65k rows — batch insert).
-  - [ ] **3.2.8 exercise → `training_sessions`** (`shealth.exercise`; map
-    `exercise_type` codes → swim, import duration/calorie/HR; gym sets stay manual).
+## Phase 3 — Telemetry + Samsung ingest ✅ DONE
+Verified end-to-end against the REAL export on a throwaway Timescale container:
+80,152 rows across all 9 files, idempotent on re-ingest, 1291/1329 sleep nights
+enriched with deep-sleep minutes. Stage codes + swim type confirmed empirically
+(40001=awake, 40002=light, 40003=deep, 40004=rem; swim=14001). 22 tests pass.
+
+- [x] **3.1 Telemetry read path** — `GET /api/v1/telemetry?metric=&from=&to=` (raw) +
+  `/telemetry/daily` (on-the-fly date_trunc rollup). repository/service/router + schemas.
+- [x] **3.2 Samsung Health ingest** — `POST /api/v1/ingest/samsung` (multi-file upload).
+  Dispatch by metadata line-1 data type; per-file savepoint isolation; row-resilient;
+  per-file report (parsed/written/skipped/errors). Idempotent upserts; intra-batch
+  dedupe by conflict key (fixes "ON CONFLICT cannot affect row twice").
+  - [x] **3.2.0 Shared reader** (`samsung/reader.py`) — skip line 1, utf-8-sig, local+
+    offset→UTC, epoch-ms, `to_float/to_int`, `ParseStats`.
+  - [x] **3.2.1–3.2.8** all parsers (`samsung/parsers.py`): weight→body_composition;
+    sleep→sleep_sessions + sleep_stage enrichment; stress/spo2/steps/TDEE/heart_rate→
+    telemetry (steps & TDEE deduped per-day taking max); exercise(14001)→training swim.
 
 ## Phase 4 — Training (basic)
 - [ ] **4.1 Sessions CRUD** — `POST /training` / `GET /training` for swim/gym sessions
