@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Health Tracker — root ignore. Per-component .gitignore files may add more.
+# Secrets live in .env files and are NEVER committed (only .env.example is).
+# ─────────────────────────────────────────────────────────────────────────────
+
+# --- secrets / local config ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+.venv-*/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- ML model caches / weights (never commit weights) ---
+models/
+*.safetensors
+*.gguf
+*.bin
+
+# --- Node / Next.js (frontend) ---
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.npm/
+.pnpm-store/
+
+# --- editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp

@@ -1,0 +1,10 @@
+# Normalize line endings: repo stores LF, Windows checkouts can use CRLF.
+# Keeps shell scripts / SQL / Dockerfiles working on the Linux Pi5 (arm64).
+* text=auto eol=lf
+
+# Binary assets — never normalize.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.safetensors binary
+*.bin binary

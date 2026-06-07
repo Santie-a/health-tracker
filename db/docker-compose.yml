@@ -1,0 +1,29 @@
+# Health Tracker — TimescaleDB (Postgres) container.
+# Dev: runs on the PC (Docker Desktop). Prod: the same compose on the Pi5 (arm64).
+# The image is multi-arch, so nothing changes between the two except .env.
+services:
+  db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: health-tracker-db
+    restart: unless-stopped
+    # All credentials/config come from .env (gitignored). See .env.example.
+    env_file: .env
+    # Bind to a single interface. Default 127.0.0.1 = dev-only/localhost.
+    # On the Pi5 set DB_BIND_ADDR to the LAN/VPN IP. NEVER expose 5432 to the internet.
+    ports:
+      - "${DB_BIND_ADDR:-127.0.0.1}:5432:5432"
+    volumes:
+      # Named volume so data survives `docker compose down` (NOT `down -v`).
+      - pgdata:/var/lib/postgresql/data
+      # *.sql here run once, in filename order, on first init of an empty volume.
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  pgdata:
+    name: health-tracker-pgdata

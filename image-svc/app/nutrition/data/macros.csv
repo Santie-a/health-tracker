@@ -1,0 +1,199 @@
+name,aliases,kcal,protein_g,carbs_g,fat_g
+chicken breast,chicken;grilled chicken;chicken fillet,165,31.0,0.0,3.6
+chicken thigh,chicken leg;dark meat chicken,209,26.0,0.0,10.9
+chicken wing,chicken wings;buffalo wings,203,30.5,0.0,8.1
+fried chicken,crispy chicken,246,28.0,8.0,14.0
+chicken nugget,chicken nuggets;nuggets,296,15.0,18.0,18.0
+turkey breast,turkey,135,30.0,0.0,1.0
+ground turkey,minced turkey,203,27.0,0.0,10.0
+beef steak,steak;sirloin;ribeye;beef,271,25.0,0.0,19.0
+ground beef,minced beef;hamburger meat;beef mince,250,26.0,0.0,15.0
+meatball,meatballs,197,20.0,5.0,10.0
+beef stew,,140,11.0,8.0,7.0
+lamb,lamb chop;mutton,294,25.0,0.0,21.0
+pork chop,pork;pork loin,231,25.7,0.0,13.9
+pork belly,,518,9.3,0.0,53.0
+bacon,,541,37.0,1.4,42.0
+ham,,145,21.0,1.5,6.0
+sausage,sausages;bratwurst,301,12.0,3.0,27.0
+salami,,336,22.0,2.0,28.0
+chorizo,,455,24.0,2.0,38.0
+hot dog,hotdog;frankfurter,290,10.0,4.0,26.0
+ribs,pork ribs;bbq ribs,277,21.0,0.0,21.0
+duck,duck breast,337,19.0,0.0,28.0
+salmon,grilled salmon;salmon fillet,208,20.0,0.0,13.0
+smoked salmon,lox,117,18.0,0.0,4.3
+tuna,canned tuna;tuna steak,132,28.0,0.0,1.3
+shrimp,prawns;prawn,99,24.0,0.2,0.3
+white fish,cod;tilapia;haddock;pollock,96,20.0,0.0,1.5
+mackerel,,205,19.0,0.0,14.0
+sardines,sardine,208,25.0,0.0,11.0
+crab,,97,19.0,0.0,1.5
+lobster,,89,19.0,0.0,0.9
+mussels,mussel,172,24.0,7.0,4.6
+calamari,squid,175,18.0,8.0,7.0
+octopus,,164,30.0,4.0,2.0
+oyster,oysters,81,9.0,4.0,2.3
+fish and chips,,195,12.0,18.0,9.0
+egg,eggs;boiled egg;fried egg;scrambled egg;scrambled eggs,143,12.6,0.7,9.5
+egg white,egg whites,52,11.0,0.7,0.2
+omelette,omelet,154,11.0,1.0,11.0
+milk,whole milk,61,3.2,4.8,3.3
+greek yogurt,yogurt;yoghurt,59,10.0,3.6,0.4
+cheddar cheese,cheese;cheddar,403,25.0,1.3,33.0
+mozzarella,mozzarella cheese,280,28.0,3.1,17.0
+cottage cheese,,98,11.1,3.4,4.3
+parmesan,parmesan cheese;parmigiano,431,38.0,4.0,29.0
+feta,feta cheese,265,14.0,4.0,21.0
+cream cheese,,342,6.0,4.0,34.0
+brie,brie cheese,334,21.0,0.5,28.0
+butter,,717,0.9,0.1,81.1
+cream,heavy cream,340,2.1,2.8,36.0
+sour cream,,198,2.4,4.6,19.0
+white rice,rice;steamed rice;cooked rice,130,2.7,28.0,0.3
+brown rice,wholegrain rice,123,2.7,25.6,1.0
+fried rice,,168,4.0,22.0,7.0
+pasta,spaghetti;cooked pasta;noodles;macaroni,158,5.8,31.0,0.9
+lasagna,lasagne,135,8.0,12.0,6.0
+ramen,ramen noodles;noodle soup,138,4.0,20.0,4.0
+bread,white bread;toast,265,9.0,49.0,3.2
+whole wheat bread,brown bread;wholemeal bread,247,13.0,41.0,3.4
+bagel,,250,10.0,49.0,1.5
+croissant,,406,8.0,46.0,21.0
+tortilla,wrap;flour tortilla,310,8.0,52.0,7.0
+pita,pita bread,275,9.0,55.0,1.2
+naan,naan bread,310,9.0,52.0,7.0
+pancakes,pancake,227,6.4,28.0,9.7
+waffle,waffles,291,8.0,33.0,14.0
+potato,boiled potato;mashed potato;baked potato,87,1.9,20.1,0.1
+french fries,fries;chips,312,3.4,41.0,15.0
+hash browns,hashbrown,265,3.0,35.0,13.0
+sweet potato,yam,86,1.6,20.1,0.1
+oats,oatmeal;porridge,389,16.9,66.3,6.9
+granola,muesli,471,10.0,64.0,20.0
+cereal,cornflakes;breakfast cereal,378,7.0,84.0,2.0
+quinoa,cooked quinoa,120,4.4,21.3,1.9
+couscous,,112,3.8,23.0,0.2
+corn,sweetcorn;maize,86,3.2,19.0,1.2
+gnocchi,,160,4.0,33.0,1.5
+dumpling,dumplings;gyoza;potsticker,180,7.0,24.0,6.0
+spring roll,spring rolls;egg roll,200,6.0,24.0,9.0
+black beans,beans;legumes,132,8.9,23.7,0.5
+kidney beans,red beans,127,8.7,22.8,0.5
+pinto beans,,143,9.0,26.0,0.7
+chickpeas,garbanzo,164,8.9,27.4,2.6
+hummus,,166,7.9,14.3,9.6
+lentils,cooked lentils;dal,116,9.0,20.1,0.4
+baked beans,,94,5.0,15.0,0.5
+edamame,soybeans,121,11.0,9.0,5.0
+peas,green peas,81,5.4,14.0,0.4
+green beans,string beans,31,1.8,7.0,0.2
+tofu,bean curd,144,17.3,2.8,8.7
+tempeh,,192,20.0,8.0,11.0
+falafel,,333,13.0,32.0,18.0
+broccoli,,34,2.8,6.6,0.4
+cauliflower,,25,1.9,5.0,0.3
+spinach,baby spinach,23,2.9,3.6,0.4
+kale,,49,4.3,9.0,0.9
+mixed salad,salad;green salad;lettuce,17,1.4,2.9,0.2
+cabbage,,25,1.3,6.0,0.1
+tomato,tomatoes,18,0.9,3.9,0.2
+cucumber,,15,0.7,3.6,0.1
+avocado,,160,2.0,8.5,14.7
+carrot,carrots,41,0.9,9.6,0.2
+bell pepper,pepper;capsicum;sweet pepper,31,1.0,6.0,0.3
+mushroom,mushrooms,22,3.1,3.3,0.3
+zucchini,courgette,17,1.2,3.1,0.3
+zucchini flowers,squash blossom;squash blossoms;zucchini flower,28,2.0,4.0,0.4
+squash,butternut squash;pumpkin,45,1.0,12.0,0.1
+eggplant,aubergine,25,1.0,6.0,0.2
+onion,onions,40,1.1,9.0,0.1
+garlic,,149,6.4,33.0,0.5
+asparagus,,20,2.2,3.9,0.1
+celery,,16,0.7,3.0,0.2
+beetroot,beet;beets,43,1.6,10.0,0.2
+brussels sprouts,brussel sprouts,43,3.4,9.0,0.3
+olives,olive,115,0.8,6.0,11.0
+pickles,pickle;gherkin,11,0.3,2.3,0.2
+banana,,89,1.1,22.8,0.3
+apple,,52,0.3,13.8,0.2
+orange,,47,0.9,11.8,0.1
+pear,,57,0.4,15.0,0.1
+peach,,39,0.9,10.0,0.3
+plum,plums,46,0.7,11.0,0.3
+grapes,grape,69,0.7,18.1,0.2
+strawberry,strawberries;berries,32,0.7,7.7,0.3
+blueberry,blueberries,57,0.7,14.5,0.3
+raspberry,raspberries,52,1.2,12.0,0.7
+pineapple,,50,0.5,13.0,0.1
+mango,mangoes,60,0.8,15.0,0.4
+watermelon,,30,0.6,7.6,0.2
+melon,cantaloupe;honeydew,34,0.8,8.0,0.2
+kiwi,kiwifruit,61,1.1,15.0,0.5
+lemon,lemons,29,1.1,9.0,0.3
+cherry,cherries,50,1.0,12.0,0.3
+pomegranate,,83,1.7,19.0,1.2
+fig,figs,74,0.8,19.0,0.3
+coconut,,354,3.3,15.0,33.0
+almonds,nuts;almond,579,21.2,21.6,49.9
+walnuts,walnut,654,15.2,13.7,65.2
+cashews,cashew,553,18.0,30.0,44.0
+pistachios,pistachio,560,20.0,28.0,45.0
+peanuts,peanut,567,26.0,16.0,49.0
+peanut butter,,588,25.1,20.0,50.4
+hazelnuts,hazelnut,628,15.0,17.0,61.0
+pecans,pecan,691,9.0,14.0,72.0
+sunflower seeds,,584,21.0,20.0,51.0
+pumpkin seeds,pepitas,559,30.0,11.0,49.0
+chia seeds,chia,486,17.0,42.0,31.0
+sesame,sesame seeds;tahini,573,18.0,23.0,50.0
+olive oil,oil;vegetable oil,884,0.0,0.0,100.0
+mayonnaise,mayo,680,1.0,0.6,75.0
+pizza,cheese pizza,266,11.0,33.0,10.0
+hamburger,burger;cheeseburger,295,17.0,24.0,14.0
+sandwich,sub;club sandwich,250,12.0,30.0,9.0
+taco,tacos,217,9.0,20.0,11.0
+burrito,,206,8.0,24.0,8.0
+quesadilla,,300,13.0,27.0,15.0
+nachos,,343,8.0,36.0,19.0
+sushi,sushi roll;maki;nigiri,150,5.8,30.0,0.7
+mac and cheese,macaroni and cheese,164,7.0,20.0,6.0
+curry,chicken curry;curry sauce,150,8.0,9.0,9.0
+pad thai,,160,7.0,20.0,6.0
+soup,vegetable soup;chicken soup,40,2.0,6.0,1.0
+quiche,,261,9.0,15.0,18.0
+ketchup,tomato ketchup,101,1.2,26.0,0.2
+mustard,,66,4.0,5.0,3.0
+soy sauce,,53,8.0,5.0,0.1
+tomato sauce,marinara;pasta sauce,32,1.5,7.0,0.4
+pesto,,418,4.0,4.0,43.0
+honey,,304,0.3,82.0,0.0
+jam,jelly;preserves,250,0.4,65.0,0.1
+maple syrup,syrup,260,0.0,67.0,0.1
+chocolate,dark chocolate;milk chocolate,535,7.7,59.4,29.7
+nutella,chocolate spread,539,6.0,58.0,31.0
+ice cream,,207,3.5,23.6,11.0
+cake,sponge cake,347,5.0,50.0,15.0
+cheesecake,,321,6.0,26.0,22.0
+brownie,brownies,466,6.0,50.0,28.0
+cookie,cookies;biscuit,488,5.0,64.0,24.0
+donut,doughnut,452,5.0,51.0,25.0
+muffin,muffins,377,5.0,55.0,15.0
+pie,apple pie;fruit pie,237,2.0,34.0,11.0
+pudding,,130,3.0,20.0,4.0
+popcorn,,387,12.0,78.0,4.0
+potato chips,crisps,536,7.0,53.0,34.0
+pretzel,pretzels,380,10.0,80.0,3.0
+crackers,cracker,502,9.0,61.0,25.0
+granola bar,protein bar;cereal bar,450,10.0,60.0,18.0
+orange juice,oj,45,0.7,10.0,0.2
+apple juice,,46,0.1,11.0,0.1
+soda,cola;soft drink;coke,41,0.0,10.6,0.0
+beer,,43,0.5,3.6,0.0
+wine,red wine;white wine,83,0.1,2.6,0.0
+coffee,black coffee,2,0.1,0.0,0.0
+tea,,1,0.0,0.2,0.0
+smoothie,fruit smoothie,55,1.0,13.0,0.5
+protein shake,protein drink,60,8.0,4.0,1.2
+milkshake,,112,3.0,18.0,3.0
+coconut water,,19,0.7,3.7,0.2

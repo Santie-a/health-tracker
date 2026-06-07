@@ -1,0 +1,29 @@
+# Image service dependencies. Install in a Python 3.12 venv (PyTorch has no 3.14
+# wheels). The RTX 5070 is Blackwell (sm_120) -> needs the CUDA 12.8 build, so the
+# cu128 index is the PRIMARY --index-url. An --extra-index-url would let pip grab
+# the CPU torch from PyPI instead; PyPI is added back below for everything else.
+#
+#   py -3.12 -m venv .venv
+#   .venv\Scripts\pip install -r requirements.txt
+--index-url https://download.pytorch.org/whl/cu128
+--extra-index-url https://pypi.org/simple
+
+# --- service ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
+pydantic-settings>=2.3
+python-multipart>=0.0.9
+pillow>=10.3
+
+# --- vision-LLM (vlm backend) ---
+# 3B fits 12 GB at bf16. For a 7B model add bitsandbytes and set LOAD_IN_4BIT=true.
+torch
+torchvision
+transformers>=5.0
+accelerate>=0.30
+qwen-vl-utils
+
+# --- tests ---
+pytest>=8.0
+httpx>=0.27
