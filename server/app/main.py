@@ -26,6 +26,7 @@ from .core.errors import install_request_id_middleware, register_exception_handl
 from .core.logging_config import configure_logging
 from .domains.ingest.router import router as ingest_router
 from .domains.nutrition.router import router as nutrition_router
+from .domains.recommendations.router import router as recommendations_router
 from .domains.telemetry.router import router as telemetry_router
 from .domains.training.router import router as training_router
 
@@ -99,6 +100,7 @@ def create_app() -> FastAPI:
     app.include_router(telemetry_router, prefix="/api/v1")
     app.include_router(training_router, prefix="/api/v1")
     app.include_router(nutrition_router, prefix="/api/v1")
+    app.include_router(recommendations_router, prefix="/api/v1")
     app.include_router(ingest_router, prefix="/api/v1")
 
     return app

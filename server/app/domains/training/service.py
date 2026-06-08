@@ -26,6 +26,23 @@ def _as_utc(ts: datetime) -> datetime:
 
 
 async def create_session(session: AsyncSession, payload: TrainingSessionIn) -> TrainingSessionOut:
+    # Build sets up front and pass them to the constructor so the relationship is a
+    # loaded collection — otherwise serializing a session with zero sets lazy-loads
+    # under async (MissingGreenlet).
+    sets = [
+        TrainingSet(
+            exercise=s.exercise,
+            set_no=s.set_no,
+            reps=s.reps,
+            weight_kg=s.weight_kg,
+            distance_m=s.distance_m,
+            pace=s.pace,
+            rpe=s.rpe,
+            is_warmup=s.is_warmup,
+            added_weight_kg=s.added_weight_kg,
+        )
+        for s in payload.sets
+    ]
     obj = TrainingSession(
         ts=_as_utc(payload.ts),
         type=payload.type,
@@ -34,21 +51,8 @@ async def create_session(session: AsyncSession, payload: TrainingSessionIn) -> T
         load=compute_load(payload.duration_min, payload.rpe, payload.load),
         notes=payload.notes,
         source="manual",
+        sets=sets,
     )
-    for s in payload.sets:
-        obj.sets.append(
-            TrainingSet(
-                exercise=s.exercise,
-                set_no=s.set_no,
-                reps=s.reps,
-                weight_kg=s.weight_kg,
-                distance_m=s.distance_m,
-                pace=s.pace,
-                rpe=s.rpe,
-                is_warmup=s.is_warmup,
-                added_weight_kg=s.added_weight_kg,
-            )
-        )
     await repository.add(session, obj)
     return TrainingSessionOut.model_validate(obj)
 

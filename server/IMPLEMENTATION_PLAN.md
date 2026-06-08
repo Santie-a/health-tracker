@@ -142,13 +142,22 @@ Verified round-trip on a throwaway DB: manual meal with nutrition_core resolutio
   NOTE: split photo onto `/meals/photo` (multipart) vs `/meals` (JSON) for clean
   content-types instead of one mixed endpoint.
 
-## Phase 6 — Recommendations
-- [ ] **6.1 Rule engine (pure functions)** — table-driven heuristics: low sleep/high
-  stress → deload; high load + low protein → protein gap; calorie balance; two-a-day
-  hydration/carb timing. Thresholds in a config module.
-- [ ] **6.2 Daily pass + storage + endpoint** — generate → store in `recommendations`
-  (jsonb, unique per date, feedback field); `GET /recommendations?date=`; guarded so a
-  failed pass never kills the API.
+## Phase 6 — Recommendations ✅ DONE
+Verified on a throwaway DB: a seeded day (manual gym+swim+meal × telemetry sleep/
+stress/TDEE/weight) produced all four recs (reduce_intensity, protein_gap,
+calorie_surplus, two_a_day); empty day → []. 49 tests (18 table-driven rule tests).
+
+- [x] **6.1 Rule engine** (`rules.py`, pure) — `DayContext` + 4 rules
+  (recovery, protein gap, calorie balance, two-a-day). Every telemetry signal is
+  OPTIONAL: a rule fires only when its inputs exist, so recs run on manual data alone.
+  Thresholds in `thresholds.py`. `generate()` guards each rule so one failure never
+  aborts the pass.
+- [x] **6.2 Daily pass + storage + endpoints** — `repository.build_context` assembles
+  the day across telemetry/training/nutrition/body_comp; `service` generates → upserts
+  `recommendations` (jsonb, unique per date) → returns. `GET /api/v1/recommendations?date=`
+  (lazy-generates + stores on first hit), `POST /recommendations/run` (force regen),
+  `POST /recommendations/feedback`. `run_for_date` is guarded for the scheduled pass.
+- Also fixed the same async lazy-load bug in **training** create (zero-set session).
 
 ## Phase 7 — Planned features (strength + manual nutrition)
 - [ ] **7.1 Exercise catalog** — `GET /exercises` (search/autocomplete), `POST /exercises`.
