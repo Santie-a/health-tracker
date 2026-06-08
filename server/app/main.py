@@ -89,6 +89,47 @@ async def lifespan(app: FastAPI):
         log.info("gateway stopped: engine disposed")
 
 
+def _use_binary_file_uploads(app: FastAPI) -> None:
+    """Make Swagger UI render file-upload buttons for upload fields.
+
+    FastAPI emits OpenAPI 3.1, which encodes uploads as ``contentMediaType``;
+    Swagger UI's file widget only recognizes the 3.0-style ``format: binary`` and
+    otherwise shows a plain text box (notably for ``list[UploadFile]`` arrays).
+    This rewrites binary string schemas to advertise ``format: binary`` so the docs
+    show real upload buttons. Documentation-only — request parsing is unaffected.
+    """
+    from fastapi.openapi.utils import get_openapi
+
+    def custom_openapi() -> dict:
+        if app.openapi_schema:
+            return app.openapi_schema
+        schema = get_openapi(
+            title=app.title, version=app.version, routes=app.routes,
+            description=app.description or None,
+        )
+
+        def walk(node) -> None:
+            if isinstance(node, dict):
+                if (
+                    node.get("type") == "string"
+                    and node.get("contentMediaType") == "application/octet-stream"
+                    and "format" not in node
+                ):
+                    node["format"] = "binary"
+                    node.pop("contentMediaType", None)
+                for value in node.values():
+                    walk(value)
+            elif isinstance(node, list):
+                for value in node:
+                    walk(value)
+
+        walk(schema)
+        app.openapi_schema = schema
+        return schema
+
+    app.openapi = custom_openapi
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Health Tracker — API Gateway",
@@ -123,6 +164,7 @@ def create_app() -> FastAPI:
     app.include_router(dashboard_router, prefix="/api/v1")
     app.include_router(ingest_router, prefix="/api/v1")
 
+    _use_binary_file_uploads(app)
     return app
 
 
