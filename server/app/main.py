@@ -17,12 +17,15 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from nutrition_core import MacroTable, default_macro_csv
+
 from . import __version__
 from .core.config import get_settings
 from .core.db import create_engine, create_sessionmaker, ping
 from .core.errors import install_request_id_middleware, register_exception_handlers
 from .core.logging_config import configure_logging
 from .domains.ingest.router import router as ingest_router
+from .domains.nutrition.router import router as nutrition_router
 from .domains.telemetry.router import router as telemetry_router
 from .domains.training.router import router as training_router
 
@@ -47,7 +50,19 @@ async def lifespan(app: FastAPI):
     engine = create_engine(settings.database_url)
     app.state.engine = engine
     app.state.sessionmaker = create_sessionmaker(engine)
-    log.info("gateway started: version=%s log_level=%s", __version__, settings.log_level)
+
+    # Fail fast at startup if the shared macro table is missing/unreadable — a fixed
+    # config + restart recovers it. Used for manual-entry macro resolution.
+    try:
+        app.state.macro_table = MacroTable.from_csv(default_macro_csv())
+    except Exception:
+        log.exception("Startup failed: could not load macro table from nutrition_core")
+        raise
+
+    log.info(
+        "gateway started: version=%s log_level=%s foods=%d",
+        __version__, settings.log_level, len(app.state.macro_table),
+    )
 
     try:
         yield
@@ -83,6 +98,7 @@ def create_app() -> FastAPI:
     # Domain routers (all under /api/v1).
     app.include_router(telemetry_router, prefix="/api/v1")
     app.include_router(training_router, prefix="/api/v1")
+    app.include_router(nutrition_router, prefix="/api/v1")
     app.include_router(ingest_router, prefix="/api/v1")
 
     return app

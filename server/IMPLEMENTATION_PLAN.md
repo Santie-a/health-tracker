@@ -125,12 +125,22 @@ auto-compute (60×8=480), list, type filter, get-by-id, 404 shape, 422 validatio
   duration×rpe when omitted; `source='manual'`; naive ts assumed UTC. Catalog
   resolution (exercise_id) + `POST /training/{id}/sets` + stats deferred to Phase 7.
 
-## Phase 5 — Nutrition + image-svc bridge
-- [ ] **5.1 image-svc HTTP client** — httpx with timeout + retry; on ANY failure return
-  the manual-entry fallback, never 500; log cause. Stub/feature-flag so the server works
-  before the GPU box exists.
-- [ ] **5.2 Meals endpoints** — `POST /meals` (multipart photo → proxy → store macros,
-  manual override), `GET /meals?date=` (items + totals).
+## Phase 5 — Nutrition + image-svc bridge ✅ DONE
+Verified round-trip on a throwaway DB: manual meal with nutrition_core resolution
+(613 kcal/66 g from food+grams), day totals, photo upload with image-svc down →
+201 degraded (never 500), get-by-id + 404. 31 tests pass.
+
+- [x] **5.1 image-svc HTTP client** (`app/integrations/image_svc.py`) — httpx with
+  timeout + 1 retry on transient errors; ANY failure (unconfigured/refused/timeout/
+  5xx/bad body) → `EstimateResult(ok=False)`, logged, NEVER raises. `map_items`
+  renames grams_est→grams. Empty `IMAGE_SVC_URL` disables the call (works pre-GPU-box).
+- [x] **5.2 Meals endpoints** — `POST /api/v1/meals` (manual JSON; food+grams resolved
+  via nutrition_core, explicit macros win), `POST /meals/photo` (multipart → image-svc,
+  degrades to empty manual meal on failure), `GET /meals?date=` (DayNutrition + totals),
+  `GET /meals/{id}`. Macro table loaded once in lifespan (fail-fast). router/service/
+  repository/schemas; pure `resolve_item`/`compute_totals` unit-tested.
+  NOTE: split photo onto `/meals/photo` (multipart) vs `/meals` (JSON) for clean
+  content-types instead of one mixed endpoint.
 
 ## Phase 6 — Recommendations
 - [ ] **6.1 Rule engine (pure functions)** — table-driven heuristics: low sleep/high
