@@ -180,12 +180,23 @@ rec hook). 57 tests.
 - [x] **7.6 Recommendation hook** — `rule_training_balance` flags weekly push:pull /
   upper:lower skew; `build_context` feeds trailing-7-day ratios from the strength stats.
 
-## Phase 8 — Dashboard, seed, deploy
-- [ ] **8.1 `GET /dashboard?date=`** — single aggregated day view (telemetry rollup +
-  training + nutrition totals + recommendations) powering the frontend home.
-- [ ] **8.2 Seed script** — fake data across telemetry/training-sets/meals for frontend dev.
-- [ ] **8.3 Dockerfile** (multi-arch `python:3.x-slim`) + Pi5 compose entry next to
-  Postgres; verify arm64 wheels; review OpenAPI `/docs` (the frontend contract).
+## Phase 8 — Dashboard, seed, deploy ✅ DONE
+Verified on a throwaway DB: seed populated 7 days; `GET /dashboard` aggregated
+telemetry + training + nutrition totals + recommendations; Docker image built and
+ran (entrypoint auto-migrated, /health ok, /health/ready database:true). 57 tests.
+
+- [x] **8.1 `GET /api/v1/dashboard?date=`** — `app/domains/dashboard/` aggregator
+  composing telemetry summary (steps/stress/HR/SpO2/TDEE/sleep), training sessions,
+  nutrition totals + meals, and recommendations into one payload. Added
+  `telemetry.get_sleep` + `SleepSummary`.
+- [x] **8.2 Seed script** — `python -m app.seed [--days N] [--samsung DIR] [--reset]`.
+  Self-contained generated telemetry + manual training(+sets)/meals + daily rec pass;
+  `--samsung` ingests a REAL export instead of generating telemetry (manual always
+  generated). Portable (no /temp dependency) but opt-in real data for local dev.
+- [x] **8.3 Dockerfile** (multi-arch `python:3.12-slim`, context = repo root so
+  nutrition_core is included) + `docker-entrypoint.sh` (runs `alembic upgrade head`
+  then uvicorn — safe because baseline 0001 is empty) + `docker-compose.yml` (Pi5
+  service entry). OpenAPI contract at `/docs`.
 
 Tests are written **alongside each domain**, not deferred (server/TODO.md "Verification"):
 table-driven rules, ingest parser, error paths (image-svc offline→fallback, bad row→skip,

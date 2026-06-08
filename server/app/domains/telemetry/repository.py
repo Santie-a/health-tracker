@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date as date_cls
+from datetime import datetime, time, timedelta, timezone
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .models import Telemetry
+from .models import SleepSession, Telemetry
 
 
 async def query_points(
@@ -54,3 +55,16 @@ async def query_daily(
     stmt = stmt.group_by(day).order_by(day)
     result = await session.execute(stmt)
     return [dict(row._mapping) for row in result]
+
+
+async def sleep_for_day(session: AsyncSession, day: date_cls) -> SleepSession | None:
+    """The night that ended on `day` (longest session if more than one)."""
+    start = datetime.combine(day, time.min, tzinfo=timezone.utc)
+    end = start + timedelta(days=1)
+    stmt = (
+        select(SleepSession)
+        .where(SleepSession.end_ts >= start, SleepSession.end_ts < end)
+        .order_by(SleepSession.total_min.desc().nullslast())
+        .limit(1)
+    )
+    return (await session.execute(stmt)).scalar_one_or_none()

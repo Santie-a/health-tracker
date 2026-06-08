@@ -3,12 +3,13 @@ watch data. Heavier rollup/derivation logic can grow here without touching HTTP.
 
 from __future__ import annotations
 
+from datetime import date as date_cls
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import repository
-from .schemas import DailyRollup, TelemetryPoint
+from .schemas import DailyRollup, SleepSummary, TelemetryPoint
 
 
 async def get_points(
@@ -19,6 +20,11 @@ async def get_points(
         TelemetryPoint(ts=r.ts, metric=r.metric, value=r.value, unit=r.unit, source=r.source)
         for r in rows
     ]
+
+
+async def get_sleep(session: AsyncSession, day: date_cls) -> SleepSummary | None:
+    row = await repository.sleep_for_day(session, day)
+    return SleepSummary.model_validate(row) if row else None
 
 
 async def get_daily(

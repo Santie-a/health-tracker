@@ -1,0 +1,21 @@
+# Gateway service. On the Pi5 this merges into the always-on stack alongside the db
+# (db/docker-compose.yml) and the frontend, so a reboot restores everything.
+#
+# Build context is the repo root so the in-repo nutrition_core package is included:
+#   docker compose -f server/docker-compose.yml up -d --build
+#
+# Requires server/.env (DATABASE_URL, API_TOKEN, IMAGE_SVC_URL — see .env.example).
+# On the Pi5, DATABASE_URL points at the db container; IMAGE_SVC_URL at the PC.
+
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    image: health-tracker-server
+    env_file: .env
+    ports:
+      - "127.0.0.1:8000:8000"   # bind localhost; reach via the frontend / a proxy
+    restart: unless-stopped
+    # When co-located with the db compose, attach both to a shared external network
+    # and set DATABASE_URL host to the db service name. Standalone, point it at the host.

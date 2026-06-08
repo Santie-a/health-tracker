@@ -26,3 +26,14 @@ class DailyRollup(BaseModel):
     max: float | None = None
     sum: float | None = None
     count: int
+
+
+class SleepSummary(BaseModel):
+    model_config = {"from_attributes": True}
+
+    total_min: int | None = None
+    deep_min: int | None = None
+    rem_min: int | None = None
+    light_min: int | None = None
+    awake_min: int | None = None
+    efficiency: float | None = None
