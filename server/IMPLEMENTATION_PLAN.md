@@ -84,11 +84,18 @@ upgrade head → downgrade), with the hypertable surviving the migrations. Tests
 - [x] **1.4 Migration `0003`: swim/cardio session metrics** — `training_sessions` +=
   nullable `kcal`, `avg_hr`, `max_hr`, `distance_m`, `source`. Reversible.
 
-## Phase 2 — Shared nutrition core
-- [ ] **2.1 Extract `packages/nutrition_core/`** — move `usda.py` matcher + `macros.csv`
-  into an installable package; `pip install -e` from both services; update image-svc
-  imports; confirm image-svc tests still pass. image-svc keeps bundling its own data
-  copy (network-independent).
+## Phase 2 — Shared nutrition core ✅ DONE
+Matcher + CSV now live once in `packages/nutrition_core/`; image-svc 21/21 and
+server 25/25 tests pass after the move.
+
+- [x] **2.1 Extract `packages/nutrition_core/`** — `git mv` `usda.py`→`matcher.py` and
+  `macros.csv` into an installable package (pyproject + package-data); exports
+  `MacroTable`, `MacroRow`, `TABLE_VERSION`, `default_macro_csv()`. image-svc imports
+  repointed to `nutrition_core`; its `config.py` sources the data path + table_version
+  from the package. Editable dep added to both `requirements.txt` and installed into
+  both venvs. Network-independence preserved: the CSV ships inside the installed
+  package (local file / baked into the image), so there's now a single source of truth
+  + one `TABLE_VERSION` instead of a duplicated copy.
 
 ## Phase 3 — Telemetry + Samsung ingest ✅ DONE
 Verified end-to-end against the REAL export on a throwaway Timescale container:
@@ -111,7 +118,6 @@ enriched with deep-sleep minutes. Stage codes + swim type confirmed empirically
 ## Phase 4 — Training (basic) ✅ DONE
 Verified round-trip on a throwaway DB: create gym+swim with inline sets, load
 auto-compute (60×8=480), list, type filter, get-by-id, 404 shape, 422 validation.
-28 tests pass.
 
 - [x] **4.1 Sessions CRUD** — `POST /api/v1/training` (session + inline `sets[]`),
   `GET /api/v1/training` (filter by `type`/`from`/`to`/`limit`), `GET /training/{id}`.

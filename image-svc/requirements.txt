@@ -24,6 +24,9 @@ transformers>=5.0
 accelerate>=0.30
 qwen-vl-utils
 
+# --- shared in-repo packages (editable; run pip from image-svc/) ---
+-e ../packages/nutrition_core
+
 # --- tests ---
 pytest>=8.0
 httpx>=0.27

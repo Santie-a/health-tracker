@@ -17,7 +17,7 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from ..config import Settings
-from ..nutrition.usda import MacroTable
+from nutrition_core import MacroTable
 from .base import Detection, FoodEstimator
 
 if TYPE_CHECKING:

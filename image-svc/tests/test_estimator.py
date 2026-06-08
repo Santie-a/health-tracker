@@ -9,7 +9,7 @@ from app.config import get_settings
 from app.estimator import build_estimate
 from app.estimator.base import Detection
 from app.estimator.stub import StubEstimator
-from app.nutrition.usda import MacroTable
+from nutrition_core import MacroTable
 
 from .conftest import make_png
 

@@ -13,7 +13,7 @@ from ..config import Settings
 from .base import Detection, FoodEstimator, build_estimate
 
 if TYPE_CHECKING:
-    from ..nutrition.usda import MacroTable
+    from nutrition_core import MacroTable
 
 __all__ = ["Detection", "FoodEstimator", "build_estimate", "make_estimator"]
 

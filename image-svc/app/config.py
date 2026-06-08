@@ -9,11 +9,13 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
+import nutrition_core
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Repo-relative default for the bundled macro table.
-_DEFAULT_MACRO_TABLE = Path(__file__).resolve().parent / "nutrition" / "data" / "macros.csv"
+# Macro table now lives in the shared nutrition_core package (single source of
+# truth shared with the gateway). Installed editable, so it's a local file.
+_DEFAULT_MACRO_TABLE = nutrition_core.default_macro_csv()
 
 
 class Settings(BaseSettings):
@@ -51,7 +53,7 @@ class Settings(BaseSettings):
 
     # --- versioning (recorded on every estimate) -------------------------
     model_version: str = "stub-0"
-    table_version: str = "usda-subset-0.2"
+    table_version: str = nutrition_core.TABLE_VERSION
 
     # --- limits -----------------------------------------------------------
     max_image_mb: float = 15.0
