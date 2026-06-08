@@ -182,20 +182,29 @@ gracefully (retried, normalized, never crashed). Green path pending a running ga
 - [x] **0.8 Time helpers** (`lib/time.ts`) — `todayISODate`, `shiftISODate`, `parseInstant`
       (naive→UTC), `formatInstant`, `formatISODate`, `toInstantISO`. The single UTC↔local home.
 
-## Phase 1 — UI design system (shared primitives)
+## Phase 1 — UI design system (shared primitives) ✅ DONE
 
-Build the reusable kit once so every view composes it. **Verify:** a Storybook-ish demo
-route renders each primitive with loading/empty/error variants.
+Build the reusable kit once so every view composes it. Verified at `/design`: every
+primitive renders with its variants and loading/empty/error states; build + typecheck +
+lint clean, no console errors. **Decision:** hand-authored primitives (shadcn-style API,
+oklch tokens) instead of running the shadcn CLI — cleaner on Next 16 + Tailwind v4 and
+keeps the components owned. Toasts via **sonner** (no Radix). The Radix-based interactive
+primitives (Dialog/Sheet/Select/Tabs) are **deferred to first use** (Phase 3+) so the tree
+carries no unused components.
 
-- [ ] **1.1 shadcn/ui install** + base primitives (button, card, input, select, dialog,
-      sheet, tabs, toast, badge, skeleton). Tailwind tokens / theme.
-- [ ] **1.2 Stat & layout primitives** — `StatCard` (value + label + unit + trend + empty),
-      `SectionCard`, `MetricGrid`. All handle null values (greyed "—").
-- [ ] **1.3 Chart wrappers** (`components/charts/`) — `TrendLine`, `GroupedBars` over
-      Recharts with built-in empty/loading states, local-time axis, UTC-in / local-out.
-- [ ] **1.4 Form kit** — react-hook-form + zod resolver helpers, `Field`, number/weight
-      inputs, a `useGatewayMutation` wrapper mapping the gateway's 422 detail → field errors
-      and surfacing 5xx via toast (never a white screen).
+- [x] **1.1 Base primitives** — `Button` (cva variants + loading), `Card` (+parts),
+      `Badge` (severity variants), `Input` (`invalid` ring), `Label`, `Separator`; sonner
+      `Toaster` (theme-synced) mounted in `Providers`. Skeleton shipped in Phase 0.
+- [x] **1.2 Stat & layout primitives** — `StatCard` (null → greyed "—" + empty hint),
+      `SectionCard` (title + header action), `MetricGrid` (responsive 2→4 col).
+- [x] **1.3 Chart wrappers** (`components/charts/`) — `ChartFrame` (loading/empty/error +
+      client-mount gate via `useMounted`, killing the Recharts SSR sizing warning),
+      `TrendLine`, `GroupedBars` (target band + per-bar `colorFor`). Token palette, themed
+      tooltip, local-time axis (UTC-in / local-out).
+- [x] **1.4 Form kit** — `Field` (label/hint/error + a11y), `NumberInput` (decimal pad +
+      unit adornment), `useGatewayMutation` (422 → RHF `setError` per field, else friendly
+      toast; success toast + query invalidation). RHF + zod ready for the logging forms.
+- [x] **1.5 Demo route** (`/design`) — gallery of every primitive + variant + async state.
 
 ## Phase 2 — Today / Home dashboard
 
