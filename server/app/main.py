@@ -28,7 +28,9 @@ from .domains.ingest.router import router as ingest_router
 from .domains.nutrition.router import router as nutrition_router
 from .domains.recommendations.router import router as recommendations_router
 from .domains.telemetry.router import router as telemetry_router
+from .domains.training.router import exercises_router
 from .domains.training.router import router as training_router
+from .domains.training.seed import seed_exercises
 
 log = logging.getLogger("server")
 
@@ -59,6 +61,17 @@ async def lifespan(app: FastAPI):
     except Exception:
         log.exception("Startup failed: could not load macro table from nutrition_core")
         raise
+
+    # Seed the starter exercise catalog (idempotent by slug). Guarded — a seeding
+    # failure (e.g. DB momentarily down) is logged but must not block startup.
+    try:
+        async with app.state.sessionmaker() as seed_session:
+            added = await seed_exercises(seed_session)
+            await seed_session.commit()
+        if added:
+            log.info("seeded %d exercises into the catalog", added)
+    except Exception:
+        log.exception("Exercise catalog seeding failed (continuing without it)")
 
     log.info(
         "gateway started: version=%s log_level=%s foods=%d",
@@ -99,6 +112,7 @@ def create_app() -> FastAPI:
     # Domain routers (all under /api/v1).
     app.include_router(telemetry_router, prefix="/api/v1")
     app.include_router(training_router, prefix="/api/v1")
+    app.include_router(exercises_router, prefix="/api/v1")
     app.include_router(nutrition_router, prefix="/api/v1")
     app.include_router(recommendations_router, prefix="/api/v1")
     app.include_router(ingest_router, prefix="/api/v1")

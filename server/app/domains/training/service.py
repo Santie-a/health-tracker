@@ -2,13 +2,48 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from collections import defaultdict
+from datetime import date as date_cls
+from datetime import datetime, time, timedelta, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import repository
-from .models import TrainingSession, TrainingSet
-from .schemas import TrainingSessionIn, TrainingSessionOut
+from .models import Exercise, ExerciseMuscle, TrainingSession, TrainingSet
+from .muscles import SECONDARY_CREDIT, muscle_group
+from .schemas import (
+    AddSetsIn,
+    ExerciseIn,
+    ExerciseOut,
+    ExerciseStat,
+    MuscleVolume,
+    TrainingSessionIn,
+    TrainingSessionOut,
+    TrainingStats,
+    WeeklyMuscleSets,
+)
+
+
+class DuplicateExercise(Exception):
+    """Raised when an exercise slug already exists."""
+
+
+def slugify(name: str) -> str:
+    return name.lower().replace("-", " ").replace("'", "").strip().replace(" ", "_")
+
+
+def _norm(s: str) -> str:
+    return " ".join(s.lower().split())
+
+
+def _name_index(exercises: list[Exercise]) -> dict[str, Exercise]:
+    """Normalized name/alias -> Exercise, for resolving free-text set labels."""
+    idx: dict[str, Exercise] = {}
+    for ex in exercises:
+        idx.setdefault(_norm(ex.name), ex)
+        for alias in ex.aliases or []:
+            idx.setdefault(_norm(alias), ex)
+    return idx
 
 
 def compute_load(duration_min: int | None, rpe: float | None, explicit: float | None) -> float | None:
@@ -67,3 +102,162 @@ async def list_sessions(
 async def get_session(session: AsyncSession, session_id: int) -> TrainingSessionOut | None:
     obj = await repository.get(session, session_id)
     return TrainingSessionOut.model_validate(obj) if obj else None
+
+
+# --- exercise catalog --------------------------------------------------------
+
+async def create_exercise(session: AsyncSession, payload: ExerciseIn) -> ExerciseOut:
+    slug = slugify(payload.name)
+    if await repository.get_exercise_by_slug(session, slug) is not None:
+        raise DuplicateExercise(slug)
+
+    # Ensure the primary_muscle is represented as a primary row, then merge in the
+    # supplied muscle rows (de-duped).
+    rows = []
+    seen = set()
+    if payload.primary_muscle:
+        rows.append(ExerciseMuscle(muscle=payload.primary_muscle, role="primary"))
+        seen.add((payload.primary_muscle, "primary"))
+    for m in payload.muscles:
+        if (m.muscle, m.role) in seen:
+            continue
+        seen.add((m.muscle, m.role))
+        rows.append(ExerciseMuscle(muscle=m.muscle, role=m.role))
+
+    ex = Exercise(
+        name=payload.name,
+        slug=slug,
+        category=payload.category,
+        primary_muscle=payload.primary_muscle,
+        equipment=payload.equipment,
+        is_unilateral=payload.is_unilateral,
+        is_bodyweight=payload.is_bodyweight,
+        aliases=payload.aliases,
+        muscles=rows,
+    )
+    await repository.add_exercise(session, ex)
+    return ExerciseOut.model_validate(ex)
+
+
+async def search_exercises(
+    session: AsyncSession, q: str | None, muscle: str | None, category: str | None, limit: int
+) -> list[ExerciseOut]:
+    rows = await repository.search_exercises(session, q, muscle, category, limit)
+    return [ExerciseOut.model_validate(r) for r in rows]
+
+
+# --- per-set logging ---------------------------------------------------------
+
+async def add_sets(
+    session: AsyncSession, session_id: int, payload: AddSetsIn
+) -> TrainingSessionOut | None:
+    obj = await repository.get(session, session_id)
+    if obj is None:
+        return None
+    index = _name_index(await repository.load_catalog(session))
+    for s in payload.sets:
+        match = index.get(_norm(s.exercise))
+        obj.sets.append(
+            TrainingSet(
+                exercise=s.exercise,
+                exercise_id=match.id if match else None,
+                set_no=s.set_no,
+                reps=s.reps,
+                weight_kg=s.weight_kg,
+                distance_m=s.distance_m,
+                pace=s.pace,
+                rpe=s.rpe,
+                is_warmup=s.is_warmup,
+                added_weight_kg=s.added_weight_kg,
+            )
+        )
+    await session.flush()
+    return TrainingSessionOut.model_validate(obj)
+
+
+# --- strength stats ----------------------------------------------------------
+
+def _monday(d: date_cls) -> date_cls:
+    return d - timedelta(days=d.weekday())
+
+
+async def get_stats(session: AsyncSession, frm: date_cls, to: date_cls) -> TrainingStats:
+    start = datetime.combine(frm, time.min, tzinfo=timezone.utc)
+    end = datetime.combine(to, time.min, tzinfo=timezone.utc) + timedelta(days=1)
+
+    catalog = await repository.load_catalog(session)
+    by_id = {ex.id: ex for ex in catalog}
+    name_idx = _name_index(catalog)
+    rows = await repository.load_sets_for_stats(session, start, end)
+
+    weekly: dict[tuple[date_cls, str], float] = defaultdict(float)
+    volume: dict[str, float] = defaultdict(float)
+    push = pull = upper = lower = 0
+    per_ex: dict[str, dict] = {}
+    unresolved: set[str] = set()
+
+    for r in rows:
+        ex = by_id.get(r.exercise_id) or name_idx.get(_norm(r.exercise or ""))
+        day = r.ts.date()
+        week = _monday(day)
+        reps = r.reps or 0
+        weight = float(r.weight_kg or 0) + float(r.added_weight_kg or 0)
+
+        key = ex.slug if ex else f"~{_norm(r.exercise or 'unknown')}"
+        pe = per_ex.setdefault(
+            key,
+            {"name": ex.name if ex else (r.exercise or "unknown"),
+             "slug": ex.slug if ex else None,
+             "sets": 0, "top": None, "e1rm": None, "date": None},
+        )
+        pe["sets"] += 1
+        if weight > 0:
+            pe["top"] = weight if pe["top"] is None else max(pe["top"], weight)
+            if reps > 0:
+                e1rm = round(weight * (1 + reps / 30), 1)
+                if pe["e1rm"] is None or e1rm > pe["e1rm"]:
+                    pe["e1rm"], pe["date"] = e1rm, day
+
+        if ex is None:
+            unresolved.add(r.exercise or "unknown")
+            continue
+
+        for em in ex.muscles:
+            credit = 1.0 if em.role == "primary" else SECONDARY_CREDIT
+            weekly[(week, em.muscle)] += credit
+            volume[em.muscle] += reps * weight * credit
+        if ex.category == "push":
+            push += 1
+        elif ex.category == "pull":
+            pull += 1
+        grp = muscle_group(ex.primary_muscle or "")
+        if grp == "upper":
+            upper += 1
+        elif grp == "lower":
+            lower += 1
+
+    return TrainingStats(
+        **{"from": frm},
+        to=to,
+        weekly_sets_per_muscle=sorted(
+            (WeeklyMuscleSets(week=w, muscle=m, sets=round(c, 1)) for (w, m), c in weekly.items()),
+            key=lambda x: (x.week, x.muscle),
+        ),
+        volume_load_per_muscle=sorted(
+            (MuscleVolume(muscle=m, volume_load=round(v, 1)) for m, v in volume.items()),
+            key=lambda x: x.muscle,
+        ),
+        push_pull_ratio=round(push / pull, 2) if pull else None,
+        upper_lower_ratio=round(upper / lower, 2) if lower else None,
+        per_exercise=sorted(
+            (
+                ExerciseStat(
+                    exercise=pe["name"], slug=pe["slug"], sets=pe["sets"],
+                    top_weight_kg=pe["top"], best_e1rm=pe["e1rm"], best_e1rm_date=pe["date"],
+                )
+                for pe in per_ex.values()
+            ),
+            key=lambda x: x.exercise,
+        ),
+        unresolved_exercises=sorted(unresolved),
+    )
