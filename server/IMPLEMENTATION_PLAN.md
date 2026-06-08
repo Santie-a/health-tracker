@@ -159,19 +159,26 @@ calorie_surplus, two_a_day); empty day → []. 49 tests (18 table-driven rule te
   `POST /recommendations/feedback`. `run_for_date` is guarded for the scheduled pass.
 - Also fixed the same async lazy-load bug in **training** create (zero-set session).
 
-## Phase 7 — Planned features (strength + manual nutrition)
-- [ ] **7.1 Exercise catalog** — `GET /exercises` (search/autocomplete), `POST /exercises`.
-- [ ] **7.2 Per-set logging** — `POST /training/{id}/sets`; resolve free-text → catalog.
-- [ ] **7.3 Strength stats** — `GET /training/stats`: working sets/muscle/week (fractional
-  secondary credit, exclude warmups), volume load + trend, push:pull & upper:lower,
-  est. 1RM (Epley), PRs.
-- [ ] **7.4 Foods seed loader** — seed `foods`/`food_portions` from nutrition_core CSV at
-  migration/startup; stamp `table_version`.
-- [ ] **7.5 Manual/serving nutrition** — `GET /foods?q=`, `GET /foods/resolve?name=`
-  (reuse matcher), `POST /meals/{id}/items` (food_id + portion×qty OR grams, `estimated`
-  flag), quick-add (recent/frequent/repeat-yesterday/raw-kcal).
-- [ ] **7.6 Recommendation hooks** — feed weekly per-muscle counts + imbalance ratios
-  into the engine.
+## Phase 7 — Planned features (strength + manual nutrition) ✅ DONE
+Verified on a throwaway DB across three integrations (strength stats, serving entry,
+rec hook). 57 tests.
+
+- [x] **7.1 Exercise catalog** — `GET/POST /api/v1/exercises` (search by name/alias/
+  muscle/category; 409 on dup). ~22-lift starter catalog seeded idempotently at startup.
+- [x] **7.2 Per-set logging** — `POST /api/v1/training/{id}/sets`; free-text exercise
+  names resolve to the catalog (sets `exercise_id`).
+- [x] **7.3 Strength stats** — `GET /api/v1/training/stats`: weekly sets/muscle (primary
+  1.0 + secondary 0.5), volume load/muscle, push:pull & upper:lower, per-exercise top
+  set + Epley e1RM + PR date; warmups excluded; unresolved labels reported.
+- [x] **7.4 Foods seed loader** — `foods_seed.py` seeds `foods` (+ curated `food_portions`)
+  from the nutrition_core CSV at startup, stamped with `TABLE_VERSION`.
+- [x] **7.5 Manual/serving nutrition** — `GET /api/v1/foods?q=`, `/foods/resolve?name=`
+  (shared matcher → catalog), `/foods/recent` (quick-add); `POST /api/v1/meals/{id}/items`
+  resolves food_id + portion×qty OR grams OR free-text+grams OR raw kcal-only, sets
+  `estimated`/`source`. MealItemOut now returns food_id/qty/portion_label (reconstructable).
+  (Deferred: frequent/repeat-yesterday quick-adds — recent + raw-kcal shipped.)
+- [x] **7.6 Recommendation hook** — `rule_training_balance` flags weekly push:pull /
+  upper:lower skew; `build_context` feeds trailing-7-day ratios from the strength stats.
 
 ## Phase 8 — Dashboard, seed, deploy
 - [ ] **8.1 `GET /dashboard?date=`** — single aggregated day view (telemetry rollup +

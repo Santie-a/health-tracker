@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domains.nutrition.models import Meal, MealItem
 from app.domains.telemetry.models import BodyComposition, SleepSession, Telemetry
+from app.domains.training import service as training_service
 from app.domains.training.models import TrainingSession
 
 from .models import Recommendation
@@ -87,6 +88,9 @@ async def build_context(session: AsyncSession, day: date_cls) -> DayContext:
         )
     ).one()
 
+    # --- weekly training balance (trailing 7 days incl. today) ---------------
+    stats = await training_service.get_stats(session, day - timedelta(days=6), day)
+
     return DayContext(
         date=day,
         sleep_min=sleep_min,
@@ -98,6 +102,8 @@ async def build_context(session: AsyncSession, day: date_cls) -> DayContext:
         total_training_load=total_load,
         protein_g=_f(protein),
         kcal_in=_f(kcal),
+        push_pull_ratio=stats.push_pull_ratio,
+        upper_lower_ratio=stats.upper_lower_ratio,
     )
 
 

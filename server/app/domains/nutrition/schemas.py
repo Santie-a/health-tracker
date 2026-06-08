@@ -33,7 +33,10 @@ class MealItemOut(BaseModel):
 
     id: int
     food: str
+    food_id: int | None
     grams: float | None
+    qty: float | None
+    portion_label: str | None
     kcal: float | None
     protein_g: float | None
     carbs_g: float | None
@@ -71,3 +74,51 @@ class DayNutrition(BaseModel):
     date: date
     meals: list[MealOut]
     totals: Totals
+
+
+# --- foods catalog & serving-based entry --------------------------------------
+
+class FoodPortionOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    label: str
+    grams: float
+    is_default: bool
+
+
+class FoodOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    slug: str
+    aliases: list[str] | None
+    kcal_100g: float | None
+    protein_100g: float | None
+    carbs_100g: float | None
+    fat_100g: float | None
+    default_grams: float | None
+    portions: list[FoodPortionOut]
+
+
+class FoodResolveOut(BaseModel):
+    matched: bool
+    query: str
+    food: FoodOut | None = None
+
+
+class MealItemAddIn(BaseModel):
+    """Add an item by catalog food (food_id) with a portion×qty or grams, by
+    free-text food + grams (matcher-resolved), or a raw kcal-only quick entry."""
+
+    food_id: int | None = None
+    food: str | None = None
+    portion_label: str | None = None
+    qty: float | None = Field(None, gt=0)
+    grams: float | None = Field(None, ge=0)
+    kcal: float | None = Field(None, ge=0)
+    protein_g: float | None = Field(None, ge=0)
+    carbs_g: float | None = Field(None, ge=0)
+    fat_g: float | None = Field(None, ge=0)
+
+
+class AddItemsIn(BaseModel):
+    items: list[MealItemAddIn] = Field(..., min_length=1)

@@ -36,6 +36,9 @@ class DayContext:
     total_training_load: float | None = None
     protein_g: float | None = None
     kcal_in: float | None = None
+    # weekly training balance (from strength stats; manual)
+    push_pull_ratio: float | None = None
+    upper_lower_ratio: float | None = None
 
 
 @dataclass
@@ -146,7 +149,32 @@ def rule_two_a_day(ctx: DayContext, t: Thresholds) -> Recommendation | None:
     )
 
 
-RULES = [rule_recovery, rule_protein, rule_calorie_balance, rule_two_a_day]
+def rule_training_balance(ctx: DayContext, t: Thresholds) -> Recommendation | None:
+    """This week's push:pull / upper:lower skew (from logged sets). Pure manual."""
+    flags: list[str] = []
+    if ctx.push_pull_ratio is not None:
+        if ctx.push_pull_ratio > t.imbalance_high:
+            flags.append(f"push:pull {ctx.push_pull_ratio:g} (push-heavy — add pulling)")
+        elif ctx.push_pull_ratio < t.imbalance_low:
+            flags.append(f"push:pull {ctx.push_pull_ratio:g} (pull-heavy — add pressing)")
+    if ctx.upper_lower_ratio is not None:
+        if ctx.upper_lower_ratio > t.imbalance_high:
+            flags.append(f"upper:lower {ctx.upper_lower_ratio:g} (upper-heavy — add legs)")
+        elif ctx.upper_lower_ratio < t.imbalance_low:
+            flags.append(f"upper:lower {ctx.upper_lower_ratio:g} (lower-heavy — add upper)")
+    if not flags:
+        return None
+    return Recommendation(
+        code="training_imbalance",
+        category="training",
+        severity="info",
+        title="Training balance (this week)",
+        detail="; ".join(flags) + ".",
+        signals=["training"],
+    )
+
+
+RULES = [rule_recovery, rule_protein, rule_calorie_balance, rule_two_a_day, rule_training_balance]
 
 
 def generate(ctx: DayContext, thresholds: Thresholds = DEFAULT) -> list[Recommendation]:

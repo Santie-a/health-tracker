@@ -25,6 +25,8 @@ from .core.db import create_engine, create_sessionmaker, ping
 from .core.errors import install_request_id_middleware, register_exception_handlers
 from .core.logging_config import configure_logging
 from .domains.ingest.router import router as ingest_router
+from .domains.nutrition.foods_seed import seed_foods
+from .domains.nutrition.router import foods_router
 from .domains.nutrition.router import router as nutrition_router
 from .domains.recommendations.router import router as recommendations_router
 from .domains.telemetry.router import router as telemetry_router
@@ -66,12 +68,13 @@ async def lifespan(app: FastAPI):
     # failure (e.g. DB momentarily down) is logged but must not block startup.
     try:
         async with app.state.sessionmaker() as seed_session:
-            added = await seed_exercises(seed_session)
+            ex_added = await seed_exercises(seed_session)
+            food_added = await seed_foods(seed_session)
             await seed_session.commit()
-        if added:
-            log.info("seeded %d exercises into the catalog", added)
+        if ex_added or food_added:
+            log.info("seeded catalog: exercises=%d foods=%d", ex_added, food_added)
     except Exception:
-        log.exception("Exercise catalog seeding failed (continuing without it)")
+        log.exception("Catalog seeding failed (continuing without it)")
 
     log.info(
         "gateway started: version=%s log_level=%s foods=%d",
@@ -114,6 +117,7 @@ def create_app() -> FastAPI:
     app.include_router(training_router, prefix="/api/v1")
     app.include_router(exercises_router, prefix="/api/v1")
     app.include_router(nutrition_router, prefix="/api/v1")
+    app.include_router(foods_router, prefix="/api/v1")
     app.include_router(recommendations_router, prefix="/api/v1")
     app.include_router(ingest_router, prefix="/api/v1")
 

@@ -18,14 +18,23 @@ from app.integrations import image_svc
 
 from . import repository
 from .models import Meal, MealItem
+from .foods_seed import slugify
 from .schemas import (
+    AddItemsIn,
     DayNutrition,
+    FoodOut,
+    FoodResolveOut,
     MealCreateResponse,
     MealIn,
+    MealItemAddIn,
     MealItemIn,
     MealOut,
     Totals,
 )
+
+
+class BadItem(Exception):
+    """Raised when an add-item payload can't be resolved (maps to 400)."""
 
 
 def _as_utc(ts: datetime) -> datetime:
@@ -116,6 +125,89 @@ async def create_photo_meal(
     meal = Meal(ts=_as_utc(ts), name=name, source="image", items=items)
     await repository.add(session, meal)
     return MealCreateResponse(meal=MealOut.model_validate(meal), degraded=False)
+
+
+# --- foods catalog & serving-based entry -------------------------------------
+
+async def search_foods(session: AsyncSession, q: str | None, limit: int) -> list[FoodOut]:
+    rows = await repository.search_foods(session, q, limit)
+    return [FoodOut.model_validate(r) for r in rows]
+
+
+async def recent_foods(session: AsyncSession, limit: int) -> list[FoodOut]:
+    rows = await repository.recent_foods(session, limit)
+    return [FoodOut.model_validate(r) for r in rows]
+
+
+async def resolve_food(session: AsyncSession, name: str, table: MacroTable) -> FoodResolveOut:
+    """Best-effort: resolve a typed name via the shared matcher, then map the
+    canonical macro name to a catalog Food (same source, so the slug lines up)."""
+    row = table.lookup(name)
+    if row is None:
+        return FoodResolveOut(matched=False, query=name)
+    food = await repository.get_food_by_slug(session, slugify(row.name))
+    return FoodResolveOut(matched=food is not None, query=name,
+                          food=FoodOut.model_validate(food) if food else None)
+
+
+async def _build_added_item(session: AsyncSession, item: MealItemAddIn, table: MacroTable) -> MealItem:
+    kcal, protein, carbs, fat = item.kcal, item.protein_g, item.carbs_g, item.fat_g
+    grams = item.grams
+    estimated = False
+
+    if item.food_id is not None:
+        food = await repository.get_food(session, item.food_id)
+        if food is None:
+            raise BadItem(f"food_id {item.food_id} not found")
+        # Resolve grams from a portion preset or qty × default serving.
+        if grams is None and item.portion_label is not None:
+            portion = next((p for p in food.portions if p.label == item.portion_label), None)
+            if portion is None:
+                raise BadItem(f"portion '{item.portion_label}' not found for {food.name}")
+            grams = float(portion.grams) * (item.qty or 1)
+            estimated = True
+        elif grams is None and item.qty is not None and food.default_grams is not None:
+            grams = float(food.default_grams) * item.qty
+            estimated = True
+        # Compute macros from per-100g unless explicitly provided.
+        if kcal is None and grams is not None:
+            factor = grams / 100.0
+            kcal = round(float(food.kcal_100g or 0) * factor, 1)
+            protein = round(float(food.protein_100g or 0) * factor, 1)
+            carbs = round(float(food.carbs_100g or 0) * factor, 1)
+            fat = round(float(food.fat_100g or 0) * factor, 1)
+            estimated = True
+        return MealItem(
+            food=item.food or food.name, food_id=food.id, grams=grams, qty=item.qty,
+            portion_label=item.portion_label, kcal=kcal, protein_g=protein, carbs_g=carbs,
+            fat_g=fat, estimated=estimated, source="estimate" if estimated else "manual",
+        )
+
+    # Free-text path: need a name or a raw kcal value.
+    if not item.food and kcal is None:
+        raise BadItem("item needs food_id, food, or kcal")
+    if kcal is None and grams is not None and item.food:
+        row = table.lookup(item.food)
+        if row is not None:
+            kcal, protein, carbs, fat = row.scale(grams)
+            estimated = True
+    return MealItem(
+        food=item.food or "item", grams=grams, qty=item.qty, portion_label=item.portion_label,
+        kcal=kcal, protein_g=protein, carbs_g=carbs, fat_g=fat,
+        estimated=estimated, source="estimate" if estimated else "manual",
+    )
+
+
+async def add_items(
+    session: AsyncSession, meal_id: int, payload: AddItemsIn, table: MacroTable
+) -> MealOut | None:
+    meal = await repository.get(session, meal_id)
+    if meal is None:
+        return None
+    for item in payload.items:
+        meal.items.append(await _build_added_item(session, item, table))
+    await session.flush()
+    return MealOut.model_validate(meal)
 
 
 async def get_day(session: AsyncSession, day) -> DayNutrition:

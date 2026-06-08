@@ -20,5 +20,9 @@ class Thresholds:
     calorie_goal: float | None = None   # optional fixed goal when TDEE telemetry is absent
     calorie_tolerance: float = 200.0    # |intake - reference| within this = "balanced"
 
+    # training balance (weekly, from strength stats)
+    imbalance_low: float = 0.5   # ratio below this = under-trained side
+    imbalance_high: float = 2.0  # ratio above this = over-trained side
+
 
 DEFAULT = Thresholds()

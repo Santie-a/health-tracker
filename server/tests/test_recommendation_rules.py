@@ -15,6 +15,7 @@ from app.domains.recommendations.rules import (
     rule_calorie_balance,
     rule_protein,
     rule_recovery,
+    rule_training_balance,
     rule_two_a_day,
 )
 from app.domains.recommendations.thresholds import DEFAULT, Thresholds
@@ -105,6 +106,26 @@ def test_calorie_skipped_without_intake_or_reference():
 def test_two_a_day_fires_only_when_both():
     assert rule_two_a_day(ctx(did_swim=True, did_gym=True), DEFAULT).code == "two_a_day"
     assert rule_two_a_day(ctx(did_gym=True), DEFAULT) is None
+
+
+# --- training balance ---------------------------------------------------------
+
+def test_balance_flags_push_heavy():
+    rec = rule_training_balance(ctx(push_pull_ratio=3.0), DEFAULT)
+    assert rec and rec.code == "training_imbalance" and "push-heavy" in rec.detail
+
+
+def test_balance_flags_lower_heavy():
+    rec = rule_training_balance(ctx(upper_lower_ratio=0.3), DEFAULT)
+    assert rec and "lower-heavy" in rec.detail
+
+
+def test_balance_quiet_when_proportionate():
+    assert rule_training_balance(ctx(push_pull_ratio=1.1, upper_lower_ratio=1.0), DEFAULT) is None
+
+
+def test_balance_skipped_without_training():
+    assert rule_training_balance(ctx(), DEFAULT) is None
 
 
 # --- engine -------------------------------------------------------------------
