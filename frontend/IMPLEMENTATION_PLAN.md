@@ -206,20 +206,24 @@ carries no unused components.
       toast; success toast + query invalidation). RHF + zod ready for the logging forms.
 - [x] **1.5 Demo route** (`/design`) — gallery of every primitive + variant + async state.
 
-## Phase 2 — Today / Home dashboard
+## Phase 2 — Today / Home dashboard ✅ DONE
 
-One call, full day. **Endpoint:** `GET /api/v1/dashboard?date=` → `DashboardOut`
-(telemetry summary, training[], nutrition_totals, meals[], recommendations[]).
+One call, full day. Verified live against seed data (steps 10,238 · sleep 5h 52m ·
+gym 60min/load 480/9 sets · meals + macro totals · two recommendations rendered) and
+against an empty day (2020-01-01 → empty arrays + null telemetry → section empty states).
+Shared types now alias the generated schema via `lib/gateway/types.ts`.
 
-- [ ] **2.1 `useDashboard(date)` hook + BFF route.**
-- [ ] **2.2 Day view** — date picker (defaults today, local), section cards:
-  - Telemetry summary: steps / avg stress / HR / SpO2 / TDEE / sleep (`SleepSummary`);
-    each null → "no watch data," never an error.
-  - Training: today's sessions (swim/gym) with load/duration.
-  - Nutrition: `Totals` (kcal/protein/carbs/fat) + meal list.
-  - Recommendations: top items (links to Phase 7 view).
-- [ ] **2.3 Per-section error boundaries + skeletons + empty states.** **Verify:** against
-      gateway **seed data** (`python -m app.seed`) and against an empty day.
+- [x] **2.1 `useDashboard(date)` hook + BFF route** — `app/api/dashboard` (typed gateway
+      passthrough, requires `date`); `getDashboard` over `apiGet`; keyed by date.
+- [x] **2.2 Day view** (`DashboardView`) — `DateNav` (prev/next/today + native picker,
+      capped at today, local dates), section cards:
+  - `TelemetrySummary`: steps / energy / avg HR / stress / SpO₂ / sleep + stage breakdown;
+    each null → greyed "—", all-empty → "no watch data," never an error.
+  - `TrainingSummary`: sessions with type badge, distance/duration/load/sets, time.
+  - `NutritionSummary`: macro totals + meals (estimated badge, per-meal kcal).
+  - `RecommendationsSummary`: severity-coloured cards + signals (feedback in Phase 6).
+- [x] **2.3 States** — each section wrapped in its own `AsyncBoundary` (render-error
+      isolation) over a layout-matched `DashboardSkeleton`; per-section empty states.
 
 ## Phase 3 — Training log + exercise catalog + set logger
 
