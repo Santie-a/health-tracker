@@ -4,6 +4,7 @@ import { queryKeys } from "@/lib/query/keys";
 
 import {
   getTrainingSession,
+  getTrainingStats,
   listTrainingSessions,
   searchExercises,
   type ExerciseFilters,
@@ -22,6 +23,13 @@ export function useTrainingSession(id: number) {
     queryKey: queryKeys.training.session(id),
     queryFn: () => getTrainingSession(id),
     enabled: Number.isInteger(id),
+  });
+}
+
+export function useTrainingStats(from?: string, to?: string) {
+  return useQuery({
+    queryKey: queryKeys.training.stats(from, to),
+    queryFn: () => getTrainingStats(from, to),
   });
 }
 

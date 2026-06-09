@@ -29,6 +29,11 @@ export type Exercise = S["ExerciseOut"];
 export type ExerciseIn = S["ExerciseIn"];
 export type ExerciseCategory = NonNullable<ExerciseIn["category"]>;
 
+export type TrainingStats = S["TrainingStats"];
+export type WeeklyMuscleSets = S["WeeklyMuscleSets"];
+export type MuscleVolume = S["MuscleVolume"];
+export type ExerciseStat = S["ExerciseStat"];
+
 export type Meal = S["MealOut"];
 export type MealItem = S["MealItemOut"];
 export type MealIn = S["MealIn"];

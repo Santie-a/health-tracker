@@ -316,16 +316,22 @@ no console errors).
       optimistic highlight + toast; **404 → `runRecommendations` then retry** once; resets
       when the day changes.
 
-## Phase 7 — Strength balance dashboard
+## Phase 7 — Strength balance dashboard ✅ DONE
 
-**Endpoint:** `GET /training/stats?from=&to=` → `TrainingStats`.
+**Endpoint:** `GET /training/stats?from=&to=` → `TrainingStats`. `BalanceView` at
+`/training/balance` (linked from the Training header); 4w/8w/12w range. Verified live
+(13 muscles, push:pull 1.33, upper:lower 2.33, Back Squat e1RM 128kg, "freestyle" flagged
+unresolved; no console errors).
 
-- [ ] **7.1 Weekly sets-per-muscle bars** vs the 10–20 target band (`weekly_sets_per_muscle`).
-- [ ] **7.2 Ratios** — push:pull and upper:lower (`push_pull_ratio`, `upper_lower_ratio`),
-      with null-safe display.
-- [ ] **7.3 Per-exercise** — volume load (`volume_load_per_muscle`), top set + estimated
-      1RM trend + PR date (`per_exercise`/`ExerciseStat`); surface `unresolved_exercises` as a
-      "map these to the catalog" nudge.
+- [x] **7.1 Weekly sets-per-muscle bars** — avg sets/week per muscle (`GroupedBars` with the
+      10–20 target band + per-bar under/in/over colouring). Computed as total credited sets ÷
+      weeks-with-data.
+- [x] **7.2 Ratios** — push:pull and upper:lower `StatCard`s, null-safe (`"—"` when absent),
+      with a "balanced ≈ 1:1" hint.
+- [x] **7.3 Per-exercise** — volume-load-by-muscle bars + a per-exercise table (sets, top
+      weight, Epley e1RM, PR date, sorted by e1RM); `unresolved_exercises` surfaced as a
+      "add them via the exercise picker" nudge. (1RM *trend* deferred — the stat is a single
+      best e1RM, not a series; would need a server enhancement.)
 
 ## Phase 8 — Samsung export import UI
 

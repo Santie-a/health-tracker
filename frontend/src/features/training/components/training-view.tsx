@@ -1,11 +1,15 @@
 "use client";
 
+import { BarChart3 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 import { EmptyState } from "@/components/async/empty-state";
 import { QueryState } from "@/components/async/query-state";
 import { Skeleton } from "@/components/async/skeleton";
+import { buttonVariants } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
+import { cn } from "@/lib/utils";
 
 import { useTrainingSessions } from "../hooks";
 import { NewSessionDialog } from "./new-session-dialog";
@@ -21,7 +25,15 @@ export function TrainingView() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">Training</h1>
-        <NewSessionDialog />
+        <div className="flex items-center gap-2">
+          <Link
+            href="/training/balance"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+          >
+            <BarChart3 /> Balance
+          </Link>
+          <NewSessionDialog />
+        </div>
       </div>
 
       <Segmented

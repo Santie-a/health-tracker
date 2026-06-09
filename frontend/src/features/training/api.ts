@@ -4,6 +4,7 @@ import type {
   TrainingSession,
   TrainingSessionIn,
   TrainingSetIn,
+  TrainingStats,
 } from "@/lib/gateway/types";
 import { apiGet, apiSend } from "@/lib/query/fetcher";
 
@@ -43,4 +44,8 @@ export function searchExercises(filters: ExerciseFilters = {}): Promise<Exercise
 
 export function createExercise(body: ExerciseIn): Promise<Exercise> {
   return apiSend<Exercise>("/api/exercises", { json: body });
+}
+
+export function getTrainingStats(from?: string, to?: string): Promise<TrainingStats> {
+  return apiGet<TrainingStats>("/api/training/stats", { from, to });
 }
