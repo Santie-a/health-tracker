@@ -8,7 +8,7 @@ from datetime import datetime, time, timedelta, timezone
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .models import SleepSession, Telemetry
+from .models import BodyComposition, SleepSession, Telemetry
 
 
 async def query_points(
@@ -55,6 +55,32 @@ async def query_daily(
     stmt = stmt.group_by(day).order_by(day)
     result = await session.execute(stmt)
     return [dict(row._mapping) for row in result]
+
+
+async def query_sleep_series(
+    session: AsyncSession, frm: datetime | None = None, to: datetime | None = None
+) -> list[SleepSession]:
+    """Nights ordered by when they ended, for the sleep trend."""
+    stmt = select(SleepSession)
+    if frm is not None:
+        stmt = stmt.where(SleepSession.end_ts >= frm)
+    if to is not None:
+        stmt = stmt.where(SleepSession.end_ts <= to)
+    stmt = stmt.order_by(SleepSession.end_ts)
+    return list((await session.execute(stmt)).scalars().all())
+
+
+async def query_body_composition(
+    session: AsyncSession, frm: datetime | None = None, to: datetime | None = None
+) -> list[BodyComposition]:
+    """Smart-scale readings ordered by time, for weight/body-fat/muscle trends."""
+    stmt = select(BodyComposition)
+    if frm is not None:
+        stmt = stmt.where(BodyComposition.ts >= frm)
+    if to is not None:
+        stmt = stmt.where(BodyComposition.ts <= to)
+    stmt = stmt.order_by(BodyComposition.ts)
+    return list((await session.execute(stmt)).scalars().all())
 
 
 async def sleep_for_day(session: AsyncSession, day: date_cls) -> SleepSession | None:

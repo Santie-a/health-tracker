@@ -281,15 +281,24 @@ that aren't on screen during the edit. Applied to meal-item add, set add, and se
 create (prepend to matching list caches). Pairs with the Phase-3 `no-store` fix (which
 addressed the browser HTTP cache).
 
-## Phase 5 — Trends
+## Phase 5 — Trends ✅ DONE
 
-**Endpoints:** `GET /telemetry/daily?metric=&from=&to=` (`DailyRollup[]`),
-`GET /telemetry?metric=&from=&to=` (raw). Body composition via telemetry/body-comp.
+**Endpoints:** `GET /telemetry/daily?metric=&from=&to=` (`DailyRollup[]`) plus **two new
+gateway endpoints added this phase** (the telemetry table had no series read for these):
+`GET /body-composition?from=&to=` (`BodyCompositionPoint[]`) and
+`GET /telemetry/sleep?from=&to=` (`SleepNight[]`). Both follow the existing
+router/service/repository/schemas pattern in the telemetry domain; OpenAPI types
+regenerated. Verified live (8 body-comp points, 7 nights, 7 days of steps; metric tab
+switch refetches; no console errors).
 
-- [ ] **5.1 Range selector** (7d / 30d / 90d, local→UTC at the edge) + metric tabs.
-- [ ] **5.2 Trend charts** — weight / body fat / skeletal muscle, sleep (total + stages),
-      stress, steps over time via `TrendLine`/`GroupedBars`. Each chart: loading/empty (no
-      data for range)/error independently. `sum` vs `avg` per metric semantics respected.
+- [x] **5.1 Range selector** (7d / 30d / 90d, computed as UTC instants at the edge) +
+      activity **metric tabs** (steps / stress / heart_rate / spo2 / energy_expenditure).
+- [x] **5.2 Trend charts** (`TrendsView`) — **Body composition** (weight / muscle / body-fat
+      from `/body-composition`), **Sleep** (total + deep hours from `/telemetry/sleep`),
+      **Activity** (selected metric over `/telemetry/daily`, `sum` for steps/energy vs `avg`
+      for the rest). Each `TrendLine` carries its own loading / empty / error (via
+      `ChartFrame`), local-time x-axis. (Server-side: added `SleepNight`/`BodyCompositionPoint`
+      schemas + `query_sleep_series`/`query_body_composition` repo fns + `body_router`.)
 
 ## Phase 6 — Recommendations + feedback
 

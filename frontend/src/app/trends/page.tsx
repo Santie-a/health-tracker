@@ -1,5 +1,5 @@
-import { Placeholder } from "@/components/layout/placeholder";
+import { TrendsView } from "@/features/telemetry/components/trends-view";
 
 export default function TrendsPage() {
-  return <Placeholder title="Trends" phase="Phase 5" />;
+  return <TrendsView />;
 }

@@ -10,6 +10,10 @@ type S = components["schemas"];
 export type Dashboard = S["DashboardOut"];
 export type TelemetrySummary = S["TelemetrySummary"];
 export type SleepSummary = S["SleepSummary"];
+export type SleepNight = S["SleepNight"];
+export type BodyCompositionPoint = S["BodyCompositionPoint"];
+export type DailyRollup = S["DailyRollup"];
+export type TelemetryPoint = S["TelemetryPoint"];
 export type Totals = S["Totals"];
 export type RecommendationItem = S["RecommendationItem"];
 

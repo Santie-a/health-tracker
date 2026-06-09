@@ -7,7 +7,9 @@
   "paths": {
     "/health": {
       "get": {
-        "tags": ["health"],
+        "tags": [
+          "health"
+        ],
         "summary": "Health",
         "description": "Liveness: process is up. Dependency-light (no DB) on purpose.",
         "operationId": "health_health_get",
@@ -27,7 +29,9 @@
     },
     "/health/ready": {
       "get": {
-        "tags": ["health"],
+        "tags": [
+          "health"
+        ],
         "summary": "Ready",
         "description": "Readiness: checks the DB so orchestration can gate traffic without\ncoupling liveness to it. 200 when ready, 503 when degraded.",
         "operationId": "ready_health_ready_get",
@@ -45,7 +49,9 @@
     },
     "/api/v1/telemetry": {
       "get": {
-        "tags": ["telemetry"],
+        "tags": [
+          "telemetry"
+        ],
         "summary": "List Points",
         "operationId": "list_points_api_v1_telemetry_get",
         "security": [
@@ -146,7 +152,9 @@
     },
     "/api/v1/telemetry/daily": {
       "get": {
-        "tags": ["telemetry"],
+        "tags": [
+          "telemetry"
+        ],
         "summary": "Daily Rollup",
         "operationId": "daily_rollup_api_v1_telemetry_daily_get",
         "security": [
@@ -227,9 +235,173 @@
         }
       }
     },
+    "/api/v1/telemetry/sleep": {
+      "get": {
+        "tags": [
+          "telemetry"
+        ],
+        "summary": "Sleep Series",
+        "description": "Per-night sleep summaries (total + stages) for the sleep trend.",
+        "operationId": "sleep_series_api_v1_telemetry_sleep_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO start (inclusive).",
+              "title": "From"
+            },
+            "description": "ISO start (inclusive)."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO end (inclusive).",
+              "title": "To"
+            },
+            "description": "ISO end (inclusive)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SleepNight"
+                  },
+                  "title": "Response Sleep Series Api V1 Telemetry Sleep Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/body-composition": {
+      "get": {
+        "tags": [
+          "telemetry"
+        ],
+        "summary": "Body Composition",
+        "description": "Smart-scale series (weight, body fat %, skeletal muscle, BMR) for trends.",
+        "operationId": "body_composition_api_v1_body_composition_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO start (inclusive).",
+              "title": "From"
+            },
+            "description": "ISO start (inclusive)."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO end (inclusive).",
+              "title": "To"
+            },
+            "description": "ISO end (inclusive)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BodyCompositionPoint"
+                  },
+                  "title": "Response Body Composition Api V1 Body Composition Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/training/stats": {
       "get": {
-        "tags": ["training"],
+        "tags": [
+          "training"
+        ],
         "summary": "Training Stats",
         "operationId": "training_stats_api_v1_training_stats_get",
         "security": [
@@ -303,7 +475,9 @@
     },
     "/api/v1/training": {
       "post": {
-        "tags": ["training"],
+        "tags": [
+          "training"
+        ],
         "summary": "Create Training",
         "operationId": "create_training_api_v1_training_post",
         "security": [
@@ -345,7 +519,9 @@
         }
       },
       "get": {
-        "tags": ["training"],
+        "tags": [
+          "training"
+        ],
         "summary": "List Training",
         "operationId": "list_training_api_v1_training_get",
         "security": [
@@ -361,7 +537,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "enum": ["swim", "gym"],
+                  "enum": [
+                    "swim",
+                    "gym"
+                  ],
                   "type": "string"
                 },
                 {
@@ -450,7 +629,9 @@
     },
     "/api/v1/training/{session_id}": {
       "get": {
-        "tags": ["training"],
+        "tags": [
+          "training"
+        ],
         "summary": "Get Training",
         "operationId": "get_training_api_v1_training__session_id__get",
         "security": [
@@ -495,7 +676,9 @@
     },
     "/api/v1/training/{session_id}/sets": {
       "post": {
-        "tags": ["training"],
+        "tags": [
+          "training"
+        ],
         "summary": "Add Sets",
         "description": "Log sets against a session; free-text exercise names resolve to the catalog.",
         "operationId": "add_sets_api_v1_training__session_id__sets_post",
@@ -551,7 +734,9 @@
     },
     "/api/v1/exercises": {
       "get": {
-        "tags": ["training"],
+        "tags": [
+          "training"
+        ],
         "summary": "Search Exercises",
         "operationId": "search_exercises_api_v1_exercises_get",
         "security": [
@@ -651,7 +836,9 @@
         }
       },
       "post": {
-        "tags": ["training"],
+        "tags": [
+          "training"
+        ],
         "summary": "Create Exercise",
         "operationId": "create_exercise_api_v1_exercises_post",
         "security": [
@@ -695,7 +882,9 @@
     },
     "/api/v1/meals": {
       "post": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Create Meal",
         "description": "Manual meal entry. Items with grams but no macros are resolved via nutrition_core.",
         "operationId": "create_meal_api_v1_meals_post",
@@ -738,7 +927,9 @@
         }
       },
       "get": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Meals For Day",
         "operationId": "meals_for_day_api_v1_meals_get",
         "security": [
@@ -786,7 +977,9 @@
     },
     "/api/v1/meals/photo": {
       "post": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Create Meal From Photo",
         "description": "Photo meal entry: proxied to image-svc. If the GPU box is unreachable the\nresponse is a degraded empty manual meal (never a 5xx).",
         "operationId": "create_meal_from_photo_api_v1_meals_photo_post",
@@ -831,7 +1024,9 @@
     },
     "/api/v1/meals/{meal_id}": {
       "get": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Get Meal",
         "operationId": "get_meal_api_v1_meals__meal_id__get",
         "security": [
@@ -876,7 +1071,9 @@
     },
     "/api/v1/meals/{meal_id}/items": {
       "post": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Add Meal Items",
         "description": "Add items to a meal by catalog food (portion\u00d7qty or grams), free-text food +\ngrams, or a raw kcal-only quick entry.",
         "operationId": "add_meal_items_api_v1_meals__meal_id__items_post",
@@ -932,7 +1129,9 @@
     },
     "/api/v1/foods": {
       "get": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Search Foods",
         "operationId": "search_foods_api_v1_foods_get",
         "security": [
@@ -1002,7 +1201,9 @@
     },
     "/api/v1/foods/recent": {
       "get": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Recent Foods",
         "operationId": "recent_foods_api_v1_foods_recent_get",
         "security": [
@@ -1054,7 +1255,9 @@
     },
     "/api/v1/foods/resolve": {
       "get": {
-        "tags": ["nutrition"],
+        "tags": [
+          "nutrition"
+        ],
         "summary": "Resolve Food",
         "operationId": "resolve_food_api_v1_foods_resolve_get",
         "security": [
@@ -1101,7 +1304,9 @@
     },
     "/api/v1/recommendations": {
       "get": {
-        "tags": ["recommendations"],
+        "tags": [
+          "recommendations"
+        ],
         "summary": "Get Recommendations",
         "description": "Today's recommendations. Generated + stored lazily on first request for a day.",
         "operationId": "get_recommendations_api_v1_recommendations_get",
@@ -1150,7 +1355,9 @@
     },
     "/api/v1/recommendations/run": {
       "post": {
-        "tags": ["recommendations"],
+        "tags": [
+          "recommendations"
+        ],
         "summary": "Run Recommendations",
         "description": "Force a regenerate + store (the daily-pass trigger).",
         "operationId": "run_recommendations_api_v1_recommendations_run_post",
@@ -1199,7 +1406,9 @@
     },
     "/api/v1/recommendations/feedback": {
       "post": {
-        "tags": ["recommendations"],
+        "tags": [
+          "recommendations"
+        ],
         "summary": "Submit Feedback",
         "operationId": "submit_feedback_api_v1_recommendations_feedback_post",
         "requestBody": {
@@ -1236,7 +1445,9 @@
     },
     "/api/v1/dashboard": {
       "get": {
-        "tags": ["dashboard"],
+        "tags": [
+          "dashboard"
+        ],
         "summary": "Dashboard",
         "description": "One call powering the frontend home: telemetry summary + training + nutrition\ntotals + recommendations for the day.",
         "operationId": "dashboard_api_v1_dashboard_get",
@@ -1285,7 +1496,9 @@
     },
     "/api/v1/ingest/samsung": {
       "post": {
-        "tags": ["ingest"],
+        "tags": [
+          "ingest"
+        ],
         "summary": "Ingest Samsung",
         "description": "Import complementary telemetry from a Samsung Health export.\n\nRoutes each file by its metadata line-1 data type; unknown types are reported\nas skipped, not errors. Upload the sleep_stage file alongside sleep to enrich\ndeep/awake stage minutes. Idempotent: re-uploading the same export is safe.",
         "operationId": "ingest_samsung_api_v1_ingest_samsung_post",
@@ -1343,7 +1556,9 @@
           }
         },
         "type": "object",
-        "required": ["items"],
+        "required": [
+          "items"
+        ],
         "title": "AddItemsIn"
       },
       "AddSetsIn": {
@@ -1358,8 +1573,69 @@
           }
         },
         "type": "object",
-        "required": ["sets"],
+        "required": [
+          "sets"
+        ],
         "title": "AddSetsIn"
+      },
+      "BodyCompositionPoint": {
+        "properties": {
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts"
+          },
+          "weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight Kg"
+          },
+          "body_fat_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Fat Pct"
+          },
+          "skeletal_muscle_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skeletal Muscle Kg"
+          },
+          "bmr_kcal": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bmr Kcal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ts"
+        ],
+        "title": "BodyCompositionPoint",
+        "description": "One smart-scale reading (sparse periodic series)."
       },
       "Body_create_meal_from_photo_api_v1_meals_photo_post": {
         "properties": {
@@ -1394,7 +1670,9 @@
           }
         },
         "type": "object",
-        "required": ["image"],
+        "required": [
+          "image"
+        ],
         "title": "Body_create_meal_from_photo_api_v1_meals_photo_post"
       },
       "Body_ingest_samsung_api_v1_ingest_samsung_post": {
@@ -1410,7 +1688,9 @@
           }
         },
         "type": "object",
-        "required": ["files"],
+        "required": [
+          "files"
+        ],
         "title": "Body_ingest_samsung_api_v1_ingest_samsung_post"
       },
       "DailyRollup": {
@@ -1474,7 +1754,11 @@
           }
         },
         "type": "object",
-        "required": ["day", "metric", "count"],
+        "required": [
+          "day",
+          "metric",
+          "count"
+        ],
         "title": "DailyRollup",
         "description": "One day's rollup for a metric. `sum` is meaningful for additive metrics\n(steps, energy_expenditure); `avg`/`min`/`max` for the rest."
       },
@@ -1543,7 +1827,11 @@
           }
         },
         "type": "object",
-        "required": ["date", "meals", "totals"],
+        "required": [
+          "date",
+          "meals",
+          "totals"
+        ],
         "title": "DayNutrition"
       },
       "ExerciseIn": {
@@ -1556,7 +1844,16 @@
             "anyOf": [
               {
                 "type": "string",
-                "enum": ["push", "pull", "squat", "hinge", "carry", "core", "swim", "other"]
+                "enum": [
+                  "push",
+                  "pull",
+                  "squat",
+                  "hinge",
+                  "carry",
+                  "core",
+                  "swim",
+                  "other"
+                ]
               },
               {
                 "type": "null"
@@ -1620,7 +1917,9 @@
           }
         },
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "title": "ExerciseIn"
       },
       "ExerciseMuscleIn": {
@@ -1631,13 +1930,18 @@
           },
           "role": {
             "type": "string",
-            "enum": ["primary", "secondary"],
+            "enum": [
+              "primary",
+              "secondary"
+            ],
             "title": "Role",
             "default": "primary"
           }
         },
         "type": "object",
-        "required": ["muscle"],
+        "required": [
+          "muscle"
+        ],
         "title": "ExerciseMuscleIn"
       },
       "ExerciseMuscleOut": {
@@ -1652,7 +1956,10 @@
           }
         },
         "type": "object",
-        "required": ["muscle", "role"],
+        "required": [
+          "muscle",
+          "role"
+        ],
         "title": "ExerciseMuscleOut"
       },
       "ExerciseOut": {
@@ -1809,7 +2116,14 @@
           }
         },
         "type": "object",
-        "required": ["exercise", "slug", "sets", "top_weight_kg", "best_e1rm", "best_e1rm_date"],
+        "required": [
+          "exercise",
+          "slug",
+          "sets",
+          "top_weight_kg",
+          "best_e1rm",
+          "best_e1rm_date"
+        ],
         "title": "ExerciseStat"
       },
       "FeedbackIn": {
@@ -1825,7 +2139,10 @@
           }
         },
         "type": "object",
-        "required": ["date", "feedback"],
+        "required": [
+          "date",
+          "feedback"
+        ],
         "title": "FeedbackIn"
       },
       "FileReport": {
@@ -1881,7 +2198,9 @@
           }
         },
         "type": "object",
-        "required": ["filename"],
+        "required": [
+          "filename"
+        ],
         "title": "FileReport"
       },
       "FoodOut": {
@@ -2006,7 +2325,11 @@
           }
         },
         "type": "object",
-        "required": ["label", "grams", "is_default"],
+        "required": [
+          "label",
+          "grams",
+          "is_default"
+        ],
         "title": "FoodPortionOut"
       },
       "FoodResolveOut": {
@@ -2031,7 +2354,10 @@
           }
         },
         "type": "object",
-        "required": ["matched", "query"],
+        "required": [
+          "matched",
+          "query"
+        ],
         "title": "FoodResolveOut"
       },
       "HTTPValidationError": {
@@ -2060,7 +2386,9 @@
           }
         },
         "type": "object",
-        "required": ["version"],
+        "required": [
+          "version"
+        ],
         "title": "HealthResponse"
       },
       "IngestResponse": {
@@ -2086,7 +2414,12 @@
           }
         },
         "type": "object",
-        "required": ["files", "parsed", "written", "skipped"],
+        "required": [
+          "files",
+          "parsed",
+          "written",
+          "skipped"
+        ],
         "title": "IngestResponse"
       },
       "MealCreateResponse": {
@@ -2112,7 +2445,9 @@
           }
         },
         "type": "object",
-        "required": ["meal"],
+        "required": [
+          "meal"
+        ],
         "title": "MealCreateResponse"
       },
       "MealIn": {
@@ -2144,7 +2479,9 @@
           }
         },
         "type": "object",
-        "required": ["ts"],
+        "required": [
+          "ts"
+        ],
         "title": "MealIn"
       },
       "MealItemAddIn": {
@@ -2328,7 +2665,9 @@
           }
         },
         "type": "object",
-        "required": ["food"],
+        "required": [
+          "food"
+        ],
         "title": "MealItemIn"
       },
       "MealItemOut": {
@@ -2508,7 +2847,14 @@
           }
         },
         "type": "object",
-        "required": ["id", "ts", "name", "photo_path", "source", "items"],
+        "required": [
+          "id",
+          "ts",
+          "name",
+          "photo_path",
+          "source",
+          "items"
+        ],
         "title": "MealOut"
       },
       "MuscleVolume": {
@@ -2523,7 +2869,10 @@
           }
         },
         "type": "object",
-        "required": ["muscle", "volume_load"],
+        "required": [
+          "muscle",
+          "volume_load"
+        ],
         "title": "MuscleVolume"
       },
       "RecommendationItem": {
@@ -2558,7 +2907,13 @@
           }
         },
         "type": "object",
-        "required": ["code", "category", "severity", "title", "detail"],
+        "required": [
+          "code",
+          "category",
+          "severity",
+          "title",
+          "detail"
+        ],
         "title": "RecommendationItem"
       },
       "RecommendationsOut": {
@@ -2601,8 +2956,92 @@
           }
         },
         "type": "object",
-        "required": ["date", "recommendations"],
+        "required": [
+          "date",
+          "recommendations"
+        ],
         "title": "RecommendationsOut"
+      },
+      "SleepNight": {
+        "properties": {
+          "total_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Min"
+          },
+          "deep_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deep Min"
+          },
+          "rem_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rem Min"
+          },
+          "light_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Light Min"
+          },
+          "awake_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Awake Min"
+          },
+          "efficiency": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Efficiency"
+          },
+          "day": {
+            "type": "string",
+            "format": "date",
+            "title": "Day"
+          }
+        },
+        "type": "object",
+        "required": [
+          "day"
+        ],
+        "title": "SleepNight",
+        "description": "A night's sleep summary tagged with the calendar day it ended on (for trends)."
       },
       "SleepSummary": {
         "properties": {
@@ -2708,7 +3147,12 @@
           }
         },
         "type": "object",
-        "required": ["ts", "metric", "value", "source"],
+        "required": [
+          "ts",
+          "metric",
+          "value",
+          "source"
+        ],
         "title": "TelemetryPoint"
       },
       "TelemetrySummary": {
@@ -2818,7 +3262,10 @@
           },
           "type": {
             "type": "string",
-            "enum": ["swim", "gym"],
+            "enum": [
+              "swim",
+              "gym"
+            ],
             "title": "Type"
           },
           "duration_min": {
@@ -2878,7 +3325,10 @@
           }
         },
         "type": "object",
-        "required": ["ts", "type"],
+        "required": [
+          "ts",
+          "type"
+        ],
         "title": "TrainingSessionIn"
       },
       "TrainingSessionOut": {
@@ -3107,7 +3557,9 @@
           }
         },
         "type": "object",
-        "required": ["exercise"],
+        "required": [
+          "exercise"
+        ],
         "title": "TrainingSetIn"
       },
       "TrainingSetOut": {
@@ -3326,7 +3778,11 @@
           }
         },
         "type": "object",
-        "required": ["loc", "msg", "type"],
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
         "title": "ValidationError"
       },
       "WeeklyMuscleSets": {
@@ -3346,7 +3802,11 @@
           }
         },
         "type": "object",
-        "required": ["week", "muscle", "sets"],
+        "required": [
+          "week",
+          "muscle",
+          "sets"
+        ],
         "title": "WeeklyMuscleSets"
       }
     },

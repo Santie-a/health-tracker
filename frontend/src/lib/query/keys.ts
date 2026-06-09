@@ -30,6 +30,8 @@ export const queryKeys = {
   telemetry: {
     daily: (metric: string, from?: string, to?: string) =>
       ["telemetry", "daily", metric, { from, to }] as const,
+    sleep: (from?: string, to?: string) => ["telemetry", "sleep", { from, to }] as const,
+    bodyComposition: (from?: string, to?: string) => ["telemetry", "body", { from, to }] as const,
   },
 
   recommendations: (date: string) => ["recommendations", date] as const,

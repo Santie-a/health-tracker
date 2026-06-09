@@ -37,3 +37,19 @@ class SleepSummary(BaseModel):
     light_min: int | None = None
     awake_min: int | None = None
     efficiency: float | None = None
+
+
+class SleepNight(SleepSummary):
+    """A night's sleep summary tagged with the calendar day it ended on (for trends)."""
+
+    day: date
+
+
+class BodyCompositionPoint(BaseModel):
+    """One smart-scale reading (sparse periodic series)."""
+
+    ts: datetime
+    weight_kg: float | None = None
+    body_fat_pct: float | None = None
+    skeletal_muscle_kg: float | None = None
+    bmr_kcal: int | None = None

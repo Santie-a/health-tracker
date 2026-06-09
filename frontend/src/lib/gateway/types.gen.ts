@@ -79,6 +79,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/telemetry/sleep": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Sleep Series
+     * @description Per-night sleep summaries (total + stages) for the sleep trend.
+     */
+    get: operations["sleep_series_api_v1_telemetry_sleep_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/body-composition": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Body Composition
+     * @description Smart-scale series (weight, body fat %, skeletal muscle, BMR) for trends.
+     */
+    get: operations["body_composition_api_v1_body_composition_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/training/stats": {
     parameters: {
       query?: never;
@@ -415,6 +455,25 @@ export interface components {
     AddSetsIn: {
       /** Sets */
       sets: components["schemas"]["TrainingSetIn"][];
+    };
+    /**
+     * BodyCompositionPoint
+     * @description One smart-scale reading (sparse periodic series).
+     */
+    BodyCompositionPoint: {
+      /**
+       * Ts
+       * Format: date-time
+       */
+      ts: string;
+      /** Weight Kg */
+      weight_kg?: number | null;
+      /** Body Fat Pct */
+      body_fat_pct?: number | null;
+      /** Skeletal Muscle Kg */
+      skeletal_muscle_kg?: number | null;
+      /** Bmr Kcal */
+      bmr_kcal?: number | null;
     };
     /** Body_create_meal_from_photo_api_v1_meals_photo_post */
     Body_create_meal_from_photo_api_v1_meals_photo_post: {
@@ -835,6 +894,29 @@ export interface components {
         [key: string]: unknown;
       } | null;
     };
+    /**
+     * SleepNight
+     * @description A night's sleep summary tagged with the calendar day it ended on (for trends).
+     */
+    SleepNight: {
+      /** Total Min */
+      total_min?: number | null;
+      /** Deep Min */
+      deep_min?: number | null;
+      /** Rem Min */
+      rem_min?: number | null;
+      /** Light Min */
+      light_min?: number | null;
+      /** Awake Min */
+      awake_min?: number | null;
+      /** Efficiency */
+      efficiency?: number | null;
+      /**
+       * Day
+       * Format: date
+       */
+      day: string;
+    };
     /** SleepSummary */
     SleepSummary: {
       /** Total Min */
@@ -1171,6 +1253,74 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["DailyRollup"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  sleep_series_api_v1_telemetry_sleep_get: {
+    parameters: {
+      query?: {
+        /** @description ISO start (inclusive). */
+        from?: string | null;
+        /** @description ISO end (inclusive). */
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SleepNight"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  body_composition_api_v1_body_composition_get: {
+    parameters: {
+      query?: {
+        /** @description ISO start (inclusive). */
+        from?: string | null;
+        /** @description ISO end (inclusive). */
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BodyCompositionPoint"][];
         };
       };
       /** @description Validation Error */

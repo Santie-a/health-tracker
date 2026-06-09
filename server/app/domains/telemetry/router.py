@@ -11,9 +11,12 @@ from app.core.auth import require_token
 from app.core.db import get_session
 
 from . import service
-from .schemas import DailyRollup, TelemetryPoint
+from .schemas import BodyCompositionPoint, DailyRollup, SleepNight, TelemetryPoint
 
 router = APIRouter(prefix="/telemetry", tags=["telemetry"], dependencies=[Depends(require_token)])
+body_router = APIRouter(
+    prefix="/body-composition", tags=["telemetry"], dependencies=[Depends(require_token)]
+)
 
 
 @router.get("", response_model=list[TelemetryPoint])
@@ -35,3 +38,23 @@ async def daily_rollup(
     session: AsyncSession = Depends(get_session),
 ) -> list[DailyRollup]:
     return await service.get_daily(session, metric, frm, to)
+
+
+@router.get("/sleep", response_model=list[SleepNight])
+async def sleep_series(
+    frm: datetime | None = Query(None, alias="from", description="ISO start (inclusive)."),
+    to: datetime | None = Query(None, description="ISO end (inclusive)."),
+    session: AsyncSession = Depends(get_session),
+) -> list[SleepNight]:
+    """Per-night sleep summaries (total + stages) for the sleep trend."""
+    return await service.get_sleep_series(session, frm, to)
+
+
+@body_router.get("", response_model=list[BodyCompositionPoint])
+async def body_composition(
+    frm: datetime | None = Query(None, alias="from", description="ISO start (inclusive)."),
+    to: datetime | None = Query(None, description="ISO end (inclusive)."),
+    session: AsyncSession = Depends(get_session),
+) -> list[BodyCompositionPoint]:
+    """Smart-scale series (weight, body fat %, skeletal muscle, BMR) for trends."""
+    return await service.get_body_composition(session, frm, to)

@@ -9,7 +9,13 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import repository
-from .schemas import DailyRollup, SleepSummary, TelemetryPoint
+from .schemas import (
+    BodyCompositionPoint,
+    DailyRollup,
+    SleepNight,
+    SleepSummary,
+    TelemetryPoint,
+)
 
 
 async def get_points(
@@ -25,6 +31,42 @@ async def get_points(
 async def get_sleep(session: AsyncSession, day: date_cls) -> SleepSummary | None:
     row = await repository.sleep_for_day(session, day)
     return SleepSummary.model_validate(row) if row else None
+
+
+async def get_sleep_series(
+    session: AsyncSession, frm: datetime | None, to: datetime | None
+) -> list[SleepNight]:
+    rows = await repository.query_sleep_series(session, frm, to)
+    return [
+        SleepNight(
+            day=r.end_ts.date(),
+            total_min=r.total_min,
+            deep_min=r.deep_min,
+            rem_min=r.rem_min,
+            light_min=r.light_min,
+            awake_min=r.awake_min,
+            efficiency=float(r.efficiency) if r.efficiency is not None else None,
+        )
+        for r in rows
+    ]
+
+
+async def get_body_composition(
+    session: AsyncSession, frm: datetime | None, to: datetime | None
+) -> list[BodyCompositionPoint]:
+    rows = await repository.query_body_composition(session, frm, to)
+    return [
+        BodyCompositionPoint(
+            ts=r.ts,
+            weight_kg=float(r.weight_kg) if r.weight_kg is not None else None,
+            body_fat_pct=float(r.body_fat_pct) if r.body_fat_pct is not None else None,
+            skeletal_muscle_kg=(
+                float(r.skeletal_muscle_kg) if r.skeletal_muscle_kg is not None else None
+            ),
+            bmr_kcal=r.bmr_kcal,
+        )
+        for r in rows
+    ]
 
 
 async def get_daily(
