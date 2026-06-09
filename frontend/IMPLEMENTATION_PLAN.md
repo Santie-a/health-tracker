@@ -353,7 +353,8 @@ written) and an unsupported file (→ "unsupported — skipped"); no console err
 
 ## Phase 9 — Polish, responsive, deploy
 
-Polish done (9.1 + 9.2); **deploy (9.3) intentionally out of scope for this session.**
+Polish done (9.1 + 9.2); deploy artifacts (9.3) done — the Pi5 build/smoke (9.4) runs on
+the box itself.
 
 - [x] **9.1 Responsive pass** — added a phone top bar (brand + theme toggle; the toggle
       was desktop-only) alongside the fixed bottom nav. Verified Today + Nutrition at 375px:
@@ -363,11 +364,21 @@ Polish done (9.1 + 9.2); **deploy (9.3) intentionally out of scope for this sess
       gateway is unreachable/degraded), `app/error.tsx` (route error boundary + retry),
       `app/not-found.tsx` (404 → Back to Today). Mutation toasts already app-wide via
       `useGatewayMutation`. Removed the orphaned `GatewayStatus` (folded into the banner).
-- [ ] **9.3 Dockerfile (arm64)** — DEFERRED (not this session). Multi-stage standalone
-      build for the Pi5; `GATEWAY_URL`/`GATEWAY_TOKEN` from env; add to the Pi5 compose.
+- [x] **9.3 Dockerfile (arm64)** — multi-stage standalone build (`output: "standalone"` in
+      `next.config.ts`). `node:22-bookworm-slim` (glibc, so arm64 napi prebuilds like
+      unrs-resolver just work) + pnpm 10 (lockfileVersion 9.0); deps → builder → minimal
+      non-root runner that runs `node server.js` with no `node_modules`. `GATEWAY_URL`/
+      `GATEWAY_TOKEN` are runtime env (no secrets baked in). `.dockerignore` keeps the
+      context lean. `docker-compose.yml` joins the shared `proxy` network (Caddy reaches
+      `frontend:3000`, no published port) and documents the container gateway-addressing
+      gotcha (localhost ≠ the gateway from inside the container). Build context is
+      `frontend/` (no repo-root deps). Fixed a latent blocker: `pnpm-workspace.yaml` had an
+      unfilled template placeholder (`allowBuilds:`) that would break a clean install.
 - [~] **9.4 Verification** — done per-phase against seed data + the real Samsung export;
-      token confirmed server-only (browser only ever calls same-origin `/api/*`). Formal
-      lighthouse/full-deploy smoke pairs with 9.3.
+      token confirmed server-only (browser only ever calls same-origin `/api/*`). The arm64
+      image build + full-deploy smoke (build on the Pi, `caddy reload`, hit
+      `health.homeserver.internal`) runs on the Pi5 itself — can't be exercised from the
+      Windows dev box.
 
 ---
 

@@ -1,0 +1,40 @@
+# Frontend service. On the Pi5 this joins the always-on stack alongside the gateway
+# (server/docker-compose.yml) and the db (db/docker-compose.yml), so a reboot restores
+# the whole site. See ../DEPLOY.md for the Pi5 topology.
+#
+#   docker compose -f frontend/docker-compose.yml up -d --build
+#
+# Requires frontend/.env (GATEWAY_URL, GATEWAY_TOKEN — see .env.example).
+#
+# Two networking facts from DEPLOY.md:
+#   1. The frontend is the ONLY component exposed by name, via the shared Caddy. It joins
+#      the external `proxy` network and does NOT publish a port; Caddy reaches it as
+#      `frontend:3000`. Add to the shared Caddyfile:
+#          http://health.homeserver.internal { reverse_proxy frontend:3000 }
+#   2. The browser only ever talks to the frontend; the frontend talks to the gateway
+#      server-side. Inside a container, GATEWAY_URL CANNOT be http://localhost:8000 (that
+#      is the frontend container itself). Reach the gateway either by:
+#        - service name on a shared network — GATEWAY_URL=http://server:8000 (unified stack), or
+#        - the Pi5 host — GATEWAY_URL=http://host.docker.internal:8000 (with the
+#          extra_hosts mapping below), since the gateway binds 127.0.0.1:8000 on the host.
+#      Set the chosen value in frontend/.env.
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: health-tracker-frontend
+    container_name: frontend
+    env_file: .env
+    restart: unless-stopped
+    # No published ports: Caddy on the `proxy` network reaches `frontend:3000`.
+    networks:
+      - proxy
+    # Needed only for the host.docker.internal addressing option above; harmless otherwise.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  proxy:
+    external: true

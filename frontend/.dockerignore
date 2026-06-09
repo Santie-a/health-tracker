@@ -1,0 +1,26 @@
+# Keep the build context small and the image clean. Mirrors .gitignore + build outputs.
+node_modules
+.next
+out
+build
+.git
+.gitignore
+npm-debug.log*
+.pnpm-debug.log*
+
+# Never ship env files into the image (secrets are runtime-only).
+.env
+.env.*
+!.env.example
+
+# Dev-only / not needed at build time.
+README.md
+TODO.md
+IMPLEMENTATION_PLAN.md
+AGENTS.md
+CLAUDE.md
+Dockerfile
+.dockerignore
+docker-compose.yml
+.prettierrc.json
+eslint.config.mjs
