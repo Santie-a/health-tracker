@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nutrition_core"
+version = "0.1.0"
+description = "Shared food-name matcher + per-100g macro table for Health Tracker."
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.setuptools]
+packages = ["nutrition_core"]
+
+[tool.setuptools.package-data]
+nutrition_core = ["data/*.csv"]

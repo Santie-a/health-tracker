@@ -1,0 +1,3821 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Health Tracker \u2014 API Gateway",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "description": "Liveness: process is up. Dependency-light (no DB) on purpose.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Ready",
+        "description": "Readiness: checks the DB so orchestration can gate traffic without\ncoupling liveness to it. 200 when ready, 503 when degraded.",
+        "operationId": "ready_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/telemetry": {
+      "get": {
+        "tags": [
+          "telemetry"
+        ],
+        "summary": "List Points",
+        "operationId": "list_points_api_v1_telemetry_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "metric",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "e.g. steps | stress | spo2 | heart_rate | energy_expenditure",
+              "title": "Metric"
+            },
+            "description": "e.g. steps | stress | spo2 | heart_rate | energy_expenditure"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO start (inclusive).",
+              "title": "From"
+            },
+            "description": "ISO start (inclusive)."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO end (inclusive).",
+              "title": "To"
+            },
+            "description": "ISO end (inclusive)."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50000,
+              "minimum": 1,
+              "default": 1000,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelemetryPoint"
+                  },
+                  "title": "Response List Points Api V1 Telemetry Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/telemetry/daily": {
+      "get": {
+        "tags": [
+          "telemetry"
+        ],
+        "summary": "Daily Rollup",
+        "operationId": "daily_rollup_api_v1_telemetry_daily_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "metric",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Metric"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DailyRollup"
+                  },
+                  "title": "Response Daily Rollup Api V1 Telemetry Daily Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/telemetry/sleep": {
+      "get": {
+        "tags": [
+          "telemetry"
+        ],
+        "summary": "Sleep Series",
+        "description": "Per-night sleep summaries (total + stages) for the sleep trend.",
+        "operationId": "sleep_series_api_v1_telemetry_sleep_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO start (inclusive).",
+              "title": "From"
+            },
+            "description": "ISO start (inclusive)."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO end (inclusive).",
+              "title": "To"
+            },
+            "description": "ISO end (inclusive)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SleepNight"
+                  },
+                  "title": "Response Sleep Series Api V1 Telemetry Sleep Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/body-composition": {
+      "get": {
+        "tags": [
+          "telemetry"
+        ],
+        "summary": "Body Composition",
+        "description": "Smart-scale series (weight, body fat %, skeletal muscle, BMR) for trends.",
+        "operationId": "body_composition_api_v1_body_composition_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO start (inclusive).",
+              "title": "From"
+            },
+            "description": "ISO start (inclusive)."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO end (inclusive).",
+              "title": "To"
+            },
+            "description": "ISO end (inclusive)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BodyCompositionPoint"
+                  },
+                  "title": "Response Body Composition Api V1 Body Composition Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/training/stats": {
+      "get": {
+        "tags": [
+          "training"
+        ],
+        "summary": "Training Stats",
+        "operationId": "training_stats_api_v1_training_stats_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Default: 8 weeks ago.",
+              "title": "From"
+            },
+            "description": "Default: 8 weeks ago."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Default: today.",
+              "title": "To"
+            },
+            "description": "Default: today."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingStats"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/training": {
+      "post": {
+        "tags": [
+          "training"
+        ],
+        "summary": "Create Training",
+        "operationId": "create_training_api_v1_training_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingSessionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingSessionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "training"
+        ],
+        "summary": "List Training",
+        "operationId": "list_training_api_v1_training_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "swim",
+                    "gym"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by session type.",
+              "title": "Type"
+            },
+            "description": "Filter by session type."
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrainingSessionOut"
+                  },
+                  "title": "Response List Training Api V1 Training Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/training/{session_id}": {
+      "get": {
+        "tags": [
+          "training"
+        ],
+        "summary": "Get Training",
+        "operationId": "get_training_api_v1_training__session_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingSessionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/training/{session_id}/sets": {
+      "post": {
+        "tags": [
+          "training"
+        ],
+        "summary": "Add Sets",
+        "description": "Log sets against a session; free-text exercise names resolve to the catalog.",
+        "operationId": "add_sets_api_v1_training__session_id__sets_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSetsIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingSessionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exercises": {
+      "get": {
+        "tags": [
+          "training"
+        ],
+        "summary": "Search Exercises",
+        "operationId": "search_exercises_api_v1_exercises_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Name/alias substring for autocomplete.",
+              "title": "Q"
+            },
+            "description": "Name/alias substring for autocomplete."
+          },
+          {
+            "name": "muscle",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Muscle"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExerciseOut"
+                  },
+                  "title": "Response Search Exercises Api V1 Exercises Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "training"
+        ],
+        "summary": "Create Exercise",
+        "operationId": "create_exercise_api_v1_exercises_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExerciseIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meals": {
+      "post": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Create Meal",
+        "description": "Manual meal entry. Items with grams but no macros are resolved via nutrition_core.",
+        "operationId": "create_meal_api_v1_meals_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MealIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Meals For Day",
+        "operationId": "meals_for_day_api_v1_meals_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Day to summarize (YYYY-MM-DD, UTC).",
+              "title": "Date"
+            },
+            "description": "Day to summarize (YYYY-MM-DD, UTC)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DayNutrition"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meals/photo": {
+      "post": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Create Meal From Photo",
+        "description": "Photo meal entry: proxied to image-svc. If the GPU box is unreachable the\nresponse is a degraded empty manual meal (never a 5xx).",
+        "operationId": "create_meal_from_photo_api_v1_meals_photo_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_create_meal_from_photo_api_v1_meals_photo_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/meals/{meal_id}": {
+      "get": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Get Meal",
+        "operationId": "get_meal_api_v1_meals__meal_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "meal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Meal Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meals/{meal_id}/items": {
+      "post": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Add Meal Items",
+        "description": "Add items to a meal by catalog food (portion\u00d7qty or grams), free-text food +\ngrams, or a raw kcal-only quick entry.",
+        "operationId": "add_meal_items_api_v1_meals__meal_id__items_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "meal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Meal Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddItemsIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/foods": {
+      "get": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Search Foods",
+        "operationId": "search_foods_api_v1_foods_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Name/alias substring for autocomplete.",
+              "title": "Q"
+            },
+            "description": "Name/alias substring for autocomplete."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FoodOut"
+                  },
+                  "title": "Response Search Foods Api V1 Foods Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/foods/recent": {
+      "get": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Recent Foods",
+        "operationId": "recent_foods_api_v1_foods_recent_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FoodOut"
+                  },
+                  "title": "Response Recent Foods Api V1 Foods Recent Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/foods/resolve": {
+      "get": {
+        "tags": [
+          "nutrition"
+        ],
+        "summary": "Resolve Food",
+        "operationId": "resolve_food_api_v1_foods_resolve_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Typed food name to resolve via the matcher.",
+              "title": "Name"
+            },
+            "description": "Typed food name to resolve via the matcher."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FoodResolveOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recommendations": {
+      "get": {
+        "tags": [
+          "recommendations"
+        ],
+        "summary": "Get Recommendations",
+        "description": "Today's recommendations. Generated + stored lazily on first request for a day.",
+        "operationId": "get_recommendations_api_v1_recommendations_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Day to fetch (YYYY-MM-DD, UTC).",
+              "title": "Date"
+            },
+            "description": "Day to fetch (YYYY-MM-DD, UTC)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendationsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recommendations/run": {
+      "post": {
+        "tags": [
+          "recommendations"
+        ],
+        "summary": "Run Recommendations",
+        "description": "Force a regenerate + store (the daily-pass trigger).",
+        "operationId": "run_recommendations_api_v1_recommendations_run_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Day to (re)generate.",
+              "title": "Date"
+            },
+            "description": "Day to (re)generate."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendationsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recommendations/feedback": {
+      "post": {
+        "tags": [
+          "recommendations"
+        ],
+        "summary": "Submit Feedback",
+        "operationId": "submit_feedback_api_v1_recommendations_feedback_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dashboard": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Dashboard",
+        "description": "One call powering the frontend home: telemetry summary + training + nutrition\ntotals + recommendations for the day.",
+        "operationId": "dashboard_api_v1_dashboard_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Day to summarize (YYYY-MM-DD, UTC).",
+              "title": "Date"
+            },
+            "description": "Day to summarize (YYYY-MM-DD, UTC)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ingest/samsung": {
+      "post": {
+        "tags": [
+          "ingest"
+        ],
+        "summary": "Ingest Samsung",
+        "description": "Import complementary telemetry from a Samsung Health export.\n\nRoutes each file by its metadata line-1 data type; unknown types are reported\nas skipped, not errors. Upload the sleep_stage file alongside sleep to enrich\ndeep/awake stage minutes. Idempotent: re-uploading the same export is safe.",
+        "operationId": "ingest_samsung_api_v1_ingest_samsung_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_ingest_samsung_api_v1_ingest_samsung_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddItemsIn": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MealItemAddIn"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "AddItemsIn"
+      },
+      "AddSetsIn": {
+        "properties": {
+          "sets": {
+            "items": {
+              "$ref": "#/components/schemas/TrainingSetIn"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Sets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sets"
+        ],
+        "title": "AddSetsIn"
+      },
+      "BodyCompositionPoint": {
+        "properties": {
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts"
+          },
+          "weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight Kg"
+          },
+          "body_fat_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Fat Pct"
+          },
+          "skeletal_muscle_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skeletal Muscle Kg"
+          },
+          "bmr_kcal": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bmr Kcal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ts"
+        ],
+        "title": "BodyCompositionPoint",
+        "description": "One smart-scale reading (sparse periodic series)."
+      },
+      "Body_create_meal_from_photo_api_v1_meals_photo_post": {
+        "properties": {
+          "image": {
+            "type": "string",
+            "title": "Image",
+            "description": "Meal photo.",
+            "format": "binary"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "ts": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "image"
+        ],
+        "title": "Body_create_meal_from_photo_api_v1_meals_photo_post"
+      },
+      "Body_ingest_samsung_api_v1_ingest_samsung_post": {
+        "properties": {
+          "files": {
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "type": "array",
+            "title": "Files",
+            "description": "One or more Samsung Health export CSVs."
+          }
+        },
+        "type": "object",
+        "required": [
+          "files"
+        ],
+        "title": "Body_ingest_samsung_api_v1_ingest_samsung_post"
+      },
+      "DailyRollup": {
+        "properties": {
+          "day": {
+            "type": "string",
+            "format": "date",
+            "title": "Day"
+          },
+          "metric": {
+            "type": "string",
+            "title": "Metric"
+          },
+          "avg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg"
+          },
+          "min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min"
+          },
+          "max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max"
+          },
+          "sum": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sum"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "day",
+          "metric",
+          "count"
+        ],
+        "title": "DailyRollup",
+        "description": "One day's rollup for a metric. `sum` is meaningful for additive metrics\n(steps, energy_expenditure); `avg`/`min`/`max` for the rest."
+      },
+      "DashboardOut": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "telemetry": {
+            "$ref": "#/components/schemas/TelemetrySummary"
+          },
+          "training": {
+            "items": {
+              "$ref": "#/components/schemas/TrainingSessionOut"
+            },
+            "type": "array",
+            "title": "Training"
+          },
+          "nutrition_totals": {
+            "$ref": "#/components/schemas/Totals"
+          },
+          "meals": {
+            "items": {
+              "$ref": "#/components/schemas/MealOut"
+            },
+            "type": "array",
+            "title": "Meals"
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendationItem"
+            },
+            "type": "array",
+            "title": "Recommendations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "telemetry",
+          "training",
+          "nutrition_totals",
+          "meals",
+          "recommendations"
+        ],
+        "title": "DashboardOut"
+      },
+      "DayNutrition": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "meals": {
+            "items": {
+              "$ref": "#/components/schemas/MealOut"
+            },
+            "type": "array",
+            "title": "Meals"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/Totals"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "meals",
+          "totals"
+        ],
+        "title": "DayNutrition"
+      },
+      "ExerciseIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "push",
+                  "pull",
+                  "squat",
+                  "hinge",
+                  "carry",
+                  "core",
+                  "swim",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "primary_muscle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Muscle"
+          },
+          "equipment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equipment"
+          },
+          "is_unilateral": {
+            "type": "boolean",
+            "title": "Is Unilateral",
+            "default": false
+          },
+          "is_bodyweight": {
+            "type": "boolean",
+            "title": "Is Bodyweight",
+            "default": false
+          },
+          "aliases": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aliases"
+          },
+          "muscles": {
+            "items": {
+              "$ref": "#/components/schemas/ExerciseMuscleIn"
+            },
+            "type": "array",
+            "title": "Muscles",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ExerciseIn"
+      },
+      "ExerciseMuscleIn": {
+        "properties": {
+          "muscle": {
+            "type": "string",
+            "title": "Muscle"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "secondary"
+            ],
+            "title": "Role",
+            "default": "primary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "muscle"
+        ],
+        "title": "ExerciseMuscleIn"
+      },
+      "ExerciseMuscleOut": {
+        "properties": {
+          "muscle": {
+            "type": "string",
+            "title": "Muscle"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "muscle",
+          "role"
+        ],
+        "title": "ExerciseMuscleOut"
+      },
+      "ExerciseOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "primary_muscle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Muscle"
+          },
+          "equipment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equipment"
+          },
+          "is_unilateral": {
+            "type": "boolean",
+            "title": "Is Unilateral"
+          },
+          "is_bodyweight": {
+            "type": "boolean",
+            "title": "Is Bodyweight"
+          },
+          "aliases": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aliases"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "muscles": {
+            "items": {
+              "$ref": "#/components/schemas/ExerciseMuscleOut"
+            },
+            "type": "array",
+            "title": "Muscles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "category",
+          "primary_muscle",
+          "equipment",
+          "is_unilateral",
+          "is_bodyweight",
+          "aliases",
+          "is_active",
+          "muscles"
+        ],
+        "title": "ExerciseOut"
+      },
+      "ExerciseStat": {
+        "properties": {
+          "exercise": {
+            "type": "string",
+            "title": "Exercise"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          },
+          "sets": {
+            "type": "integer",
+            "title": "Sets"
+          },
+          "top_weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Weight Kg"
+          },
+          "best_e1rm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Best E1Rm"
+          },
+          "best_e1rm_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Best E1Rm Date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "exercise",
+          "slug",
+          "sets",
+          "top_weight_kg",
+          "best_e1rm",
+          "best_e1rm_date"
+        ],
+        "title": "ExerciseStat"
+      },
+      "FeedbackIn": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "feedback": {
+            "type": "string",
+            "title": "Feedback"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "feedback"
+        ],
+        "title": "FeedbackIn"
+      },
+      "FileReport": {
+        "properties": {
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "data_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Type"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target"
+          },
+          "parsed": {
+            "type": "integer",
+            "title": "Parsed",
+            "default": 0
+          },
+          "written": {
+            "type": "integer",
+            "title": "Written",
+            "default": 0
+          },
+          "skipped": {
+            "type": "integer",
+            "title": "Skipped",
+            "default": 0
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Errors",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "filename"
+        ],
+        "title": "FileReport"
+      },
+      "FoodOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "aliases": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aliases"
+          },
+          "kcal_100g": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kcal 100G"
+          },
+          "protein_100g": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Protein 100G"
+          },
+          "carbs_100g": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carbs 100G"
+          },
+          "fat_100g": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fat 100G"
+          },
+          "default_grams": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Grams"
+          },
+          "portions": {
+            "items": {
+              "$ref": "#/components/schemas/FoodPortionOut"
+            },
+            "type": "array",
+            "title": "Portions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "aliases",
+          "kcal_100g",
+          "protein_100g",
+          "carbs_100g",
+          "fat_100g",
+          "default_grams",
+          "portions"
+        ],
+        "title": "FoodOut"
+      },
+      "FoodPortionOut": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "grams": {
+            "type": "number",
+            "title": "Grams"
+          },
+          "is_default": {
+            "type": "boolean",
+            "title": "Is Default"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "grams",
+          "is_default"
+        ],
+        "title": "FoodPortionOut"
+      },
+      "FoodResolveOut": {
+        "properties": {
+          "matched": {
+            "type": "boolean",
+            "title": "Matched"
+          },
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "food": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FoodOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "matched",
+          "query"
+        ],
+        "title": "FoodResolveOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "ok"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version"
+        ],
+        "title": "HealthResponse"
+      },
+      "IngestResponse": {
+        "properties": {
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/FileReport"
+            },
+            "type": "array",
+            "title": "Files"
+          },
+          "parsed": {
+            "type": "integer",
+            "title": "Parsed"
+          },
+          "written": {
+            "type": "integer",
+            "title": "Written"
+          },
+          "skipped": {
+            "type": "integer",
+            "title": "Skipped"
+          }
+        },
+        "type": "object",
+        "required": [
+          "files",
+          "parsed",
+          "written",
+          "skipped"
+        ],
+        "title": "IngestResponse"
+      },
+      "MealCreateResponse": {
+        "properties": {
+          "meal": {
+            "$ref": "#/components/schemas/MealOut"
+          },
+          "degraded": {
+            "type": "boolean",
+            "title": "Degraded",
+            "default": false
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meal"
+        ],
+        "title": "MealCreateResponse"
+      },
+      "MealIn": {
+        "properties": {
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts",
+            "description": "When the meal was eaten (UTC ISO; naive assumed UTC)."
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MealItemIn"
+            },
+            "type": "array",
+            "title": "Items",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "ts"
+        ],
+        "title": "MealIn"
+      },
+      "MealItemAddIn": {
+        "properties": {
+          "food_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Food Id"
+          },
+          "food": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Food"
+          },
+          "portion_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Portion Label"
+          },
+          "qty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty"
+          },
+          "grams": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grams"
+          },
+          "kcal": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kcal"
+          },
+          "protein_g": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Protein G"
+          },
+          "carbs_g": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carbs G"
+          },
+          "fat_g": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fat G"
+          }
+        },
+        "type": "object",
+        "title": "MealItemAddIn",
+        "description": "Add an item by catalog food (food_id) with a portion\u00d7qty or grams, by\nfree-text food + grams (matcher-resolved), or a raw kcal-only quick entry."
+      },
+      "MealItemIn": {
+        "properties": {
+          "food": {
+            "type": "string",
+            "title": "Food",
+            "description": "Food name; resolved against nutrition_core when macros omitted."
+          },
+          "grams": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grams"
+          },
+          "kcal": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kcal"
+          },
+          "protein_g": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Protein G"
+          },
+          "carbs_g": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carbs G"
+          },
+          "fat_g": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fat G"
+          }
+        },
+        "type": "object",
+        "required": [
+          "food"
+        ],
+        "title": "MealItemIn"
+      },
+      "MealItemOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "food": {
+            "type": "string",
+            "title": "Food"
+          },
+          "food_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Food Id"
+          },
+          "grams": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grams"
+          },
+          "qty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty"
+          },
+          "portion_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Portion Label"
+          },
+          "kcal": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kcal"
+          },
+          "protein_g": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Protein G"
+          },
+          "carbs_g": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carbs G"
+          },
+          "fat_g": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fat G"
+          },
+          "estimated": {
+            "type": "boolean",
+            "title": "Estimated"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "food",
+          "food_id",
+          "grams",
+          "qty",
+          "portion_label",
+          "kcal",
+          "protein_g",
+          "carbs_g",
+          "fat_g",
+          "estimated",
+          "source"
+        ],
+        "title": "MealItemOut"
+      },
+      "MealOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "photo_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Path"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MealItemOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "ts",
+          "name",
+          "photo_path",
+          "source",
+          "items"
+        ],
+        "title": "MealOut"
+      },
+      "MuscleVolume": {
+        "properties": {
+          "muscle": {
+            "type": "string",
+            "title": "Muscle"
+          },
+          "volume_load": {
+            "type": "number",
+            "title": "Volume Load"
+          }
+        },
+        "type": "object",
+        "required": [
+          "muscle",
+          "volume_load"
+        ],
+        "title": "MuscleVolume"
+      },
+      "RecommendationItem": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "signals": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Signals",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "category",
+          "severity",
+          "title",
+          "detail"
+        ],
+        "title": "RecommendationItem"
+      },
+      "RecommendationsOut": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "generated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generated At"
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendationItem"
+            },
+            "type": "array",
+            "title": "Recommendations"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "recommendations"
+        ],
+        "title": "RecommendationsOut"
+      },
+      "SleepNight": {
+        "properties": {
+          "total_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Min"
+          },
+          "deep_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deep Min"
+          },
+          "rem_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rem Min"
+          },
+          "light_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Light Min"
+          },
+          "awake_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Awake Min"
+          },
+          "efficiency": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Efficiency"
+          },
+          "day": {
+            "type": "string",
+            "format": "date",
+            "title": "Day"
+          }
+        },
+        "type": "object",
+        "required": [
+          "day"
+        ],
+        "title": "SleepNight",
+        "description": "A night's sleep summary tagged with the calendar day it ended on (for trends)."
+      },
+      "SleepSummary": {
+        "properties": {
+          "total_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Min"
+          },
+          "deep_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deep Min"
+          },
+          "rem_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rem Min"
+          },
+          "light_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Light Min"
+          },
+          "awake_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Awake Min"
+          },
+          "efficiency": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Efficiency"
+          }
+        },
+        "type": "object",
+        "title": "SleepSummary"
+      },
+      "TelemetryPoint": {
+        "properties": {
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts"
+          },
+          "metric": {
+            "type": "string",
+            "title": "Metric"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ts",
+          "metric",
+          "value",
+          "source"
+        ],
+        "title": "TelemetryPoint"
+      },
+      "TelemetrySummary": {
+        "properties": {
+          "steps": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Steps"
+          },
+          "avg_stress": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Stress"
+          },
+          "avg_heart_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Heart Rate"
+          },
+          "avg_spo2": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Spo2"
+          },
+          "energy_expenditure": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Energy Expenditure"
+          },
+          "sleep": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SleepSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "TelemetrySummary"
+      },
+      "Totals": {
+        "properties": {
+          "kcal": {
+            "type": "number",
+            "title": "Kcal",
+            "default": 0
+          },
+          "protein_g": {
+            "type": "number",
+            "title": "Protein G",
+            "default": 0
+          },
+          "carbs_g": {
+            "type": "number",
+            "title": "Carbs G",
+            "default": 0
+          },
+          "fat_g": {
+            "type": "number",
+            "title": "Fat G",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "Totals"
+      },
+      "TrainingSessionIn": {
+        "properties": {
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts",
+            "description": "Session start (UTC ISO; naive is assumed UTC)."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "swim",
+              "gym"
+            ],
+            "title": "Type"
+          },
+          "duration_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Min"
+          },
+          "rpe": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 10.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rpe"
+          },
+          "load": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Load",
+            "description": "Optional; auto-computed as duration_min \u00d7 rpe when omitted."
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "sets": {
+            "items": {
+              "$ref": "#/components/schemas/TrainingSetIn"
+            },
+            "type": "array",
+            "title": "Sets",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "ts",
+          "type"
+        ],
+        "title": "TrainingSessionIn"
+      },
+      "TrainingSessionOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "duration_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Min"
+          },
+          "rpe": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rpe"
+          },
+          "load": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Load"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "kcal": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kcal"
+          },
+          "avg_hr": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Hr"
+          },
+          "max_hr": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Hr"
+          },
+          "distance_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance M"
+          },
+          "sets": {
+            "items": {
+              "$ref": "#/components/schemas/TrainingSetOut"
+            },
+            "type": "array",
+            "title": "Sets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "ts",
+          "type",
+          "duration_min",
+          "rpe",
+          "load",
+          "notes",
+          "source",
+          "kcal",
+          "avg_hr",
+          "max_hr",
+          "distance_m",
+          "sets"
+        ],
+        "title": "TrainingSessionOut"
+      },
+      "TrainingSetIn": {
+        "properties": {
+          "exercise": {
+            "type": "string",
+            "title": "Exercise",
+            "description": "Free-text exercise / stroke, e.g. 'bench press', 'freestyle'."
+          },
+          "set_no": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Set No"
+          },
+          "reps": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reps"
+          },
+          "weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight Kg"
+          },
+          "distance_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance M"
+          },
+          "pace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pace"
+          },
+          "rpe": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 10.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rpe"
+          },
+          "is_warmup": {
+            "type": "boolean",
+            "title": "Is Warmup",
+            "default": false
+          },
+          "added_weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Added Weight Kg"
+          }
+        },
+        "type": "object",
+        "required": [
+          "exercise"
+        ],
+        "title": "TrainingSetIn"
+      },
+      "TrainingSetOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "exercise": {
+            "type": "string",
+            "title": "Exercise"
+          },
+          "set_no": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Set No"
+          },
+          "reps": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reps"
+          },
+          "weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight Kg"
+          },
+          "distance_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance M"
+          },
+          "pace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pace"
+          },
+          "rpe": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rpe"
+          },
+          "is_warmup": {
+            "type": "boolean",
+            "title": "Is Warmup"
+          },
+          "added_weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Added Weight Kg"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "exercise",
+          "set_no",
+          "reps",
+          "weight_kg",
+          "distance_m",
+          "pace",
+          "rpe",
+          "is_warmup",
+          "added_weight_kg"
+        ],
+        "title": "TrainingSetOut"
+      },
+      "TrainingStats": {
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "title": "From"
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "title": "To"
+          },
+          "weekly_sets_per_muscle": {
+            "items": {
+              "$ref": "#/components/schemas/WeeklyMuscleSets"
+            },
+            "type": "array",
+            "title": "Weekly Sets Per Muscle"
+          },
+          "volume_load_per_muscle": {
+            "items": {
+              "$ref": "#/components/schemas/MuscleVolume"
+            },
+            "type": "array",
+            "title": "Volume Load Per Muscle"
+          },
+          "push_pull_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Push Pull Ratio"
+          },
+          "upper_lower_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upper Lower Ratio"
+          },
+          "per_exercise": {
+            "items": {
+              "$ref": "#/components/schemas/ExerciseStat"
+            },
+            "type": "array",
+            "title": "Per Exercise"
+          },
+          "unresolved_exercises": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unresolved Exercises"
+          }
+        },
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "weekly_sets_per_muscle",
+          "volume_load_per_muscle",
+          "push_pull_ratio",
+          "upper_lower_ratio",
+          "per_exercise",
+          "unresolved_exercises"
+        ],
+        "title": "TrainingStats"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WeeklyMuscleSets": {
+        "properties": {
+          "week": {
+            "type": "string",
+            "format": "date",
+            "title": "Week"
+          },
+          "muscle": {
+            "type": "string",
+            "title": "Muscle"
+          },
+          "sets": {
+            "type": "number",
+            "title": "Sets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "week",
+          "muscle",
+          "sets"
+        ],
+        "title": "WeeklyMuscleSets"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "description": "Shared gateway token (no 'Bearer ' prefix).",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

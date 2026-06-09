@@ -19,7 +19,7 @@ from .auth import require_token
 from .config import Settings, get_settings
 from .estimator import build_estimate, make_estimator
 from .logging_config import configure_logging
-from .nutrition.usda import MacroTable
+from nutrition_core import MacroTable
 from .schemas import EstimateResponse, HealthResponse
 
 log = logging.getLogger("image_svc")

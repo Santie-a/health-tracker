@@ -11,7 +11,7 @@ from ..schemas import EstimateResponse, FoodItem, Totals
 if TYPE_CHECKING:  # avoid importing Pillow at module load
     from PIL.Image import Image
 
-    from ..nutrition.usda import MacroTable
+    from nutrition_core import MacroTable
 
 
 @dataclass(frozen=True)

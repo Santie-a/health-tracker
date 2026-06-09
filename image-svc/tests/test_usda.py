@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from app.config import get_settings
-from app.nutrition.usda import MacroTable
+from nutrition_core import MacroTable
 
 
 @pytest.fixture(scope="module")
