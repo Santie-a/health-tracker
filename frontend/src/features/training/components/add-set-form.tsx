@@ -39,7 +39,10 @@ export function AddSetForm({ sessionId, lastSet }: { sessionId: number; lastSet?
   const mutation = useGatewayMutation({
     mutationFn: (set: TrainingSetIn) => addSets(sessionId, [set]),
     form,
-    invalidate: [queryKeys.training.session(sessionId), ["training"], ["dashboard"]],
+    // The response is the full updated session → write it straight to the cache
+    // (race-free). Aggregates (list, dashboard) are disjoint keys, refreshed separately.
+    update: (qc, session) => qc.setQueryData(queryKeys.training.session(sessionId), session),
+    invalidate: [["training", "list"], ["dashboard"]],
     onSuccess: (_data, set) => {
       // Keep exercise + weight for the next set; clear reps + warmup.
       reset({

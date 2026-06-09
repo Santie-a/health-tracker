@@ -106,7 +106,9 @@ export async function apiGet<T>(
   query?: Record<string, string | number | undefined>,
 ): Promise<T> {
   try {
-    return await parse<T>(await fetch(withQuery(path, query)));
+    // no-store: React Query owns caching; the browser HTTP cache must not serve a
+    // stale list after a mutation (the "must refresh to see it" bug).
+    return await parse<T>(await fetch(withQuery(path, query), { cache: "no-store" }));
   } catch (err) {
     if (err instanceof ApiError) throw err;
     throw new ApiError(0, "network", "Network error");

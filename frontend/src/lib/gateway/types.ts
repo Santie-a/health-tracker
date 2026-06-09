@@ -25,3 +25,13 @@ export type ExerciseCategory = NonNullable<ExerciseIn["category"]>;
 
 export type Meal = S["MealOut"];
 export type MealItem = S["MealItemOut"];
+export type MealIn = S["MealIn"];
+export type MealItemIn = S["MealItemIn"];
+export type MealItemAddIn = S["MealItemAddIn"];
+export type AddItemsIn = S["AddItemsIn"];
+export type DayNutrition = S["DayNutrition"];
+export type MealCreateResponse = S["MealCreateResponse"];
+
+export type Food = S["FoodOut"];
+export type FoodPortion = S["FoodPortionOut"];
+export type FoodResolve = S["FoodResolveOut"];

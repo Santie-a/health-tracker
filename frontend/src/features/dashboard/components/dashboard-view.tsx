@@ -7,8 +7,9 @@ import { QueryState } from "@/components/async/query-state";
 import { Skeleton } from "@/components/async/skeleton";
 import { todayISODate } from "@/lib/time";
 
+import { DateNav } from "@/components/date-nav";
+
 import { useDashboard } from "../hooks";
-import { DateNav } from "./date-nav";
 import { NutritionSummary } from "./nutrition-summary";
 import { RecommendationsSummary } from "./recommendations-summary";
 import { TelemetrySummary } from "./telemetry-summary";

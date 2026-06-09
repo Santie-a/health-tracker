@@ -248,26 +248,38 @@ swim-conditional distance/pace fields). Forms use RHF's 3-generic `useForm` so t
       RPE, warm-up toggle; keeps exercise+weight after add for fast "+ Add set"; "Repeat
       last" copies the last set; invalidates session + dashboard.
 
-## Phase 4 — Nutrition: manual, serving, photo
+## Phase 4 — Nutrition: manual, serving, photo ✅ DONE
 
 **Endpoints:** `GET /meals?date=` (`DayNutrition`), `POST /meals`, `POST /meals/photo`
 (multipart → `MealCreateResponse`, `degraded` flag), `POST /meals/{id}/items`,
-`GET /foods?q=`, `/foods/recent`, `/foods/resolve?name=`.
+`GET /foods?q=`, `/foods/recent`, `/foods/resolve?name=`. Verified live against seed data
+(day 1,811 kcal; brown-rice serving preview 240 kcal = 123/100g × 195g; item-add) **and
+the degraded photo path with image-svc offline** (gateway returns `degraded:true`, never
+a 5xx → banner + manual editor). `DateNav` promoted to a shared component.
 
-- [ ] **4.1 Day nutrition view** — meals + totals; per-item shows estimated-vs-weighed
-      (`MealItemOut.estimated`/`source`); empty/loading/error.
-- [ ] **4.2 Food search + serving picker** — `/foods` search → choose portion × qty or
-      grams, **live macro preview** before save (reuse `/foods/resolve` math client-side or
-      preview via the item shape). Manual entry is the **default** path.
-- [ ] **4.3 Fast logging** — recent foods (`/foods/recent`), raw-kcal quick-add,
-      repeat-yesterday. Built on the same item-add component.
-- [ ] **4.4 Photo flow** — upload → `POST /meals/photo`. **If `degraded=true`
-      (image-svc offline): render the manual editor with a banner, not an error.** Otherwise
-      show the estimate as an **editable** item list before save. The single most important
-      resilience path — test image-svc both up and down.
-- [ ] **4.5 Unified editable meal** — image-detected + searched + estimated items in one
-      list; add items via `POST /meals/{id}/items` (food_id+portion×qty OR grams OR
-      free-text+grams OR raw kcal). Optimistic, invalidates dashboard totals.
+- [x] **4.1 Day nutrition view** (`/nutrition`) — `DateNav` + macro totals + meals list
+      (estimated badge, photo icon, per-meal kcal); Log meal + Photo entry points.
+- [x] **4.2 Food search + serving picker** — `FoodCombobox` (search `/foods`) → portion
+      `<select>` × qty *or* custom grams, with a client-side **live macro preview**
+      (`macros.ts`); free text is valid (resolved server-side on save).
+- [x] **4.3 Fast logging** — recent-foods chips (`/foods/recent`) and a "Quick kcal" raw
+      adder (name + kcal + macros), both inside the one `AddItemForm`.
+- [x] **4.4 Photo flow** — `PhotoUpload` (multipart → `/meals/photo`, BFF `proxyUpload`).
+      `degraded:true` → toast + navigate with `?degraded=1` → meal detail shows the
+      **manual-entry banner**, never an error. (image-svc currently offline, so this is
+      the live-tested path; the success path renders the returned items the same way.)
+- [x] **4.5 Unified editable meal** (`/nutrition/[id]`) — per-meal totals + item list
+      (detected/searched/estimated, estimated badge) + `AddItemForm` adding via
+      `POST /meals/{id}/items` (food_id+portion×qty OR grams OR free-text OR raw kcal).
+
+**Cross-cutting fix (read-after-write race).** An immediate invalidate→refetch after a
+mutation can race the gateway's just-committed write and render stale (the "must refresh"
+symptom). `useGatewayMutation` gained an `update(qc, data)` hook: the write endpoints
+return the full updated entity, so we write it straight to the cache via `setQueryData`
+(instant, race-free) and only `invalidate` *disjoint* aggregate keys (day/dashboard/list)
+that aren't on screen during the edit. Applied to meal-item add, set add, and session
+create (prepend to matching list caches). Pairs with the Phase-3 `no-store` fix (which
+addressed the browser HTTP cache).
 
 ## Phase 5 — Trends
 

@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { formatISODate, shiftISODate, todayISODate } from "@/lib/time";
 
 /**
- * Day selector for the dashboard: prev / next / today + a native date picker. Works in
- * local calendar dates (YYYY-MM-DD); "next" is capped at today since there's no future data.
+ * Shared day selector: prev / next / today + a native date picker. Works in local
+ * calendar dates (YYYY-MM-DD); "next" is capped at today since there's no future data.
+ * Used by the Today dashboard and the nutrition day view.
  */
 export function DateNav({ date, onChange }: { date: string; onChange: (date: string) => void }) {
   const today = todayISODate();
@@ -23,15 +24,13 @@ export function DateNav({ date, onChange }: { date: string; onChange: (date: str
       >
         <ChevronLeft />
       </Button>
-      <div className="relative">
-        <input
-          type="date"
-          value={date}
-          max={today}
-          onChange={(e) => e.target.value && onChange(e.target.value)}
-          className="bg-background focus-visible:ring-ring h-9 rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
-        />
-      </div>
+      <input
+        type="date"
+        value={date}
+        max={today}
+        onChange={(e) => e.target.value && onChange(e.target.value)}
+        className="bg-background focus-visible:ring-ring h-9 rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
+      />
       <Button
         variant="outline"
         size="icon"

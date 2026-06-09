@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
-import type { TrainingSessionIn, TrainingSetIn } from "@/lib/gateway/types";
+import type { TrainingSession, TrainingSessionIn, TrainingSetIn } from "@/lib/gateway/types";
 import { useGatewayMutation } from "@/lib/query/use-gateway-mutation";
 
 import { createTrainingSession } from "../api";
@@ -36,7 +36,19 @@ export function NewSessionDialog() {
     mutationFn: createTrainingSession,
     form,
     successMessage: "Session logged",
-    invalidate: [["dashboard"], ["training"]],
+    // Prepend the new session to the (mounted) list caches it belongs in, so it appears
+    // instantly without a refetch that could race the gateway's just-committed write.
+    update: (qc, session: TrainingSession) => {
+      for (const q of qc.getQueryCache().findAll({ queryKey: ["training", "list"] })) {
+        const filters = q.queryKey[2] as { type?: string } | undefined;
+        if (!filters?.type || filters.type === session.type) {
+          qc.setQueryData<TrainingSession[]>(q.queryKey, (old) =>
+            Array.isArray(old) ? [session, ...old] : old,
+          );
+        }
+      }
+    },
+    invalidate: [["dashboard"]],
     onSuccess: () => {
       reset({ type, ts: nowLocalInput() } as NewSessionForm);
       setOpen(false);
