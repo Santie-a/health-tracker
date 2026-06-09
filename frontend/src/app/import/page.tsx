@@ -1,5 +1,5 @@
-import { Placeholder } from "@/components/layout/placeholder";
+import { ImportView } from "@/features/ingest/components/import-view";
 
 export default function ImportPage() {
-  return <Placeholder title="Import" phase="Phase 8" />;
+  return <ImportView />;
 }

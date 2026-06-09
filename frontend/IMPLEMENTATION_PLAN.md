@@ -333,18 +333,22 @@ unresolved; no console errors).
       "add them via the exercise picker" nudge. (1RM *trend* deferred — the stat is a single
       best e1RM, not a series; would need a server enhancement.)
 
-## Phase 8 — Samsung export import UI
+## Phase 8 — Samsung export import UI ✅ DONE
 
-**Endpoint:** `POST /api/v1/ingest/samsung` (multipart, one or more CSVs) → `IngestResponse`
-(per-file `FileReport`: data_type, target, parsed/written/skipped, errors[] + totals).
-Telemetry is complementary and import-only — this page never blocks manual logging.
+**Endpoint:** `POST /api/v1/ingest/samsung` (multipart, repeated `files` field) →
+`IngestResponse` (per-file `FileReport`: data_type, target, parsed/written/skipped,
+errors[] + totals). Telemetry is import-only — this page never blocks manual logging.
+Verified live against the **real export** (weight → 66 written, oxygen_saturation → 1,297
+written) and an unsupported file (→ "unsupported — skipped"); no console errors.
 
-- [ ] **8.1 Upload page** (`/import`) — multi-file drag-drop (the `com.samsung.*` CSVs),
-      BFF multipart pass-through to `/ingest/samsung` (token server-side). Hint to include
-      `sleep_stage` alongside `sleep`.
-- [ ] **8.2 Per-file report** — render `FileReport[]` (parsed/written/skipped + expandable
-      errors) and totals; unknown types shown as skipped, not errors. Idempotent re-upload is
-      safe — say so. Loading/empty/error states; large uploads show progress, never hang the UI.
+- [x] **8.1 Upload page** (`/import`) — multi-file drag-drop + click-to-browse, selected-
+      files list (size + remove), `Import N files` button. BFF `proxyUpload` streams the
+      multipart `files` to `/ingest/samsung` (token server-side). Hint to include
+      `sleep_stage` alongside `sleep`; idempotent-reupload note.
+- [x] **8.2 Per-file report** (`ImportReport`) — totals badges (written/parsed/skipped) +
+      per-file table (target, parsed/written/skipped) + expandable per-file error lists;
+      unknown types show "unsupported — skipped" (not an error). Success invalidates
+      dashboard/telemetry/recommendations. (Upload is one-shot; the button shows a spinner.)
 
 ## Phase 9 — Polish, responsive, deploy
 
