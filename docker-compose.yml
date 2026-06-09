@@ -1,0 +1,100 @@
+# Health Tracker — unified always-on stack (db + server + frontend).
+#
+# This is the DEPLOY target (ARCHITECTURE.md / DEPLOY.md "always-on stack"): one stack on
+# the Pi5 under /mnt/ssd/stacks/health-tracker/, so a reboot restores the whole site. The
+# per-component compose files (db/, server/, frontend/) still exist for running a single
+# piece in isolation during dev — use those OR this, not both at once (they share the
+# `health-tracker-pgdata` volume and container names).
+#
+#   docker compose up -d --build         # build + start the whole stack
+#   docker compose logs -f server        # tail one service
+#
+# image-svc is NOT here: it lives on the PC (GPU), reached over Tailscale. The server's
+# IMAGE_SVC_URL (in server/.env) points at the PC's Tailscale name; it is optional and the
+# app degrades to manual meal entry when it's offline.
+#
+# ── Networking (the whole point of unifying) ─────────────────────────────────────────────
+# All three share the internal `backend` network and address each other by SERVICE NAME:
+#   - server  reaches the db via  db:5432      → set DATABASE_URL host to `db` in server/.env
+#   - frontend reaches the gateway via server:8000 → set GATEWAY_URL=http://server:8000 in frontend/.env
+# Only the frontend additionally joins the external `proxy` network so the shared Caddy can
+# serve it by name; db and server publish nothing public. (`localhost` inside a container is
+# the container itself — never use it for cross-service URLs here.)
+
+services:
+  db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: health-tracker-db
+    restart: unless-stopped
+    env_file: db/.env          # POSTGRES_USER=health, POSTGRES_PASSWORD, POSTGRES_DB, DB_BIND_ADDR
+    # Optional host publish for backups/psql from the Pi host (loopback only). Inter-service
+    # traffic does NOT use this — it goes over the `backend` network as db:5432.
+    ports:
+      - "${DB_BIND_ADDR:-127.0.0.1}:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/initdb:/docker-entrypoint-initdb.d:ro   # *.sql run once on first init
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - backend
+
+  server:
+    build:
+      context: .                 # repo root — the Dockerfile needs packages/ AND server/
+      dockerfile: server/Dockerfile
+    image: health-tracker-server
+    container_name: server
+    restart: unless-stopped
+    env_file: server/.env        # DATABASE_URL host MUST be `db`; IMAGE_SVC_URL = PC Tailscale name
+    # The entrypoint runs `alembic upgrade head` then uvicorn. Wait for the db to be healthy
+    # so the first migration doesn't fail-and-retry.
+    depends_on:
+      db:
+        condition: service_healthy
+    # Optional loopback publish for hitting /docs from the Pi host. The frontend reaches the
+    # gateway over the `backend` network (server:8000), not this.
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      # No curl in python:slim — use the interpreter. /health is unauthenticated.
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health', timeout=4).status==200 else sys.exit(1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    networks:
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: health-tracker-frontend
+    container_name: frontend
+    restart: unless-stopped
+    env_file: frontend/.env      # GATEWAY_URL=http://server:8000 ; GATEWAY_TOKEN matches server API_TOKEN
+    # The gateway being down is a designed degraded path (ConnectionBanner), so we only need
+    # the server process started, not healthy, before the frontend comes up.
+    depends_on:
+      server:
+        condition: service_started
+    # No published port: Caddy on the `proxy` network reaches `frontend:3000`. Add to the
+    # shared Caddyfile:  http://health.homeserver.internal { reverse_proxy frontend:3000 }
+    networks:
+      - backend
+      - proxy
+
+networks:
+  backend:
+    driver: bridge
+  proxy:
+    external: true            # the shared homelab proxy network (Caddy). Must pre-exist on the Pi.
+
+volumes:
+  pgdata:
+    name: health-tracker-pgdata   # same name as db/docker-compose.yml → reuses existing data

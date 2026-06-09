@@ -170,8 +170,8 @@ step below double-checks.
 
 ## Deployment order
 
-> Status: `db` is ready today. `server` and `frontend` steps describe the intended flow
-> and apply once those components are built (they are currently TODO-only).
+> Status: all three components (db, server, frontend) are built and wired into one stack
+> (the root `docker-compose.yml`). image-svc runs separately on the PC.
 
 ### 0. Pi5 prep — already done
 The host is provisioned: arm64 OS, SSD at `/mnt/ssd`, Docker with data-root on the SSD,
@@ -181,46 +181,46 @@ project you only need to:
   with it — expected.)
 - Confirm the `proxy` network exists: `docker network ls | grep proxy` (it does).
 
-### 1. Database — ready now
+### 1. Fill in the three `.env` files
+One per component, each from its `.env.example`. In the unified stack, **cross-service URLs
+use the docker service name, never `localhost`** (inside a container `localhost` is that
+container):
 ```bash
-cd /mnt/ssd/stacks/health-tracker/db
-cp .env.example .env          # set POSTGRES_PASSWORD; keep DB_BIND_ADDR=127.0.0.1
-# point the data volume at /mnt/ssd/appdata/health-tracker/db in the compose
-docker compose up -d
+cd /mnt/ssd/stacks/health-tracker
+cp db/.env.example       db/.env        # POSTGRES_USER=health, a strong POSTGRES_PASSWORD, DB_BIND_ADDR=127.0.0.1
+cp server/.env.example   server/.env    # DATABASE_URL=...@db:5432/...  IMAGE_SVC_URL=http://<PC_TS_NAME>:8001  API_TOKEN=<shared>
+cp frontend/.env.example frontend/.env  # GATEWAY_URL=http://server:8000  GATEWAY_TOKEN=<same as server API_TOKEN>
 ```
-The `initdb/*.sql` runs automatically on the first boot of an empty volume (extensions,
-schema, hypertables). Then apply the deferred Timescale features in `apply-later/` and
-verify with the steps in [db/README.md](./db/README.md).
+`API_TOKEN` (server) and `GATEWAY_TOKEN` (frontend) must match; that same token is what the
+PC's `image-svc/.env` expects too.
 
-### 2. Server gateway — when built
+### 2. Bring up the whole stack
 ```bash
-cd /mnt/ssd/stacks/health-tracker/server
-cp .env.example .env          # DATABASE_URL=localhost, IMAGE_SVC_URL=http://<PC_TS_NAME>:8001, API_TOKEN=<shared>
+cd /mnt/ssd/stacks/health-tracker
+docker compose up -d --build      # builds arm64 images on the Pi, starts db → server → frontend
 ```
-Build the arm64 image and run it (build on the Pi). Target: add it to a Pi5
-`docker-compose.yml` next to Postgres (so gateway→DB is localhost and it restarts with
-the box). Run DB migrations (Alembic) on deploy. The gateway stays internal — no `proxy`
-network, no published port.
+Order is handled for you: the server waits for the db healthcheck, then its entrypoint runs
+`alembic upgrade head` (idempotent) before uvicorn; the frontend starts after the server.
+The `initdb/*.sql` runs once on the first boot of an empty volume (extensions, schema,
+hypertables) — then apply the deferred Timescale features in `db/apply-later/` and verify
+per [db/README.md](./db/README.md). Only the frontend is on the `proxy` network; db and
+server are internal (db also publishes `127.0.0.1:5432` for host-side backups only).
 
-### 3. Frontend — when built (served from the Pi5, exposed via the shared Caddy)
-Build the Next.js app for arm64 and run it on the Pi5. It holds the gateway token
-**server-side** (route handlers / server actions); the browser never sees it.
-frontend→gateway is localhost on the Pi5.
-
-To serve it by name without a port:
-1. Put the `frontend` container on the **`proxy`** network (in addition to the project's
-   internal network). Do **not** publish its port to the host.
-2. Add a block to the shared Caddyfile (see
-   [Exposing a service through the shared Caddy](#exposing-a-service-through-the-shared-caddy)):
+### 3. Expose the frontend through the shared Caddy
+The `frontend` container is already on the `proxy` network with no published port. Wire it
+to the proxy + DNS (see [Exposing a service through the shared Caddy](#exposing-a-service-through-the-shared-caddy)):
+1. Add to the shared Caddyfile:
    ```
    http://health.homeserver.internal {
        reverse_proxy frontend:3000
    }
    ```
-   (use the frontend's real internal port).
+2. `caddy validate` + `caddy reload` (don't restart the container).
 3. Add the Pi-hole record `health.homeserver.internal → <PI_TS_IP>`.
 
-Your phone/PC then hits `http://health.homeserver.internal` over Tailscale.
+Your phone/PC then hits `http://health.homeserver.internal` over Tailscale. The browser only
+ever talks to the frontend; the frontend reaches the gateway server-side as `server:8000`,
+so the token never leaves the Pi.
 
 ### 4. image-svc — on the PC, on demand
 Already runs bare-metal on the PC (Python 3.12 venv, `IMAGE_SVC_BACKEND=vlm`):
@@ -352,13 +352,16 @@ Hard rules for this host — follow them, don't re-derive:
 
 ---
 
-## The always-on stack (target shape)
+## The always-on stack
 
-Eventually a single `docker-compose.yml` (a Dockge stack at
-`/mnt/ssd/stacks/health-tracker/`) brings up **db + server + frontend** (frontend also on
-the `proxy` network) with `restart: unless-stopped`, so a power blip or reboot restores
-the whole site unattended. Today only `db` has a compose file; the server/frontend
-compose entries land with those components.
+The root `docker-compose.yml` (a Dockge stack at `/mnt/ssd/stacks/health-tracker/`) brings
+up **db + server + frontend** on a shared internal `backend` network (frontend also on the
+`proxy` network) with `restart: unless-stopped`, so a power blip or reboot restores the
+whole site unattended. Services address each other by name (`db:5432`, `server:8000`);
+startup is ordered via the db healthcheck + `depends_on`. The per-component compose files
+(`db/`, `server/`, `frontend/`) remain for running a single piece in isolation during dev —
+use those **or** the root stack, not both at once (they share the `health-tracker-pgdata`
+volume and container names).
 
 ---
 
