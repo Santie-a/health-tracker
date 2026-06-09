@@ -225,22 +225,28 @@ Shared types now alias the generated schema via `lib/gateway/types.ts`.
 - [x] **2.3 States** — each section wrapped in its own `AsyncBoundary` (render-error
       isolation) over a layout-matched `DashboardSkeleton`; per-section empty states.
 
-## Phase 3 — Training log + exercise catalog + set logger
+## Phase 3 — Training log + exercise catalog + set logger ✅ DONE
 
 **Endpoints:** `GET/POST /training`, `GET /training/{id}`, `POST /training/{id}/sets`,
-`GET /exercises?q=&muscle=&category=`, `POST /exercises`.
+`GET /exercises?q=&muscle=&category=`, `POST /exercises`. First write-heavy phase; pulled
+in the deferred Radix **Dialog** primitive + a reusable **Segmented** control. Verified
+end-to-end through the BFF (list, exercise search, create session → load auto-computed
+315 = 45×7, add set with free-text resolution, and the 422 path → normalized envelope)
+and visually (list + filter, session detail + set logger, the new-session dialog with the
+swim-conditional distance/pace fields). Forms use RHF's 3-generic `useForm` so the zod
+*output* reaches `mutate`; `useWatch` keeps the React-Compiler lint clean.
 
-- [ ] **3.1 Sessions list** — `useTrainingSessions({type,from,to})`; filter by type;
-      empty/loading/error.
-- [ ] **3.2 New session form** — swim (distance/pace/duration) vs gym (type-switched zod
-      schema); optional inline `sets[]`; load auto-computes server-side (don't duplicate).
-      Optimistic add + invalidate dashboard.
-- [ ] **3.3 Exercise picker** — debounced search over `/exercises` with muscle/category
-      filters; inline "quick-add custom" (`POST /exercises`, handle 409 dup gracefully).
-      Reusable combobox.
-- [ ] **3.4 Set logger** — under a session: add sets (reps × weight, RPE, warmup toggle,
-      bodyweight + added weight); **"+set" / repeat-last-set** for fast entry; free-text
-      exercise resolves server-side. Optimistic, mobile-first.
+- [x] **3.1 Sessions list** — `useTrainingSessions({type})`; All/Gym/Swim `Segmented`
+      filter; rows link to detail; loading/empty/error.
+- [x] **3.2 New session form** — `NewSessionDialog`: gym/swim toggle (swim reveals
+      distance/pace, ridden on an inline set), datetime/duration/rpe/notes; `useGatewayMutation`
+      (invalidate training + dashboard, success toast); load auto-computes server-side.
+- [x] **3.3 Exercise picker** — `ExerciseCombobox`: debounced search, one-tap select,
+      inline quick-add (`POST /exercises`, 409 → fall back to free text). Custom (input +
+      dropdown + `useClickOutside`), no extra Radix dep. Free text resolves server-side.
+- [x] **3.4 Set logger** — `/training/[id]` detail + `AddSetForm`: reps × weight, +weight,
+      RPE, warm-up toggle; keeps exercise+weight after add for fast "+ Add set"; "Repeat
+      last" copies the last set; invalidates session + dashboard.
 
 ## Phase 4 — Nutrition: manual, serving, photo
 

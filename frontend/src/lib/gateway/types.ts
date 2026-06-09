@@ -15,6 +15,13 @@ export type RecommendationItem = S["RecommendationItem"];
 
 export type TrainingSession = S["TrainingSessionOut"];
 export type TrainingSet = S["TrainingSetOut"];
+export type TrainingSessionIn = S["TrainingSessionIn"];
+export type TrainingSetIn = S["TrainingSetIn"];
+export type SessionType = TrainingSessionIn["type"]; // "swim" | "gym"
+
+export type Exercise = S["ExerciseOut"];
+export type ExerciseIn = S["ExerciseIn"];
+export type ExerciseCategory = NonNullable<ExerciseIn["category"]>;
 
 export type Meal = S["MealOut"];
 export type MealItem = S["MealItemOut"];

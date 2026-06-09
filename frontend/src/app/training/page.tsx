@@ -1,5 +1,5 @@
-import { Placeholder } from "@/components/layout/placeholder";
+import { TrainingView } from "@/features/training/components/training-view";
 
 export default function TrainingPage() {
-  return <Placeholder title="Training" phase="Phase 3" />;
+  return <TrainingView />;
 }
