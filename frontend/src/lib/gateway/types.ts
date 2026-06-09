@@ -16,6 +16,8 @@ export type DailyRollup = S["DailyRollup"];
 export type TelemetryPoint = S["TelemetryPoint"];
 export type Totals = S["Totals"];
 export type RecommendationItem = S["RecommendationItem"];
+export type RecommendationsOut = S["RecommendationsOut"];
+export type FeedbackIn = S["FeedbackIn"];
 
 export type TrainingSession = S["TrainingSessionOut"];
 export type TrainingSet = S["TrainingSetOut"];

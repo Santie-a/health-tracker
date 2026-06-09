@@ -1,5 +1,5 @@
-import { Placeholder } from "@/components/layout/placeholder";
+import { RecommendationsView } from "@/features/recommendations/components/recommendations-view";
 
 export default function RecommendationsPage() {
-  return <Placeholder title="Advice" phase="Phase 6" />;
+  return <RecommendationsView />;
 }

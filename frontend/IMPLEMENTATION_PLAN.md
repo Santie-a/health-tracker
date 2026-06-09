@@ -300,15 +300,21 @@ switch refetches; no console errors).
       `ChartFrame`), local-time x-axis. (Server-side: added `SleepNight`/`BodyCompositionPoint`
       schemas + `query_sleep_series`/`query_body_composition` repo fns + `body_router`.)
 
-## Phase 6 — Recommendations + feedback
+## Phase 6 — Recommendations + feedback ✅ DONE
 
 **Endpoints:** `GET /recommendations?date=` (lazy-generates), `POST /recommendations/run`,
-`POST /recommendations/feedback` (`{date, feedback}` → 204; 404 if none stored).
+`POST /recommendations/feedback` (`{date, feedback}` → 204; 404 if none stored). Verified
+live (06-08 → 2 recs; feedback → 204; empty day → 404 envelope; thumb highlights + toast;
+no console errors).
 
-- [ ] **6.1 List view** — `RecommendationItem` cards grouped by category/severity with
-      signals; empty ("no recommendations / not enough data yet").
-- [ ] **6.2 Feedback** — thumbs up/down → `POST /feedback`; optimistic, handle 404
-      (regenerate via `/run` then retry) gracefully. Optional "re-run today" action.
+- [x] **6.1 List view** (`RecommendationsView`, `/recommendations` = "Advice") — `DateNav`
+      + severity-coloured `RecommendationCard`s (title/severity badge/detail/category +
+      signals) + empty state; a **regenerate** button (`POST /run` → `setQueryData`).
+      Extracted `RecommendationCard` to a shared component — the dashboard summary now
+      reuses it (DRY).
+- [x] **6.2 Feedback** — day-level thumbs up/down → `POST /feedback` (`"up"`/`"down"`),
+      optimistic highlight + toast; **404 → `runRecommendations` then retry** once; resets
+      when the day changes.
 
 ## Phase 7 — Strength balance dashboard
 
