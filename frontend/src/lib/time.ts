@@ -29,7 +29,7 @@ export function shiftISODate(isoDate: string, days: number): string {
  * a *naive* string (no zone) is interpreted as UTC, matching the gateway's contract
  * ("naive assumed UTC").
  */
-export function parseInstant(iso: string): Date {
+function parseInstant(iso: string): Date {
   return new Date(hasZone(iso) ? iso : `${iso}Z`);
 }
 
@@ -45,9 +45,4 @@ export function formatInstant(iso: string, pattern = "MMM d, h:mm a"): string {
 /** Format a `YYYY-MM-DD` calendar date for display (default: "EEE, MMM d"). */
 export function formatISODate(isoDate: string, pattern = "EEE, MMM d"): string {
   return format(parseISO(isoDate), pattern);
-}
-
-/** A `Date` (or now) as a UTC ISO instant — for posting `ts` fields to the gateway. */
-export function toInstantISO(date: Date = new Date()): string {
-  return date.toISOString();
 }

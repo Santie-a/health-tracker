@@ -205,6 +205,7 @@ carries no unused components.
       unit adornment), `useGatewayMutation` (422 → RHF `setError` per field, else friendly
       toast; success toast + query invalidation). RHF + zod ready for the logging forms.
 - [x] **1.5 Demo route** (`/design`) — gallery of every primitive + variant + async state.
+      *(Removed in the Phase 9 cleanup — it was a dev-only gallery of hardcoded sample data.)*
 
 ## Phase 2 — Today / Home dashboard ✅ DONE
 
