@@ -352,15 +352,21 @@ written) and an unsupported file (→ "unsupported — skipped"); no console err
 
 ## Phase 9 — Polish, responsive, deploy
 
-- [ ] **9.1 Responsive pass** — phone-first logging (Training, Nutrition); thumb-reachable
-      primary actions; tested at mobile width.
-- [ ] **9.2 Global states** — offline banner, toast on mutation success/failure, 404 page,
-      root error boundary copy, theme-toggle finish.
-- [ ] **9.3 Dockerfile (arm64)** — multi-stage `node:lts-alpine` standalone build; runs on
-      the Pi5 alongside gateway + DB (`frontend→gateway` becomes localhost). Add to the Pi5
-      `docker-compose.yml`; `GATEWAY_URL`/`GATEWAY_TOKEN` from env. Mirror server's DEPLOY.md.
-- [ ] **9.4 Verification** — full run against seed data; lighthouse/responsive smoke;
-      confirm token never reaches the browser (network tab shows only same-origin `/api/*`).
+Polish done (9.1 + 9.2); **deploy (9.3) intentionally out of scope for this session.**
+
+- [x] **9.1 Responsive pass** — added a phone top bar (brand + theme toggle; the toggle
+      was desktop-only) alongside the fixed bottom nav. Verified Today + Nutrition at 375px:
+      macro grids reflow 2-col, header actions fit, tables scroll (`overflow-x-auto`),
+      dialogs are `w-[calc(100%-2rem)]`.
+- [x] **9.2 Global states** — `ConnectionBanner` (polls BFF health; shows only when the
+      gateway is unreachable/degraded), `app/error.tsx` (route error boundary + retry),
+      `app/not-found.tsx` (404 → Back to Today). Mutation toasts already app-wide via
+      `useGatewayMutation`. Removed the orphaned `GatewayStatus` (folded into the banner).
+- [ ] **9.3 Dockerfile (arm64)** — DEFERRED (not this session). Multi-stage standalone
+      build for the Pi5; `GATEWAY_URL`/`GATEWAY_TOKEN` from env; add to the Pi5 compose.
+- [~] **9.4 Verification** — done per-phase against seed data + the real Samsung export;
+      token confirmed server-only (browser only ever calls same-origin `/api/*`). Formal
+      lighthouse/full-deploy smoke pairs with 9.3.
 
 ---
 

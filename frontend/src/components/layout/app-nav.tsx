@@ -28,9 +28,18 @@ function isActive(pathname: string, href: string): boolean {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
+function Brand() {
+  return (
+    <Link href="/" className="flex items-center gap-2 font-semibold">
+      <Activity className="text-primary size-5" />
+      Health Tracker
+    </Link>
+  );
+}
+
 /**
- * App chrome: brand + primary nav + theme toggle. Renders as a top bar on desktop and
- * a fixed bottom bar on phones (thumb-reachable) — logging happens from mobile.
+ * App chrome. Desktop: a top bar with brand + nav + theme toggle. Phone: a slim top bar
+ * (brand + theme toggle) plus a fixed bottom bar for thumb-reachable navigation.
  */
 export function AppNav() {
   const pathname = usePathname();
@@ -40,10 +49,9 @@ export function AppNav() {
       {/* Desktop / tablet: top bar */}
       <header className="bg-background/80 sticky top-0 z-40 hidden border-b backdrop-blur sm:block">
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-1 px-4">
-          <Link href="/" className="mr-3 flex items-center gap-2 font-semibold">
-            <Activity className="text-primary size-5" />
-            Health Tracker
-          </Link>
+          <div className="mr-3">
+            <Brand />
+          </div>
           <nav className="flex items-center gap-1">
             {NAV.map(({ href, label, icon: Icon }) => (
               <Link
@@ -65,6 +73,12 @@ export function AppNav() {
             <ThemeToggle />
           </div>
         </div>
+      </header>
+
+      {/* Phone: slim top bar (brand + theme toggle) */}
+      <header className="bg-background/80 sticky top-0 z-40 flex h-12 items-center justify-between border-b px-4 backdrop-blur sm:hidden">
+        <Brand />
+        <ThemeToggle />
       </header>
 
       {/* Phone: fixed bottom bar */}
