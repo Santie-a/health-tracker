@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from datetime import date as date_cls
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.timerange import day_bounds
 from .models import BodyComposition, SleepSession, Telemetry
 
 
@@ -33,10 +34,16 @@ async def query_daily(
     metric: str,
     frm: datetime | None = None,
     to: datetime | None = None,
+    tz_name: str = "UTC",
 ) -> list[dict]:
     """On-the-fly daily rollup via date_trunc (Timescale optimizes this). The
-    `telemetry_daily` continuous aggregate can replace this later for scale."""
-    day = func.date_trunc("day", Telemetry.ts).label("day")
+    `telemetry_daily` continuous aggregate can replace this later for scale.
+
+    Buckets by the calendar day in `tz_name` (Postgres `ts AT TIME ZONE tz` → local
+    wall clock), so rollups align with the user's day, not UTC. `frm`/`to` still filter
+    on the UTC instant. tz_name="UTC" keeps the original behavior."""
+    local_ts = func.timezone(tz_name, Telemetry.ts)  # timestamptz → naive local wall clock
+    day = func.date_trunc("day", local_ts).label("day")
     stmt = (
         select(
             day,
@@ -85,8 +92,7 @@ async def query_body_composition(
 
 async def sleep_for_day(session: AsyncSession, day: date_cls) -> SleepSession | None:
     """The night that ended on `day` (longest session if more than one)."""
-    start = datetime.combine(day, time.min, tzinfo=timezone.utc)
-    end = start + timedelta(days=1)
+    start, end = day_bounds(day)  # local calendar day → UTC instants (APP_TIMEZONE)
     stmt = (
         select(SleepSession)
         .where(SleepSession.end_ts >= start, SleepSession.end_ts < end)

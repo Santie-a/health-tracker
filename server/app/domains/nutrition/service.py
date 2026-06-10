@@ -8,12 +8,13 @@ meal when the GPU box is unreachable — never an error.
 
 from __future__ import annotations
 
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime, timezone
 
 from nutrition_core import MacroTable
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
+from app.core.timerange import day_bounds
 from app.integrations import image_svc
 
 from . import repository
@@ -211,8 +212,7 @@ async def add_items(
 
 
 async def get_day(session: AsyncSession, day) -> DayNutrition:
-    start = datetime.combine(day, time.min, tzinfo=timezone.utc)
-    end = start + timedelta(days=1)
+    start, end = day_bounds(day)  # local calendar day → UTC instants (APP_TIMEZONE)
     meals = await repository.list_in_range(session, start, end)
     all_items = [it for m in meals for it in m.items]
     return DayNutrition(

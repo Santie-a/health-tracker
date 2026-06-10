@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from datetime import date as date_cls
-from datetime import datetime, time, timedelta, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.timerange import day_bounds
 from app.domains.nutrition import service as nutrition_service
 from app.domains.recommendations import service as recommendations_service
 from app.domains.telemetry import service as telemetry_service
@@ -27,8 +27,7 @@ async def _metric(session: AsyncSession, metric: str, day, start, end) -> float 
 
 
 async def get_dashboard(session: AsyncSession, day: date_cls) -> DashboardOut:
-    start = datetime.combine(day, time.min, tzinfo=timezone.utc)
-    end = start + timedelta(days=1)
+    start, end = day_bounds(day)  # local calendar day → UTC instants (APP_TIMEZONE)
 
     telemetry = TelemetrySummary(
         steps=await _metric(session, "steps", day, start, end),

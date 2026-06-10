@@ -8,6 +8,8 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.timerange import tz_name
+
 from . import repository
 from .schemas import (
     BodyCompositionPoint,
@@ -72,7 +74,7 @@ async def get_body_composition(
 async def get_daily(
     session: AsyncSession, metric: str, frm: datetime | None, to: datetime | None
 ) -> list[DailyRollup]:
-    rows = await repository.query_daily(session, metric, frm, to)
+    rows = await repository.query_daily(session, metric, frm, to, tz_name())
     return [
         DailyRollup(
             day=r["day"].date(),

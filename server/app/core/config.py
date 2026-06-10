@@ -35,6 +35,14 @@ class Settings(BaseSettings):
     # Seconds to wait before falling back to the manual-entry path.
     image_svc_timeout: float = 30.0
 
+    # --- localization -----------------------------------------------------
+    # IANA timezone used for "what day is it" bucketing in day-scoped reads
+    # (nutrition/dashboard/recommendations/telemetry). The gateway stores UTC
+    # instants; these reads group by THIS zone's calendar day, so an entry logged
+    # in the local evening lands on the local day, not the next UTC one. Default
+    # UTC = naive behavior. Example: America/Costa_Rica.
+    app_timezone: str = "UTC"
+
     # --- observability ----------------------------------------------------
     log_level: str = "INFO"  # DEBUG | INFO | WARNING | ERROR
 

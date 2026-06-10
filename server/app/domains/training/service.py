@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import date as date_cls
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.timerange import range_bounds
 
 from . import repository
 from .models import Exercise, ExerciseMuscle, TrainingSession, TrainingSet
@@ -182,8 +184,7 @@ def _monday(d: date_cls) -> date_cls:
 
 
 async def get_stats(session: AsyncSession, frm: date_cls, to: date_cls) -> TrainingStats:
-    start = datetime.combine(frm, time.min, tzinfo=timezone.utc)
-    end = datetime.combine(to, time.min, tzinfo=timezone.utc) + timedelta(days=1)
+    start, end = range_bounds(frm, to)  # local calendar days → UTC instants (APP_TIMEZONE)
 
     catalog = await repository.load_catalog(session)
     by_id = {ex.id: ex for ex in catalog}

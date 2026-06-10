@@ -4,12 +4,13 @@ read/write the stored daily recommendation row."""
 from __future__ import annotations
 
 from datetime import date as date_cls
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.timerange import day_bounds
 from app.domains.nutrition.models import Meal, MealItem
 from app.domains.telemetry.models import BodyComposition, SleepSession, Telemetry
 from app.domains.training import service as training_service
@@ -20,8 +21,7 @@ from .rules import DayContext
 
 
 def _day_range(day: date_cls) -> tuple[datetime, datetime]:
-    start = datetime.combine(day, time.min, tzinfo=timezone.utc)
-    return start, start + timedelta(days=1)
+    return day_bounds(day)  # local calendar day → UTC instants (APP_TIMEZONE)
 
 
 def _f(value) -> float | None:
