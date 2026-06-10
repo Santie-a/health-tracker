@@ -50,11 +50,37 @@ async function resilientFetch(input: RequestInfo | URL, init?: RequestInit): Pro
   throw lastError;
 }
 
-/** Typed gateway client. Use with `gw()` to unwrap or throw a GatewayError. */
-export const gateway = createClient<paths>({
-  baseUrl: gatewayUrl(),
-  headers: authHeaders(),
-  fetch: resilientFetch,
+/**
+ * Lazily build the client so the gateway URL/token are read at REQUEST time, never at
+ * module load: `next build` evaluates these route modules with no env present, and an
+ * eager `gatewayUrl()` here would throw during "collect page data" (it has no runtime env).
+ */
+let cachedClient: ReturnType<typeof createClient<paths>> | undefined;
+
+function getClient(): ReturnType<typeof createClient<paths>> {
+  if (!cachedClient) {
+    cachedClient = createClient<paths>({
+      baseUrl: gatewayUrl(),
+      headers: authHeaders(),
+      fetch: resilientFetch,
+    });
+  }
+  return cachedClient;
+}
+
+/**
+ * Typed gateway client. Use with `gw()` to unwrap or throw a GatewayError. Backed by a
+ * lazily-initialized client (see `getClient`) via a Proxy, so call sites stay
+ * `gateway.GET(...)` while the env is only touched on first use.
+ */
+export const gateway = new Proxy({} as ReturnType<typeof createClient<paths>>, {
+  get(_target, prop) {
+    const real = getClient() as unknown as Record<string | symbol, unknown>;
+    const value = real[prop];
+    return typeof value === "function"
+      ? (value as (...args: unknown[]) => unknown).bind(real)
+      : value;
+  },
 });
 
 type OpenApiResult<T> = {
