@@ -3,8 +3,8 @@
 # This is the DEPLOY target (ARCHITECTURE.md / DEPLOY.md "always-on stack"): one stack on
 # the Pi5 under /mnt/ssd/stacks/health-tracker/, so a reboot restores the whole site. The
 # per-component compose files (db/, server/, frontend/) still exist for running a single
-# piece in isolation during dev — use those OR this, not both at once (they share the
-# `health-tracker-pgdata` volume and container names).
+# piece in isolation during dev (on the PC) — they use named volumes and don't assume the
+# Pi's /mnt/ssd layout. This stack is the Pi target: db data binds to /mnt/ssd/appdata/.
 #
 #   docker compose up -d --build         # build + start the whole stack
 #   docker compose logs -f server        # tail one service
@@ -32,7 +32,9 @@ services:
     ports:
       - "${DB_BIND_ADDR:-127.0.0.1}:5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      # Homelab convention (DEPLOY.md): persistent data as a bind mount under appdata/,
+      # not an anonymous/named volume — visible on disk and easy to back up.
+      - /mnt/ssd/appdata/health-tracker/db:/var/lib/postgresql/data
       - ./db/initdb:/docker-entrypoint-initdb.d:ro   # *.sql run once on first init
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -95,6 +97,5 @@ networks:
   proxy:
     external: true            # the shared homelab proxy network (Caddy). Must pre-exist on the Pi.
 
-volumes:
-  pgdata:
-    name: health-tracker-pgdata   # same name as db/docker-compose.yml → reuses existing data
+# No top-level `volumes:` — db data is a host bind mount under /mnt/ssd/appdata/ (above),
+# following the homelab stacks/ + appdata/ convention.

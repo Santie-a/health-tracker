@@ -358,10 +358,11 @@ The root `docker-compose.yml` (a Dockge stack at `/mnt/ssd/stacks/health-tracker
 up **db + server + frontend** on a shared internal `backend` network (frontend also on the
 `proxy` network) with `restart: unless-stopped`, so a power blip or reboot restores the
 whole site unattended. Services address each other by name (`db:5432`, `server:8000`);
-startup is ordered via the db healthcheck + `depends_on`. The per-component compose files
-(`db/`, `server/`, `frontend/`) remain for running a single piece in isolation during dev —
-use those **or** the root stack, not both at once (they share the `health-tracker-pgdata`
-volume and container names).
+startup is ordered via the db healthcheck + `depends_on`. Postgres data is a bind mount at
+`/mnt/ssd/appdata/health-tracker/db` (the `stacks/` + `appdata/` convention), not a named
+volume. The per-component compose files (`db/`, `server/`, `frontend/`) remain for running a
+single piece in isolation during dev on the PC (they use named volumes and don't assume the
+`/mnt/ssd` layout).
 
 ---
 
