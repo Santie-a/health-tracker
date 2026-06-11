@@ -32,6 +32,20 @@ PORTIONS: dict[str, list[tuple[str, float, bool]]] = {
     "oats": [("1 cup cooked", 234, True), ("1/2 cup dry", 40, False)],
     "milk": [("1 cup", 244, True)],
     "peanut_butter": [("1 tbsp", 16, True)],
+    # Colombian staples — "1 unidad" (one piece) presets for finger foods.
+    "arepa": [("1 unidad", 80, True)],
+    "arepa_de_huevo": [("1 unidad", 120, True)],
+    "arepa_de_queso": [("1 unidad", 90, True)],
+    "empanada": [("1 unidad", 45, True)],
+    "patacon": [("1 unidad", 50, True)],
+    "platano_maduro": [("1 tajada", 60, True)],
+    "bunuelo": [("1 unidad", 40, True)],
+    "pandebono": [("1 unidad", 50, True)],
+    "pan_de_yuca": [("1 unidad", 45, True)],
+    "almojabana": [("1 unidad", 70, True)],
+    "tamal": [("1 unidad", 250, True)],
+    "oblea": [("1 unidad", 60, True)],
+    "bocadillo": [("1 unidad", 25, True)],
 }
 
 

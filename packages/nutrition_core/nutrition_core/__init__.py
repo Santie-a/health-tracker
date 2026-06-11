@@ -18,7 +18,7 @@ from .matcher import MacroRow, MacroTable
 __all__ = ["MacroRow", "MacroTable", "TABLE_VERSION", "default_macro_csv"]
 
 # Bump when the bundled macros.csv changes; both services record it on output.
-TABLE_VERSION = "usda-subset-0.2"
+TABLE_VERSION = "usda-subset-0.3-co"
 
 
 def default_macro_csv() -> Path:
