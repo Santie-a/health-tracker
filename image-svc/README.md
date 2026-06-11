@@ -2,8 +2,7 @@
 
 Standalone FastAPI inference service (GPU, RTX 5070). Takes a meal photo and returns a per-item macro estimate. **Only the gateway calls it** — never the browser. Can be off when not logging meals.
 
-See [TODO.md](./TODO.md) for the roadmap and [../ARCHITECTURE.md](../ARCHITECTURE.md)
-for how it fits the system.
+See [../ARCHITECTURE.md](../ARCHITECTURE.md) for how it fits the system.
 
 ## API
 

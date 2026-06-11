@@ -12,10 +12,13 @@ import type { paths } from "./types.gen";
  * to the browser. Everything the app does against the gateway goes through here so
  * auth, timeouts, retries, and error normalization live in exactly one place.
  *
- * Transport policy (resilience): every request has a timeout and is retried ONCE on
- * a transient failure (network error, timeout, or 5xx) — never on a 4xx, which is a
- * deterministic client/validation error. Failures are surfaced as `GatewayError`,
- * never as raw fetch rejections or stack traces.
+ * Transport policy (resilience): every request has a timeout. Only *idempotent* reads
+ * (GET/HEAD) are retried ONCE on a transient failure (network error, timeout, or 5xx).
+ * A POST/PUT/PATCH/DELETE is never retried: a timeout or 5xx may arrive *after* the
+ * write already landed server-side (e.g. a photo meal that created a row and ran a GPU
+ * estimate), so a blind retry would duplicate that work. Never on a 4xx either, which is
+ * a deterministic client/validation error. Failures surface as `GatewayError`, never as
+ * raw fetch rejections or stack traces.
  */
 
 const DEFAULT_TIMEOUT_MS = 30_000; // generous: photo meals proxy to the GPU service
@@ -27,20 +30,25 @@ function authHeaders(): Record<string, string> {
 
 /** fetch with an abort-based timeout and a single retry on transient failures. */
 async function resilientFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  // Retry only idempotent reads. A POST/PUT/PATCH/DELETE that times out or 5xxs may have
+  // already been applied (the write landed; only the response was lost), so retrying it
+  // would duplicate the side effect — e.g. a second meal + a second GPU estimate.
+  const method = (init?.method ?? "GET").toUpperCase();
+  const retryable = method === "GET" || method === "HEAD";
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt++) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
     try {
       const res = await fetch(input, { ...init, signal: controller.signal });
-      if (res.status >= 500 && attempt === 0) {
-        lastError = res; // 5xx → one retry, then return whatever we get
+      if (res.status >= 500 && attempt === 0 && retryable) {
+        lastError = res; // 5xx on a read → one retry, then return whatever we get
         continue;
       }
       return res;
     } catch (err) {
       lastError = err;
-      if (attempt === 0) continue; // network/timeout → one retry
+      if (attempt === 0 && retryable) continue; // network/timeout on a read → one retry
       throw err;
     } finally {
       clearTimeout(timer);

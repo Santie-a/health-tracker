@@ -60,6 +60,11 @@ class Settings(BaseSettings):
     # Decoded-pixel ceiling (decompression-bomb guard). The MB cap bounds bytes,
     # not decoded size; 100 MP is generous for high-res phone photos.
     max_image_pixels: int = 100_000_000
+    # VLM input cap: downscale (preserving aspect) to at most this many pixels before
+    # inference. The model's visual-token count — and thus GPU memory — scales with pixel
+    # count, so a full-res phone photo (4K ≈ 8 MP) overflows VRAM while ~1 MP identifies
+    # foods fine. Distinct from max_image_pixels above, which only guards decoding.
+    max_pixels: int = 1_000_000
 
     # --- observability ----------------------------------------------------
     log_level: str = "INFO"  # DEBUG | INFO | WARNING | ERROR

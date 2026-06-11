@@ -71,10 +71,10 @@ Your data is overwhelmingly time-series (per-minute/hourly telemetry). Timescale
 health-tracker/
   ARCHITECTURE.md        <- this file
   README.md
-  db/        TODO.md     <- Pi5 Postgres/Timescale
-  server/    TODO.md     <- Python gateway + recommendations
-  image-svc/ TODO.md     <- GPU food->macros service
-  frontend/  TODO.md     <- Next dashboard
+  db/        README.md            <- Pi5 Postgres/Timescale
+  server/    IMPLEMENTATION_PLAN  <- Python gateway + recommendations
+  image-svc/ README.md            <- GPU food->macros service
+  frontend/  IMPLEMENTATION_PLAN  <- Next dashboard
 ```
 
 ## Build order (suggested)

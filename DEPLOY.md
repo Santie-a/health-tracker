@@ -22,7 +22,7 @@ The Pi5 host is set up and these facts are stable. Treat them as the deployment 
 - Root filesystem is on the microSD; **all container data lives on a USB SSD** mounted
   at `/mnt/ssd` (ext4, mounted by UUID in `/etc/fstab` with `nofail`).
 - Networking is managed by **NetworkManager + netplan** (not `dhcpcd`). `eth0` has a
-  **static IP `192.168.20.51/24`**, gateway `192.168.20.1`. Wired, not Wi-Fi.
+  **static IP `<PI_LAN_IP>/24`** (e.g. `192.168.x.51`), gateway `<LAN_GATEWAY_IP>`. Wired, not Wi-Fi.
 
 **Storage layout — put things here**
 ```
@@ -79,7 +79,7 @@ easy to back up.
 | Shared proxy network          | `proxy` (external) |
 | Caddyfile                     | `/mnt/ssd/stacks/caddy/Caddyfile` |
 | Naming domain                 | `homeserver.internal` |
-| Pi static LAN IP              | `192.168.20.51` |
+| Pi static LAN IP              | `<PI_LAN_IP>` |
 | Pi Tailscale name / IP        | `raspberrypi-homeserver` / `<PI_TS_IP>` |
 | PC (image-svc) address        | `<PC_TS_NAME>` (Tailscale name) |
 
@@ -342,7 +342,7 @@ Hard rules for this host — follow them, don't re-derive:
 - **Pin image versions** (e.g. `postgres:16-alpine`, `caddy:2`) — avoid `:latest` so a
   recreate can't pull a breaking major version.
 - **Networking is netplan + NetworkManager.** Do not suggest `dhcpcd`/`/etc/dhcpcd.conf`.
-  The static IP lives in the NM connection; `eth0` is `192.168.20.51`.
+  The static IP lives in the NM connection; `eth0` is `<PI_LAN_IP>`.
 - **Secrets:** never commit a `.env`; create it per host from `.env.example`. The
   `API_TOKEN` must match between the PC's `image-svc/.env` and the Pi5's `server/.env`.
 - **DB stays local:** `DB_BIND_ADDR=127.0.0.1`; the gateway is internal; only the
@@ -370,7 +370,7 @@ single piece in isolation during dev on the PC (they use named volumes and don't
 
 Cron `pg_dump` on the Pi5 + copy off-device (the dump and any off-device copy should land
 on `/mnt/ssd` or an external target, not the microSD). It must **fail loudly** (log +
-non-zero exit) so a silent/0-byte backup is noticeable — see [db/TODO.md](./db/TODO.md).
+non-zero exit) so a silent/0-byte backup is noticeable — see [db/README.md](./db/README.md).
 
 ---
 

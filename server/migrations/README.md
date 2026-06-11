@@ -45,4 +45,4 @@ alembic upgrade head                    # apply
 ```
 
 Once a set of changes is stable, fold the same tables/columns into `db/initdb`
-so a fresh bring-up matches (per db/TODO.md), keeping `0001` the baseline.
+so a fresh bring-up matches, keeping `0001` the baseline.

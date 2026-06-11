@@ -1,13 +1,13 @@
 "use client";
 
-import { Camera } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ApiError } from "@/lib/query/fetcher";
 import { useGatewayMutation } from "@/lib/query/use-gateway-mutation";
+import { cn } from "@/lib/utils";
 
 import { createPhotoMeal } from "../api";
 
@@ -15,10 +15,15 @@ import { createPhotoMeal } from "../api";
  * Meal-photo entry. Uploads to the gateway → image-svc. When that box is offline the
  * gateway returns a *degraded* empty meal (not an error); we still navigate to the meal
  * and flag `degraded` so the detail page shows the manual-entry banner.
+ *
+ * Mobile note: this is a real `<label>` wrapping the file input — NOT a button that
+ * programmatically `.click()`s a hidden input. On Android, returning from the camera
+ * activity can reload the page; a label-associated, user-tapped input delivers the
+ * captured file far more reliably than a synthetic click into a `display:none` input
+ * (whose handler/state may not survive the round-trip).
  */
 export function PhotoUpload() {
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const mutation = useGatewayMutation({
     mutationFn: (file: File) => {
@@ -38,13 +43,22 @@ export function PhotoUpload() {
   });
 
   return (
-    <>
+    <label
+      aria-busy={mutation.isPending}
+      className={cn(
+        buttonVariants({ variant: "outline", size: "sm" }),
+        "cursor-pointer",
+        mutation.isPending && "pointer-events-none opacity-50",
+      )}
+    >
+      {mutation.isPending ? <Loader2 className="animate-spin" /> : <Camera />}
+      Photo
       <input
-        ref={inputRef}
         type="file"
         accept="image/*"
         capture="environment"
-        className="hidden"
+        disabled={mutation.isPending}
+        className="sr-only"
         onChange={(e) => {
           const file = e.target.files?.[0];
           e.target.value = ""; // allow re-selecting the same file
@@ -54,18 +68,11 @@ export function PhotoUpload() {
             return;
           }
           mutation.mutate(file, {
-            onError: (err) => toast.error(err instanceof ApiError ? err.friendly : "Upload failed"),
+            onError: (err) =>
+              toast.error(err instanceof ApiError ? err.friendly : "Upload failed"),
           });
         }}
       />
-      <Button
-        variant="outline"
-        size="sm"
-        loading={mutation.isPending}
-        onClick={() => inputRef.current?.click()}
-      >
-        <Camera /> Photo
-      </Button>
-    </>
+    </label>
   );
 }

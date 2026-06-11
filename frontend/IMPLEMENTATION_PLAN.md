@@ -1,8 +1,8 @@
 # Frontend — Implementation Plan
 
 Ordered breakdown of the Next.js dashboard build into small, individually-shippable
-tasks. Derived from [ARCHITECTURE.md](../ARCHITECTURE.md), [frontend/TODO.md](./TODO.md),
-[DEPLOY.md](../DEPLOY.md), and the **already-built** gateway contract
+tasks. Derived from [ARCHITECTURE.md](../ARCHITECTURE.md), [DEPLOY.md](../DEPLOY.md),
+and the **already-built** gateway contract
 (`server/app/domains/*/router.py` + `schemas.py`, served at `/openapi.json` and `/docs`).
 The gateway is the single backend; the frontend mirrors its layered, resilient style.
 

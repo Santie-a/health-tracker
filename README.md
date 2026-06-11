@@ -13,7 +13,7 @@ on-demand GPU box) and how `.env` is handled per machine.
 - `image-svc/` — GPU (RTX 5070) FastAPI service: food photo -> macro estimate.
 - `frontend/` — Next.js dashboard and logging UI.
 
-Each folder has a `TODO.md`. Start with `db/`, then `server/`, then `image-svc/`, then `frontend/`.
+Each component has a `README.md` (and the server/frontend an `IMPLEMENTATION_PLAN.md`). The build order was `db/` → `server/` → `image-svc/` → `frontend/`.
 
 ## Conventions
 - Frontend talks only to `server/`. Never call the DB or image service from the browser.

@@ -1,8 +1,8 @@
 # Samsung Health — CSV files used by the server
 
-Quick-reference index of which export CSVs the ingest pipeline reads. Full column
-catalogue is in [schema.md](./schema.md); ingest mappings and parser quirks are in
-[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) ("Samsung Health ingestion").
+Quick-reference index of which export CSVs the ingest pipeline reads. Ingest mappings
+and parser quirks are in [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)
+("Samsung Health ingestion").
 
 > Filenames in the export carry a timestamp suffix, e.g.
 > `com.samsung.shealth.sleep.20260607134546.csv`. Match on the **data-type prefix**

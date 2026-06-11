@@ -1,8 +1,7 @@
 # Server — Implementation Plan
 
 Ordered breakdown of the gateway build into small, individually-shippable tasks.
-Derived from [ARCHITECTURE.md](../ARCHITECTURE.md), [server/TODO.md](./TODO.md),
-[db/TODO.md](../db/TODO.md), and the existing schema
+Derived from [ARCHITECTURE.md](../ARCHITECTURE.md) and the existing schema
 ([db/initdb/02_schema.sql](../db/initdb/02_schema.sql)). The `image-svc` app is the
 reference implementation for config/auth/logging/app-factory patterns — mirror it.
 
@@ -198,7 +197,7 @@ ran (entrypoint auto-migrated, /health ok, /health/ready database:true). 57 test
   then uvicorn — safe because baseline 0001 is empty) + `docker-compose.yml` (Pi5
   service entry). OpenAPI contract at `/docs`.
 
-Tests are written **alongside each domain**, not deferred (server/TODO.md "Verification"):
+Tests are written **alongside each domain**, not deferred:
 table-driven rules, ingest parser, error paths (image-svc offline→fallback, bad row→skip,
 DB error→503, global handler shape), strength stats, serving→macro resolution.
 
@@ -223,7 +222,7 @@ High-value-but-tedious-to-type metrics (the reason to bother automating): **dail
 sleep sessions, stress, SpO2, weight/body-composition**. These mostly come from
 *daily-summary* CSVs that are flat and easy — no JSON-sidecar parsing needed.
 
-### Locked-in v1 scope (decided 2026-06-07, against the real export in `server/schema.md`)
+### Locked-in v1 scope (decided 2026-06-07, against the real Samsung export)
 
 Files to ingest and their targets (one parser each, see tasks 3.2.0–3.2.8):
 
@@ -254,4 +253,4 @@ goals/badges/rewards/social/insight/program files; `vitality_score` (opaque comp
 - **Idempotent upsert:** telemetry on `(ts, metric, source)`; body_composition on `ts`;
   sleep on `start_ts`; exercise/training on a stable natural key (e.g. start_ts+type).
 
-**Later:** Health Connect (Android) as a cleaner automated bridge (server/TODO.md).
+**Later:** Health Connect (Android) as a cleaner automated bridge.

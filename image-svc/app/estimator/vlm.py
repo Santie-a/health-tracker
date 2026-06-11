@@ -36,6 +36,22 @@ _PROMPT = (
 _JSON_ARRAY = re.compile(r"\[.*\]", re.DOTALL)
 
 
+def _downscale(image: "Image", max_pixels: int) -> "Image":
+    """Shrink (preserving aspect ratio) so the image has at most ``max_pixels`` pixels.
+
+    The model turns each image into visual tokens proportional to its pixel count, and GPU
+    memory scales with that token count — so an uncapped multi-megapixel phone photo
+    overflows VRAM. Food identification needs only ~1 MP, so we bound it here.
+    """
+    from PIL import Image as PILImage
+
+    w, h = image.size
+    if w * h <= max_pixels:
+        return image
+    scale = (max_pixels / (w * h)) ** 0.5
+    return image.resize((max(1, round(w * scale)), max(1, round(h * scale))), PILImage.LANCZOS)
+
+
 class VLMEstimator(FoodEstimator):
     name = "vlm"
 
@@ -91,6 +107,8 @@ class VLMEstimator(FoodEstimator):
         self.warmup()
         import torch
 
+        # Bound the resolution before inference — the main control on GPU memory.
+        image = _downscale(image, self._settings.max_pixels)
         prompt = _PROMPT.format(names=", ".join(self.table.names))
         messages = [
             {

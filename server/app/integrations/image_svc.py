@@ -17,7 +17,7 @@ from app.core.config import Settings
 
 log = logging.getLogger("server.image_svc")
 
-_RETRIES = 1  # one retry for transient connect/timeout errors
+_RETRIES = 1  # one retry, but ONLY when the connection never landed (see estimate)
 
 
 @dataclass
@@ -71,13 +71,18 @@ async def estimate(
                     model_version=data.get("model_version"),
                     table_version=data.get("table_version"),
                 )
-            # 5xx (e.g. model OOM) is the documented "degraded" signal; don't retry 4xx.
+            # Any non-200 means image-svc already received and processed the request, so a
+            # retry would re-run the (expensive, non-idempotent) GPU inference. 5xx (e.g.
+            # model OOM) is the documented "degraded" signal — fall back, don't retry.
             last_error = f"image-svc returned {resp.status_code}"
-            if resp.status_code < 500:
-                break
-        except (httpx.TimeoutException, httpx.TransportError) as exc:
+            break
+        except (httpx.ConnectError, httpx.ConnectTimeout) as exc:
+            # Couldn't establish the connection — the request never reached image-svc, so
+            # retrying is safe (e.g. the on-demand GPU box just came online).
             last_error = f"{type(exc).__name__}: {exc}"
-        except Exception as exc:  # malformed body, unexpected — still degrade, never raise
+        except Exception as exc:
+            # Read timeout (inference still in flight), malformed body, or anything else:
+            # the request may already be processing, so DON'T retry — degrade, never raise.
             last_error = f"{type(exc).__name__}: {exc}"
             break
 
