@@ -29,7 +29,9 @@ from .schemas import (
     MealIn,
     MealItemAddIn,
     MealItemIn,
+    MealItemUpdate,
     MealOut,
+    MealUpdate,
     Totals,
 )
 
@@ -208,6 +210,61 @@ async def add_items(
     for item in payload.items:
         meal.items.append(await _build_added_item(session, item, table))
     await session.flush()
+    return MealOut.model_validate(meal)
+
+
+# --- edit / delete (v1.1) ----------------------------------------------------
+
+async def update_meal(
+    session: AsyncSession, meal_id: int, payload: MealUpdate
+) -> MealOut | None:
+    meal = await repository.get(session, meal_id)
+    if meal is None:
+        return None
+    data = payload.model_dump(exclude_unset=True)
+    if "ts" in data and data["ts"] is not None:
+        data["ts"] = _as_utc(data["ts"])
+    for field, value in data.items():
+        setattr(meal, field, value)
+    await session.flush()
+    return MealOut.model_validate(meal)
+
+
+async def delete_meal(session: AsyncSession, meal_id: int) -> bool:
+    meal = await repository.get(session, meal_id)
+    if meal is None:
+        return False
+    await repository.delete(session, meal)
+    return True
+
+
+async def update_item(
+    session: AsyncSession, meal_id: int, item_id: int, payload: MealItemUpdate, table: MacroTable
+) -> MealOut | None:
+    item = await repository.get_item(session, meal_id, item_id)
+    if item is None:
+        return None
+    data = payload.model_dump(exclude_unset=True)
+    for field, value in data.items():
+        setattr(item, field, value)
+    # Re-estimate macros when grams changed but the caller didn't pin them explicitly.
+    macro_keys = {"kcal", "protein_g", "carbs_g", "fat_g"}
+    if "grams" in data and not (data.keys() & macro_keys) and item.grams is not None:
+        row = table.lookup(item.food)
+        if row is not None:
+            item.kcal, item.protein_g, item.carbs_g, item.fat_g = row.scale(float(item.grams))
+            item.estimated = True
+    await session.flush()
+    meal = await repository.get(session, meal_id)
+    return MealOut.model_validate(meal)
+
+
+async def delete_item(session: AsyncSession, meal_id: int, item_id: int) -> MealOut | None:
+    item = await repository.get_item(session, meal_id, item_id)
+    if item is None:
+        return None
+    await repository.delete_item(session, item)
+    meal = await repository.get(session, meal_id)
     return MealOut.model_validate(meal)
 
 

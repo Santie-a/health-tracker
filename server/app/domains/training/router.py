@@ -15,9 +15,12 @@ from .schemas import (
     AddSetsIn,
     ExerciseIn,
     ExerciseOut,
+    ExerciseUpdate,
     SessionType,
     TrainingSessionIn,
     TrainingSessionOut,
+    TrainingSessionUpdate,
+    TrainingSetUpdate,
     TrainingStats,
 )
 
@@ -52,6 +55,38 @@ async def create_exercise(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"Exercise '{exc}' already exists.",
         )
+
+
+@exercises_router.patch("/{exercise_id}", response_model=ExerciseOut)
+async def update_exercise(
+    exercise_id: int,
+    payload: ExerciseUpdate,
+    session: AsyncSession = Depends(get_session),
+) -> ExerciseOut:
+    """Edit a catalog exercise. Renaming regenerates the slug (409 on collision)."""
+    try:
+        ex = await service.update_exercise(session, exercise_id, payload)
+    except service.DuplicateExercise as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Exercise '{exc}' already exists.",
+        )
+    if ex is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Exercise not found.")
+    return ex
+
+
+@exercises_router.delete("/{exercise_id}")
+async def delete_exercise(
+    exercise_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
+    """Delete a catalog exercise. Soft-deletes (deactivates) instead when logged sets
+    still reference it, so history stays intact. Returns the action taken."""
+    action = await service.delete_exercise(session, exercise_id)
+    if action is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Exercise not found.")
+    return {"action": action}
 
 
 # --- strength stats (registered before /{session_id} to avoid capture) -------
@@ -99,6 +134,28 @@ async def get_training(
     return obj
 
 
+@router.patch("/{session_id}", response_model=TrainingSessionOut)
+async def update_training(
+    session_id: int,
+    payload: TrainingSessionUpdate,
+    session: AsyncSession = Depends(get_session),
+) -> TrainingSessionOut:
+    """Edit session fields; `load` recomputes from duration×rpe when unset explicitly."""
+    obj = await service.update_session(session, session_id, payload)
+    if obj is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Training session not found.")
+    return obj
+
+
+@router.delete("/{session_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_training(
+    session_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> None:
+    if not await service.delete_session(session, session_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Training session not found.")
+
+
 @router.post("/{session_id}/sets", response_model=TrainingSessionOut, status_code=status.HTTP_201_CREATED)
 async def add_sets(
     session_id: int,
@@ -109,4 +166,31 @@ async def add_sets(
     obj = await service.add_sets(session, session_id, payload)
     if obj is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Training session not found.")
+    return obj
+
+
+@router.patch("/{session_id}/sets/{set_id}", response_model=TrainingSessionOut)
+async def update_set(
+    session_id: int,
+    set_id: int,
+    payload: TrainingSetUpdate,
+    session: AsyncSession = Depends(get_session),
+) -> TrainingSessionOut:
+    """Edit one set; returns the updated session."""
+    obj = await service.update_set(session, session_id, set_id, payload)
+    if obj is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Set not found.")
+    return obj
+
+
+@router.delete("/{session_id}/sets/{set_id}", response_model=TrainingSessionOut)
+async def delete_set(
+    session_id: int,
+    set_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> TrainingSessionOut:
+    """Remove one set; returns the updated session."""
+    obj = await service.delete_set(session, session_id, set_id)
+    if obj is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Set not found.")
     return obj

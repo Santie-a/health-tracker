@@ -122,3 +122,26 @@ class MealItemAddIn(BaseModel):
 
 class AddItemsIn(BaseModel):
     items: list[MealItemAddIn] = Field(..., min_length=1)
+
+
+# --- edit (v1.1) --------------------------------------------------------------
+
+class MealUpdate(BaseModel):
+    """Partial meal edit. Only supplied fields are changed (PATCH semantics)."""
+
+    ts: datetime | None = Field(None, description="When the meal was eaten (UTC ISO; naive assumed UTC).")
+    name: str | None = None
+
+
+class MealItemUpdate(BaseModel):
+    """Partial item edit. Omitted fields are left untouched. When `grams` changes
+    and macros aren't supplied, macros are re-estimated from the catalog/matcher."""
+
+    food: str | None = None
+    grams: float | None = Field(None, ge=0)
+    qty: float | None = Field(None, gt=0)
+    portion_label: str | None = None
+    kcal: float | None = Field(None, ge=0)
+    protein_g: float | None = Field(None, ge=0)
+    carbs_g: float | None = Field(None, ge=0)
+    fat_g: float | None = Field(None, ge=0)

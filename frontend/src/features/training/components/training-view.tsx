@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Dumbbell } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -31,6 +31,12 @@ export function TrainingView() {
             className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
           >
             <BarChart3 /> Balance
+          </Link>
+          <Link
+            href="/training/exercises"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+          >
+            <Dumbbell /> Catalog
           </Link>
           <NewSessionDialog />
         </div>

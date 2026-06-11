@@ -30,7 +30,9 @@ from .schemas import (
     FoodResolveOut,
     MealCreateResponse,
     MealIn,
+    MealItemUpdate,
     MealOut,
+    MealUpdate,
 )
 
 router = APIRouter(prefix="/meals", tags=["nutrition"], dependencies=[Depends(require_token)])
@@ -121,6 +123,28 @@ async def get_meal(
     return MealOut.model_validate(meal)
 
 
+@router.patch("/{meal_id}", response_model=MealOut)
+async def update_meal(
+    meal_id: int,
+    payload: MealUpdate,
+    session: AsyncSession = Depends(get_session),
+) -> MealOut:
+    """Edit a meal's name and/or timestamp (fix a wrong entry)."""
+    meal = await service.update_meal(session, meal_id, payload)
+    if meal is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found.")
+    return meal
+
+
+@router.delete("/{meal_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_meal(
+    meal_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> None:
+    if not await service.delete_meal(session, meal_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found.")
+
+
 @router.post("/{meal_id}/items", response_model=MealOut, status_code=status.HTTP_201_CREATED)
 async def add_meal_items(
     meal_id: int,
@@ -136,4 +160,33 @@ async def add_meal_items(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
     if meal is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found.")
+    return meal
+
+
+@router.patch("/{meal_id}/items/{item_id}", response_model=MealOut)
+async def update_meal_item(
+    meal_id: int,
+    item_id: int,
+    payload: MealItemUpdate,
+    session: AsyncSession = Depends(get_session),
+    table: MacroTable = Depends(get_macro_table),
+) -> MealOut:
+    """Edit a single item; returns the updated meal. Macros re-estimate when grams
+    change and aren't pinned explicitly."""
+    meal = await service.update_item(session, meal_id, item_id, payload, table)
+    if meal is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal item not found.")
+    return meal
+
+
+@router.delete("/{meal_id}/items/{item_id}", response_model=MealOut)
+async def delete_meal_item(
+    meal_id: int,
+    item_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> MealOut:
+    """Remove one item; returns the updated meal."""
+    meal = await service.delete_item(session, meal_id, item_id)
+    if meal is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal item not found.")
     return meal

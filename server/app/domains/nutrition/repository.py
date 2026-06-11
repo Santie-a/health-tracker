@@ -34,6 +34,22 @@ async def get(session: AsyncSession, meal_id: int) -> Meal | None:
     return result.scalar_one_or_none()
 
 
+async def get_item(session: AsyncSession, meal_id: int, item_id: int) -> MealItem | None:
+    """An item scoped to its meal — returns None if it belongs to a different meal."""
+    stmt = select(MealItem).where(MealItem.id == item_id, MealItem.meal_id == meal_id)
+    return (await session.execute(stmt)).scalar_one_or_none()
+
+
+async def delete(session: AsyncSession, meal: Meal) -> None:
+    await session.delete(meal)  # cascades to meal_items (ORM + FK ondelete)
+    await session.flush()
+
+
+async def delete_item(session: AsyncSession, item: MealItem) -> None:
+    await session.delete(item)
+    await session.flush()
+
+
 # --- foods catalog -----------------------------------------------------------
 
 async def search_foods(session: AsyncSession, q: str | None, limit: int) -> list[Food]:

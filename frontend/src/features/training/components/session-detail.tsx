@@ -7,30 +7,13 @@ import { QueryState } from "@/components/async/query-state";
 import { Skeleton } from "@/components/async/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { SectionCard } from "@/components/ui/section-card";
-import type { TrainingSession, TrainingSet } from "@/lib/gateway/types";
+import type { TrainingSession } from "@/lib/gateway/types";
 import { formatInstant } from "@/lib/time";
 
 import { useTrainingSession } from "../hooks";
 import { AddSetForm } from "./add-set-form";
-
-function setLine(s: TrainingSet): string {
-  if (s.distance_m != null || s.pace) {
-    return [s.distance_m != null ? `${s.distance_m} m` : null, s.pace].filter(Boolean).join(" · ");
-  }
-  const load = [
-    s.reps != null ? `${s.reps}` : null,
-    s.weight_kg != null ? `× ${s.weight_kg} kg` : null,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  const extra = [
-    s.added_weight_kg != null ? `+${s.added_weight_kg} kg` : null,
-    s.rpe != null ? `RPE ${s.rpe}` : null,
-  ]
-    .filter(Boolean)
-    .join(" · ");
-  return [load || "—", extra].filter(Boolean).join(" · ");
-}
+import { EditSessionDialog } from "./edit-session-dialog";
+import { SetRow } from "./set-row";
 
 function header(s: TrainingSession): string {
   const parts = [
@@ -80,6 +63,9 @@ export function SessionDetail({ id }: { id: number }) {
                     <p className="text-muted-foreground text-sm">{header(session)}</p>
                   ) : null}
                 </div>
+                <div className="ml-auto">
+                  <EditSessionDialog session={session} />
+                </div>
               </div>
               {session.notes ? (
                 <p className="bg-muted/50 rounded-md p-3 text-sm">{session.notes}</p>
@@ -91,16 +77,7 @@ export function SessionDetail({ id }: { id: number }) {
                 ) : (
                   <ol className="divide-y">
                     {sets.map((s, i) => (
-                      <li key={s.id} className="flex items-center gap-3 py-2 first:pt-0 last:pb-0">
-                        <span className="text-muted-foreground w-5 shrink-0 text-xs tabular-nums">
-                          {i + 1}
-                        </span>
-                        <span className="min-w-0 flex-1 truncate text-sm">
-                          <span className="font-medium">{s.exercise}</span>
-                          <span className="text-muted-foreground"> · {setLine(s)}</span>
-                        </span>
-                        {s.is_warmup ? <Badge variant="outline">warm-up</Badge> : null}
-                      </li>
+                      <SetRow key={s.id} sessionId={id} set={s} index={i} />
                     ))}
                   </ol>
                 )}

@@ -46,6 +46,24 @@ async def get(session: AsyncSession, session_id: int) -> TrainingSession | None:
     return result.scalar_one_or_none()
 
 
+async def get_set(session: AsyncSession, session_id: int, set_id: int) -> TrainingSet | None:
+    """A set scoped to its session — None if it belongs to a different session."""
+    stmt = select(TrainingSet).where(
+        TrainingSet.id == set_id, TrainingSet.session_id == session_id
+    )
+    return (await session.execute(stmt)).scalar_one_or_none()
+
+
+async def delete(session: AsyncSession, obj: TrainingSession) -> None:
+    await session.delete(obj)  # cascades to training_sets (ORM + FK ondelete)
+    await session.flush()
+
+
+async def delete_set(session: AsyncSession, obj: TrainingSet) -> None:
+    await session.delete(obj)
+    await session.flush()
+
+
 # --- exercise catalog --------------------------------------------------------
 
 async def add_exercise(session: AsyncSession, ex: Exercise) -> Exercise:
@@ -60,6 +78,34 @@ async def get_exercise_by_slug(session: AsyncSession, slug: str) -> Exercise | N
             select(Exercise).options(selectinload(Exercise.muscles)).where(Exercise.slug == slug)
         )
     ).scalar_one_or_none()
+
+
+async def get_exercise(session: AsyncSession, exercise_id: int) -> Exercise | None:
+    return (
+        await session.execute(
+            select(Exercise).options(selectinload(Exercise.muscles)).where(Exercise.id == exercise_id)
+        )
+    ).scalar_one_or_none()
+
+
+async def delete_exercise(session: AsyncSession, ex: Exercise) -> None:
+    await session.delete(ex)  # cascades to exercise_muscles
+    await session.flush()
+
+
+async def count_sets_for_exercise(session: AsyncSession, exercise_id: int) -> int:
+    """How many logged sets reference this catalog exercise (gates hard-delete)."""
+    from sqlalchemy import func
+
+    return int(
+        (
+            await session.execute(
+                select(func.count())
+                .select_from(TrainingSet)
+                .where(TrainingSet.exercise_id == exercise_id)
+            )
+        ).scalar_one()
+    )
 
 
 async def search_exercises(

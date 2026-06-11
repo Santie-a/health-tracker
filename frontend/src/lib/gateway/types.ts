@@ -22,9 +22,12 @@ export type TrainingSession = S["TrainingSessionOut"];
 export type TrainingSet = S["TrainingSetOut"];
 export type TrainingSessionIn = S["TrainingSessionIn"];
 export type TrainingSetIn = S["TrainingSetIn"];
+export type TrainingSessionUpdate = S["TrainingSessionUpdate"];
+export type TrainingSetUpdate = S["TrainingSetUpdate"];
 
 export type Exercise = S["ExerciseOut"];
 export type ExerciseIn = S["ExerciseIn"];
+export type ExerciseUpdate = S["ExerciseUpdate"];
 
 export type TrainingStats = S["TrainingStats"];
 
@@ -33,6 +36,8 @@ export type MealItem = S["MealItemOut"];
 export type MealIn = S["MealIn"];
 export type MealItemAddIn = S["MealItemAddIn"];
 export type AddItemsIn = S["AddItemsIn"];
+export type MealUpdate = S["MealUpdate"];
+export type MealItemUpdate = S["MealItemUpdate"];
 export type DayNutrition = S["DayNutrition"];
 export type MealCreateResponse = S["MealCreateResponse"];
 

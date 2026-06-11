@@ -75,6 +75,34 @@ class AddSetsIn(BaseModel):
     sets: list[TrainingSetIn] = Field(..., min_length=1)
 
 
+# --- edit (v1.1) --------------------------------------------------------------
+
+class TrainingSessionUpdate(BaseModel):
+    """Partial session edit (PATCH). `load` recomputes from duration×rpe when those
+    change and no explicit load is given."""
+
+    ts: datetime | None = None
+    type: SessionType | None = None
+    duration_min: int | None = None
+    rpe: float | None = Field(None, ge=0, le=10)
+    load: float | None = None
+    notes: str | None = None
+
+
+class TrainingSetUpdate(BaseModel):
+    """Partial set edit. Omitted fields are untouched."""
+
+    exercise: str | None = None
+    set_no: int | None = None
+    reps: int | None = None
+    weight_kg: float | None = None
+    distance_m: float | None = None
+    pace: str | None = None
+    rpe: float | None = Field(None, ge=0, le=10)
+    is_warmup: bool | None = None
+    added_weight_kg: float | None = None
+
+
 # --- exercise catalog ---------------------------------------------------------
 
 ExerciseCategory = Literal["push", "pull", "squat", "hinge", "carry", "core", "swim", "other"]
@@ -116,6 +144,21 @@ class ExerciseOut(BaseModel):
     aliases: list[str] | None
     is_active: bool
     muscles: list[ExerciseMuscleOut]
+
+
+class ExerciseUpdate(BaseModel):
+    """Partial catalog edit (PATCH). When `name` changes the slug is regenerated
+    (409 on collision). Supplying `muscles` replaces the muscle set wholesale."""
+
+    name: str | None = None
+    category: ExerciseCategory | None = None
+    primary_muscle: str | None = None
+    equipment: str | None = None
+    is_unilateral: bool | None = None
+    is_bodyweight: bool | None = None
+    aliases: list[str] | None = None
+    is_active: bool | None = None
+    muscles: list[ExerciseMuscleIn] | None = None
 
 
 # --- strength stats -----------------------------------------------------------

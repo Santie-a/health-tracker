@@ -18,9 +18,12 @@ from .schemas import (
     ExerciseIn,
     ExerciseOut,
     ExerciseStat,
+    ExerciseUpdate,
     MuscleVolume,
     TrainingSessionIn,
     TrainingSessionOut,
+    TrainingSessionUpdate,
+    TrainingSetUpdate,
     TrainingStats,
     WeeklyMuscleSets,
 )
@@ -148,6 +151,60 @@ async def search_exercises(
     return [ExerciseOut.model_validate(r) for r in rows]
 
 
+async def update_exercise(
+    session: AsyncSession, exercise_id: int, payload: ExerciseUpdate
+) -> ExerciseOut | None:
+    ex = await repository.get_exercise(session, exercise_id)
+    if ex is None:
+        return None
+    data = payload.model_dump(exclude_unset=True)
+
+    # Renaming regenerates the slug; guard the unique constraint against other rows.
+    if "name" in data and data["name"]:
+        slug = slugify(data["name"])
+        existing = await repository.get_exercise_by_slug(session, slug)
+        if existing is not None and existing.id != ex.id:
+            raise DuplicateExercise(slug)
+        ex.slug = slug
+
+    # `muscles` (when supplied) replaces the set wholesale; primary_muscle is folded in
+    # as a primary row to mirror create_exercise.
+    muscles = data.pop("muscles", None)
+    for field, value in data.items():
+        setattr(ex, field, value)
+    if muscles is not None:
+        rows, seen = [], set()
+        primary = data.get("primary_muscle", ex.primary_muscle)
+        if primary:
+            rows.append(ExerciseMuscle(muscle=primary, role="primary"))
+            seen.add((primary, "primary"))
+        for m in muscles:
+            if (m.muscle, m.role) in seen:
+                continue
+            seen.add((m.muscle, m.role))
+            rows.append(ExerciseMuscle(muscle=m.muscle, role=m.role))
+        ex.muscles = rows  # cascade delete-orphan clears the old rows
+
+    await session.flush()
+    fresh = await repository.get_exercise(session, exercise_id)
+    return ExerciseOut.model_validate(fresh)
+
+
+async def delete_exercise(session: AsyncSession, exercise_id: int) -> str | None:
+    """Hard-delete when no logged set references the exercise; otherwise soft-delete
+    (is_active=False) to preserve historical sets. Returns the action, or None if
+    the exercise doesn't exist."""
+    ex = await repository.get_exercise(session, exercise_id)
+    if ex is None:
+        return None
+    if await repository.count_sets_for_exercise(session, exercise_id) > 0:
+        ex.is_active = False
+        await session.flush()
+        return "deactivated"
+    await repository.delete_exercise(session, ex)
+    return "deleted"
+
+
 # --- per-set logging ---------------------------------------------------------
 
 async def add_sets(
@@ -174,6 +231,65 @@ async def add_sets(
             )
         )
     await session.flush()
+    return TrainingSessionOut.model_validate(obj)
+
+
+# --- edit / delete (v1.1) ----------------------------------------------------
+
+async def update_session(
+    session: AsyncSession, session_id: int, payload: TrainingSessionUpdate
+) -> TrainingSessionOut | None:
+    obj = await repository.get(session, session_id)
+    if obj is None:
+        return None
+    data = payload.model_dump(exclude_unset=True)
+    if "ts" in data and data["ts"] is not None:
+        data["ts"] = _as_utc(data["ts"])
+    for field, value in data.items():
+        setattr(obj, field, value)
+    # Recompute load unless the caller pinned it: any change to duration/rpe (or an
+    # explicit load) flows through compute_load with the post-edit values.
+    if {"duration_min", "rpe", "load"} & data.keys():
+        obj.load = compute_load(obj.duration_min, obj.rpe, data.get("load", obj.load))
+    await session.flush()
+    return TrainingSessionOut.model_validate(obj)
+
+
+async def delete_session(session: AsyncSession, session_id: int) -> bool:
+    obj = await repository.get(session, session_id)
+    if obj is None:
+        return False
+    await repository.delete(session, obj)
+    return True
+
+
+async def update_set(
+    session: AsyncSession, session_id: int, set_id: int, payload: TrainingSetUpdate
+) -> TrainingSessionOut | None:
+    s = await repository.get_set(session, session_id, set_id)
+    if s is None:
+        return None
+    data = payload.model_dump(exclude_unset=True)
+    for field, value in data.items():
+        setattr(s, field, value)
+    # Re-resolve the catalog link when the free-text exercise label changes.
+    if "exercise" in data:
+        index = _name_index(await repository.load_catalog(session))
+        match = index.get(_norm(s.exercise or ""))
+        s.exercise_id = match.id if match else None
+    await session.flush()
+    obj = await repository.get(session, session_id)
+    return TrainingSessionOut.model_validate(obj)
+
+
+async def delete_set(
+    session: AsyncSession, session_id: int, set_id: int
+) -> TrainingSessionOut | None:
+    s = await repository.get_set(session, session_id, set_id)
+    if s is None:
+        return None
+    await repository.delete_set(session, s)
+    obj = await repository.get(session, session_id)
     return TrainingSessionOut.model_validate(obj)
 
 

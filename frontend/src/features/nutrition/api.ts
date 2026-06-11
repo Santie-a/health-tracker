@@ -6,6 +6,8 @@ import type {
   Meal,
   MealCreateResponse,
   MealIn,
+  MealItemUpdate,
+  MealUpdate,
 } from "@/lib/gateway/types";
 import { apiGet, apiSend } from "@/lib/query/fetcher";
 
@@ -28,6 +30,24 @@ export function createPhotoMeal(form: FormData): Promise<MealCreateResponse> {
 
 export function addMealItems(id: number, items: AddItemsIn["items"]): Promise<Meal> {
   return apiSend<Meal>(`/api/meals/${id}/items`, { json: { items } });
+}
+
+export function updateMeal(id: number, body: MealUpdate): Promise<Meal> {
+  return apiSend<Meal>(`/api/meals/${id}`, { method: "PATCH", json: body });
+}
+
+export function deleteMeal(id: number): Promise<void> {
+  return apiSend<void>(`/api/meals/${id}`, { method: "DELETE" });
+}
+
+/** Edit one item; the gateway returns the updated meal. */
+export function updateMealItem(id: number, itemId: number, body: MealItemUpdate): Promise<Meal> {
+  return apiSend<Meal>(`/api/meals/${id}/items/${itemId}`, { method: "PATCH", json: body });
+}
+
+/** Remove one item; the gateway returns the updated meal. */
+export function deleteMealItem(id: number, itemId: number): Promise<Meal> {
+  return apiSend<Meal>(`/api/meals/${id}/items/${itemId}`, { method: "DELETE" });
 }
 
 export function searchFoods(q: string, limit = 8): Promise<Food[]> {
