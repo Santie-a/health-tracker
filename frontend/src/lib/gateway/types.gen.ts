@@ -4,2510 +4,3018 @@
  */
 
 export interface paths {
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Health
-         * @description Liveness: process is up. Dependency-light (no DB) on purpose.
-         */
-        get: operations["health_health_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  "/health": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/health/ready": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Ready
-         * @description Readiness: checks the DB so orchestration can gate traffic without
-         *     coupling liveness to it. 200 when ready, 503 when degraded.
-         */
-        get: operations["ready_health_ready_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Health
+     * @description Liveness: process is up. Dependency-light (no DB) on purpose.
+     */
+    get: operations["health_health_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/health/ready": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/telemetry": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Points */
-        get: operations["list_points_api_v1_telemetry_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Ready
+     * @description Readiness: checks the DB so orchestration can gate traffic without
+     *     coupling liveness to it. 200 when ready, 503 when degraded.
+     */
+    get: operations["ready_health_ready_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/telemetry": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/telemetry/daily": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Daily Rollup */
-        get: operations["daily_rollup_api_v1_telemetry_daily_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** List Points */
+    get: operations["list_points_api_v1_telemetry_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/telemetry/daily": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/telemetry/sleep": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Sleep Series
-         * @description Per-night sleep summaries (total + stages) for the sleep trend.
-         */
-        get: operations["sleep_series_api_v1_telemetry_sleep_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Daily Rollup */
+    get: operations["daily_rollup_api_v1_telemetry_daily_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/telemetry/sleep": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/body-composition": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Body Composition
-         * @description Smart-scale series (weight, body fat %, skeletal muscle, BMR) for trends.
-         */
-        get: operations["body_composition_api_v1_body_composition_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Sleep Series
+     * @description Per-night sleep summaries (total + stages) for the sleep trend.
+     */
+    get: operations["sleep_series_api_v1_telemetry_sleep_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/body-composition": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/training/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Training Stats */
-        get: operations["training_stats_api_v1_training_stats_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Body Composition
+     * @description Smart-scale series (weight, body fat %, skeletal muscle, BMR) for trends.
+     */
+    get: operations["body_composition_api_v1_body_composition_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/training/stats": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/training": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Training */
-        get: operations["list_training_api_v1_training_get"];
-        put?: never;
-        /** Create Training */
-        post: operations["create_training_api_v1_training_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Training Stats */
+    get: operations["training_stats_api_v1_training_stats_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/training": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/training/{session_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Training */
-        get: operations["get_training_api_v1_training__session_id__get"];
-        put?: never;
-        post?: never;
-        /** Delete Training */
-        delete: operations["delete_training_api_v1_training__session_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Training
-         * @description Edit session fields; `load` recomputes from duration×rpe when unset explicitly.
-         */
-        patch: operations["update_training_api_v1_training__session_id__patch"];
-        trace?: never;
+    /** List Training */
+    get: operations["list_training_api_v1_training_get"];
+    put?: never;
+    /** Create Training */
+    post: operations["create_training_api_v1_training_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/training/{session_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/training/{session_id}/sets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add Sets
-         * @description Log sets against a session; free-text exercise names resolve to the catalog.
-         */
-        post: operations["add_sets_api_v1_training__session_id__sets_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get Training */
+    get: operations["get_training_api_v1_training__session_id__get"];
+    put?: never;
+    post?: never;
+    /** Delete Training */
+    delete: operations["delete_training_api_v1_training__session_id__delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update Training
+     * @description Edit session fields; `load` recomputes from duration×rpe when unset explicitly.
+     */
+    patch: operations["update_training_api_v1_training__session_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/training/{session_id}/sets": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/training/{session_id}/sets/{set_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * Delete Set
-         * @description Remove one set; returns the updated session.
-         */
-        delete: operations["delete_set_api_v1_training__session_id__sets__set_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Set
-         * @description Edit one set; returns the updated session.
-         */
-        patch: operations["update_set_api_v1_training__session_id__sets__set_id__patch"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Add Sets
+     * @description Log sets against a session; free-text exercise names resolve to the catalog.
+     */
+    post: operations["add_sets_api_v1_training__session_id__sets_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/training/{session_id}/sets/{set_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/exercises": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Search Exercises */
-        get: operations["search_exercises_api_v1_exercises_get"];
-        put?: never;
-        /** Create Exercise */
-        post: operations["create_exercise_api_v1_exercises_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Delete Set
+     * @description Remove one set; returns the updated session.
+     */
+    delete: operations["delete_set_api_v1_training__session_id__sets__set_id__delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update Set
+     * @description Edit one set; returns the updated session.
+     */
+    patch: operations["update_set_api_v1_training__session_id__sets__set_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/exercises": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/exercises/{exercise_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * Delete Exercise
-         * @description Delete a catalog exercise. Soft-deletes (deactivates) instead when logged sets
-         *     still reference it, so history stays intact. Returns the action taken.
-         */
-        delete: operations["delete_exercise_api_v1_exercises__exercise_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Exercise
-         * @description Edit a catalog exercise. Renaming regenerates the slug (409 on collision).
-         */
-        patch: operations["update_exercise_api_v1_exercises__exercise_id__patch"];
-        trace?: never;
+    /** Search Exercises */
+    get: operations["search_exercises_api_v1_exercises_get"];
+    put?: never;
+    /** Create Exercise */
+    post: operations["create_exercise_api_v1_exercises_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/exercises/{exercise_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/meals": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Meals For Day */
-        get: operations["meals_for_day_api_v1_meals_get"];
-        put?: never;
-        /**
-         * Create Meal
-         * @description Manual meal entry. Items with grams but no macros are resolved via nutrition_core.
-         */
-        post: operations["create_meal_api_v1_meals_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Delete Exercise
+     * @description Delete a catalog exercise. Soft-deletes (deactivates) instead when logged sets
+     *     still reference it, so history stays intact. Returns the action taken.
+     */
+    delete: operations["delete_exercise_api_v1_exercises__exercise_id__delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update Exercise
+     * @description Edit a catalog exercise. Renaming regenerates the slug (409 on collision).
+     */
+    patch: operations["update_exercise_api_v1_exercises__exercise_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/meals": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/meals/photo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create Meal From Photo
-         * @description Photo meal entry: proxied to image-svc. If the GPU box is unreachable the
-         *     response is a degraded empty manual meal (never a 5xx).
-         */
-        post: operations["create_meal_from_photo_api_v1_meals_photo_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Meals For Day */
+    get: operations["meals_for_day_api_v1_meals_get"];
+    put?: never;
+    /**
+     * Create Meal
+     * @description Manual meal entry. Items with grams but no macros are resolved via nutrition_core.
+     */
+    post: operations["create_meal_api_v1_meals_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/meals/photo": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/meals/{meal_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Meal */
-        get: operations["get_meal_api_v1_meals__meal_id__get"];
-        put?: never;
-        post?: never;
-        /** Delete Meal */
-        delete: operations["delete_meal_api_v1_meals__meal_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Meal
-         * @description Edit a meal's name and/or timestamp (fix a wrong entry).
-         */
-        patch: operations["update_meal_api_v1_meals__meal_id__patch"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Create Meal From Photo
+     * @description Photo meal entry: proxied to image-svc. If the GPU box is unreachable the
+     *     response is a degraded empty manual meal (never a 5xx).
+     */
+    post: operations["create_meal_from_photo_api_v1_meals_photo_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/meals/{meal_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/meals/{meal_id}/items": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add Meal Items
-         * @description Add items to a meal by catalog food (portion×qty or grams), free-text food +
-         *     grams, or a raw kcal-only quick entry.
-         */
-        post: operations["add_meal_items_api_v1_meals__meal_id__items_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get Meal */
+    get: operations["get_meal_api_v1_meals__meal_id__get"];
+    put?: never;
+    post?: never;
+    /** Delete Meal */
+    delete: operations["delete_meal_api_v1_meals__meal_id__delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update Meal
+     * @description Edit a meal's name and/or timestamp (fix a wrong entry).
+     */
+    patch: operations["update_meal_api_v1_meals__meal_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/meals/{meal_id}/items": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/meals/{meal_id}/items/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * Delete Meal Item
-         * @description Remove one item; returns the updated meal.
-         */
-        delete: operations["delete_meal_item_api_v1_meals__meal_id__items__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Meal Item
-         * @description Edit a single item; returns the updated meal. Macros re-estimate when grams
-         *     change and aren't pinned explicitly.
-         */
-        patch: operations["update_meal_item_api_v1_meals__meal_id__items__item_id__patch"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Add Meal Items
+     * @description Add items to a meal by catalog food (portion×qty or grams), free-text food +
+     *     grams, or a raw kcal-only quick entry.
+     */
+    post: operations["add_meal_items_api_v1_meals__meal_id__items_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/meals/{meal_id}/items/{item_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/foods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Search Foods */
-        get: operations["search_foods_api_v1_foods_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Delete Meal Item
+     * @description Remove one item; returns the updated meal.
+     */
+    delete: operations["delete_meal_item_api_v1_meals__meal_id__items__item_id__delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update Meal Item
+     * @description Edit a single item; returns the updated meal. Macros re-estimate when grams
+     *     change and aren't pinned explicitly.
+     */
+    patch: operations["update_meal_item_api_v1_meals__meal_id__items__item_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/foods": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/foods/recent": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Recent Foods */
-        get: operations["recent_foods_api_v1_foods_recent_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Search Foods */
+    get: operations["search_foods_api_v1_foods_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/foods/recent": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/foods/resolve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Resolve Food */
-        get: operations["resolve_food_api_v1_foods_resolve_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Recent Foods */
+    get: operations["recent_foods_api_v1_foods_recent_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/foods/resolve": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/recommendations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Recommendations
-         * @description Today's recommendations. Generated + stored lazily on first request for a day.
-         */
-        get: operations["get_recommendations_api_v1_recommendations_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Resolve Food */
+    get: operations["resolve_food_api_v1_foods_resolve_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/recommendations": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/recommendations/run": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Run Recommendations
-         * @description Force a regenerate + store (the daily-pass trigger).
-         */
-        post: operations["run_recommendations_api_v1_recommendations_run_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Recommendations
+     * @description Today's recommendations. Generated + stored lazily on first request for a day.
+     */
+    get: operations["get_recommendations_api_v1_recommendations_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/recommendations/run": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/recommendations/feedback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Submit Feedback */
-        post: operations["submit_feedback_api_v1_recommendations_feedback_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Run Recommendations
+     * @description Force a regenerate + store (the daily-pass trigger).
+     */
+    post: operations["run_recommendations_api_v1_recommendations_run_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/recommendations/feedback": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/dashboard": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Dashboard
-         * @description One call powering the frontend home: telemetry summary + training + nutrition
-         *     totals + recommendations for the day.
-         */
-        get: operations["dashboard_api_v1_dashboard_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Submit Feedback */
+    post: operations["submit_feedback_api_v1_recommendations_feedback_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/goals": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/ingest/samsung": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Ingest Samsung
-         * @description Import complementary telemetry from a Samsung Health export.
-         *
-         *     Routes each file by its metadata line-1 data type; unknown types are reported
-         *     as skipped, not errors. Upload the sleep_stage file alongside sleep to enrich
-         *     deep/awake stage minutes. Idempotent: re-uploading the same export is safe.
-         */
-        post: operations["ingest_samsung_api_v1_ingest_samsung_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** List Goals */
+    get: operations["list_goals_api_v1_goals_get"];
+    put?: never;
+    /**
+     * Create Goal
+     * @description Create a goal. Unspecified fields are filled from the goal type (category,
+     *     metric, surplus/deficit, protein target, baseline from latest body comp).
+     */
+    post: operations["create_goal_api_v1_goals_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/goals/active": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /**
+     * Active Goals
+     * @description The current active goal(s) (at most one body + one sleep) with live progress.
+     */
+    get: operations["active_goals_api_v1_goals_active_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/goals/{goal_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Goal */
+    get: operations["get_goal_api_v1_goals__goal_id__get"];
+    put?: never;
+    post?: never;
+    /** Delete Goal */
+    delete: operations["delete_goal_api_v1_goals__goal_id__delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update Goal
+     * @description Edit a goal or change its status (active|achieved|abandoned).
+     */
+    patch: operations["update_goal_api_v1_goals__goal_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/goals/{goal_id}/progress": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Goal Progress */
+    get: operations["goal_progress_api_v1_goals__goal_id__progress_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/dashboard": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Dashboard
+     * @description One call powering the frontend home: telemetry summary + training + nutrition
+     *     totals + recommendations for the day.
+     */
+    get: operations["dashboard_api_v1_dashboard_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/ingest/samsung": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Ingest Samsung
+     * @description Import complementary telemetry from a Samsung Health export.
+     *
+     *     Routes each file by its metadata line-1 data type; unknown types are reported
+     *     as skipped, not errors. Upload the sleep_stage file alongside sleep to enrich
+     *     deep/awake stage minutes. Idempotent: re-uploading the same export is safe.
+     */
+    post: operations["ingest_samsung_api_v1_ingest_samsung_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /** AddItemsIn */
-        AddItemsIn: {
-            /** Items */
-            items: components["schemas"]["MealItemAddIn"][];
-        };
-        /** AddSetsIn */
-        AddSetsIn: {
-            /** Sets */
-            sets: components["schemas"]["TrainingSetIn"][];
-        };
-        /**
-         * BodyCompositionPoint
-         * @description One smart-scale reading (sparse periodic series).
-         */
-        BodyCompositionPoint: {
-            /**
-             * Ts
-             * Format: date-time
-             */
-            ts: string;
-            /** Weight Kg */
-            weight_kg?: number | null;
-            /** Body Fat Pct */
-            body_fat_pct?: number | null;
-            /** Skeletal Muscle Kg */
-            skeletal_muscle_kg?: number | null;
-            /** Bmr Kcal */
-            bmr_kcal?: number | null;
-        };
-        /** Body_create_meal_from_photo_api_v1_meals_photo_post */
-        Body_create_meal_from_photo_api_v1_meals_photo_post: {
-            /**
-             * Image
-             * Format: binary
-             * @description Meal photo.
-             */
-            image: string;
-            /** Name */
-            name?: string | null;
-            /** Ts */
-            ts?: string | null;
-        };
-        /** Body_ingest_samsung_api_v1_ingest_samsung_post */
-        Body_ingest_samsung_api_v1_ingest_samsung_post: {
-            /**
-             * Files
-             * @description One or more Samsung Health export CSVs.
-             */
-            files: string[];
-        };
-        /**
-         * DailyRollup
-         * @description One day's rollup for a metric. `sum` is meaningful for additive metrics
-         *     (steps, energy_expenditure); `avg`/`min`/`max` for the rest.
-         */
-        DailyRollup: {
-            /**
-             * Day
-             * Format: date
-             */
-            day: string;
-            /** Metric */
-            metric: string;
-            /** Avg */
-            avg?: number | null;
-            /** Min */
-            min?: number | null;
-            /** Max */
-            max?: number | null;
-            /** Sum */
-            sum?: number | null;
-            /** Count */
-            count: number;
-        };
-        /** DashboardOut */
-        DashboardOut: {
-            /**
-             * Date
-             * Format: date
-             */
-            date: string;
-            telemetry: components["schemas"]["TelemetrySummary"];
-            /** Training */
-            training: components["schemas"]["TrainingSessionOut"][];
-            nutrition_totals: components["schemas"]["Totals"];
-            /** Meals */
-            meals: components["schemas"]["MealOut"][];
-            /** Recommendations */
-            recommendations: components["schemas"]["RecommendationItem"][];
-        };
-        /** DayNutrition */
-        DayNutrition: {
-            /**
-             * Date
-             * Format: date
-             */
-            date: string;
-            /** Meals */
-            meals: components["schemas"]["MealOut"][];
-            totals: components["schemas"]["Totals"];
-        };
-        /** ExerciseIn */
-        ExerciseIn: {
-            /** Name */
-            name: string;
-            /** Category */
-            category?: ("push" | "pull" | "squat" | "hinge" | "carry" | "core" | "swim" | "other") | null;
-            /** Primary Muscle */
-            primary_muscle?: string | null;
-            /** Equipment */
-            equipment?: string | null;
-            /**
-             * Is Unilateral
-             * @default false
-             */
-            is_unilateral: boolean;
-            /**
-             * Is Bodyweight
-             * @default false
-             */
-            is_bodyweight: boolean;
-            /** Aliases */
-            aliases?: string[] | null;
-            /**
-             * Muscles
-             * @default []
-             */
-            muscles: components["schemas"]["ExerciseMuscleIn"][];
-        };
-        /** ExerciseMuscleIn */
-        ExerciseMuscleIn: {
-            /** Muscle */
-            muscle: string;
-            /**
-             * Role
-             * @default primary
-             * @enum {string}
-             */
-            role: "primary" | "secondary";
-        };
-        /** ExerciseMuscleOut */
-        ExerciseMuscleOut: {
-            /** Muscle */
-            muscle: string;
-            /** Role */
-            role: string;
-        };
-        /** ExerciseOut */
-        ExerciseOut: {
-            /** Id */
-            id: number;
-            /** Name */
-            name: string;
-            /** Slug */
-            slug: string;
-            /** Category */
-            category: string | null;
-            /** Primary Muscle */
-            primary_muscle: string | null;
-            /** Equipment */
-            equipment: string | null;
-            /** Is Unilateral */
-            is_unilateral: boolean;
-            /** Is Bodyweight */
-            is_bodyweight: boolean;
-            /** Aliases */
-            aliases: string[] | null;
-            /** Is Active */
-            is_active: boolean;
-            /** Muscles */
-            muscles: components["schemas"]["ExerciseMuscleOut"][];
-        };
-        /** ExerciseStat */
-        ExerciseStat: {
-            /** Exercise */
-            exercise: string;
-            /** Slug */
-            slug: string | null;
-            /** Sets */
-            sets: number;
-            /** Top Weight Kg */
-            top_weight_kg: number | null;
-            /** Best E1Rm */
-            best_e1rm: number | null;
-            /** Best E1Rm Date */
-            best_e1rm_date: string | null;
-        };
-        /**
-         * ExerciseUpdate
-         * @description Partial catalog edit (PATCH). When `name` changes the slug is regenerated
-         *     (409 on collision). Supplying `muscles` replaces the muscle set wholesale.
-         */
-        ExerciseUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Category */
-            category?: ("push" | "pull" | "squat" | "hinge" | "carry" | "core" | "swim" | "other") | null;
-            /** Primary Muscle */
-            primary_muscle?: string | null;
-            /** Equipment */
-            equipment?: string | null;
-            /** Is Unilateral */
-            is_unilateral?: boolean | null;
-            /** Is Bodyweight */
-            is_bodyweight?: boolean | null;
-            /** Aliases */
-            aliases?: string[] | null;
-            /** Is Active */
-            is_active?: boolean | null;
-            /** Muscles */
-            muscles?: components["schemas"]["ExerciseMuscleIn"][] | null;
-        };
-        /** FeedbackIn */
-        FeedbackIn: {
-            /**
-             * Date
-             * Format: date
-             */
-            date: string;
-            /** Feedback */
-            feedback: string;
-        };
-        /** FileReport */
-        FileReport: {
-            /** Filename */
-            filename: string;
-            /** Data Type */
-            data_type?: string | null;
-            /** Target */
-            target?: string | null;
-            /**
-             * Parsed
-             * @default 0
-             */
-            parsed: number;
-            /**
-             * Written
-             * @default 0
-             */
-            written: number;
-            /**
-             * Skipped
-             * @default 0
-             */
-            skipped: number;
-            /**
-             * Errors
-             * @default []
-             */
-            errors: string[];
-        };
-        /** FoodOut */
-        FoodOut: {
-            /** Id */
-            id: number;
-            /** Name */
-            name: string;
-            /** Slug */
-            slug: string;
-            /** Aliases */
-            aliases: string[] | null;
-            /** Kcal 100G */
-            kcal_100g: number | null;
-            /** Protein 100G */
-            protein_100g: number | null;
-            /** Carbs 100G */
-            carbs_100g: number | null;
-            /** Fat 100G */
-            fat_100g: number | null;
-            /** Default Grams */
-            default_grams: number | null;
-            /** Portions */
-            portions: components["schemas"]["FoodPortionOut"][];
-        };
-        /** FoodPortionOut */
-        FoodPortionOut: {
-            /** Label */
-            label: string;
-            /** Grams */
-            grams: number;
-            /** Is Default */
-            is_default: boolean;
-        };
-        /** FoodResolveOut */
-        FoodResolveOut: {
-            /** Matched */
-            matched: boolean;
-            /** Query */
-            query: string;
-            food?: components["schemas"]["FoodOut"] | null;
-        };
-        /** HTTPValidationError */
-        HTTPValidationError: {
-            /** Detail */
-            detail?: components["schemas"]["ValidationError"][];
-        };
-        /** HealthResponse */
-        HealthResponse: {
-            /**
-             * Status
-             * @default ok
-             */
-            status: string;
-            /** Version */
-            version: string;
-        };
-        /** IngestResponse */
-        IngestResponse: {
-            /** Files */
-            files: components["schemas"]["FileReport"][];
-            /** Parsed */
-            parsed: number;
-            /** Written */
-            written: number;
-            /** Skipped */
-            skipped: number;
-        };
-        /** MealCreateResponse */
-        MealCreateResponse: {
-            meal: components["schemas"]["MealOut"];
-            /**
-             * Degraded
-             * @default false
-             */
-            degraded: boolean;
-            /** Note */
-            note?: string | null;
-        };
-        /** MealIn */
-        MealIn: {
-            /**
-             * Ts
-             * Format: date-time
-             * @description When the meal was eaten (UTC ISO; naive assumed UTC).
-             */
-            ts: string;
-            /** Name */
-            name?: string | null;
-            /**
-             * Items
-             * @default []
-             */
-            items: components["schemas"]["MealItemIn"][];
-        };
-        /**
-         * MealItemAddIn
-         * @description Add an item by catalog food (food_id) with a portion×qty or grams, by
-         *     free-text food + grams (matcher-resolved), or a raw kcal-only quick entry.
-         */
-        MealItemAddIn: {
-            /** Food Id */
-            food_id?: number | null;
-            /** Food */
-            food?: string | null;
-            /** Portion Label */
-            portion_label?: string | null;
-            /** Qty */
-            qty?: number | null;
-            /** Grams */
-            grams?: number | null;
-            /** Kcal */
-            kcal?: number | null;
-            /** Protein G */
-            protein_g?: number | null;
-            /** Carbs G */
-            carbs_g?: number | null;
-            /** Fat G */
-            fat_g?: number | null;
-        };
-        /** MealItemIn */
-        MealItemIn: {
-            /**
-             * Food
-             * @description Food name; resolved against nutrition_core when macros omitted.
-             */
-            food: string;
-            /** Grams */
-            grams?: number | null;
-            /** Kcal */
-            kcal?: number | null;
-            /** Protein G */
-            protein_g?: number | null;
-            /** Carbs G */
-            carbs_g?: number | null;
-            /** Fat G */
-            fat_g?: number | null;
-        };
-        /** MealItemOut */
-        MealItemOut: {
-            /** Id */
-            id: number;
-            /** Food */
-            food: string;
-            /** Food Id */
-            food_id: number | null;
-            /** Grams */
-            grams: number | null;
-            /** Qty */
-            qty: number | null;
-            /** Portion Label */
-            portion_label: string | null;
-            /** Kcal */
-            kcal: number | null;
-            /** Protein G */
-            protein_g: number | null;
-            /** Carbs G */
-            carbs_g: number | null;
-            /** Fat G */
-            fat_g: number | null;
-            /** Estimated */
-            estimated: boolean;
-            /** Source */
-            source: string | null;
-        };
-        /**
-         * MealItemUpdate
-         * @description Partial item edit. Omitted fields are left untouched. When `grams` changes
-         *     and macros aren't supplied, macros are re-estimated from the catalog/matcher.
-         */
-        MealItemUpdate: {
-            /** Food */
-            food?: string | null;
-            /** Grams */
-            grams?: number | null;
-            /** Qty */
-            qty?: number | null;
-            /** Portion Label */
-            portion_label?: string | null;
-            /** Kcal */
-            kcal?: number | null;
-            /** Protein G */
-            protein_g?: number | null;
-            /** Carbs G */
-            carbs_g?: number | null;
-            /** Fat G */
-            fat_g?: number | null;
-        };
-        /** MealOut */
-        MealOut: {
-            /** Id */
-            id: number;
-            /**
-             * Ts
-             * Format: date-time
-             */
-            ts: string;
-            /** Name */
-            name: string | null;
-            /** Photo Path */
-            photo_path: string | null;
-            /** Source */
-            source: string;
-            /** Items */
-            items: components["schemas"]["MealItemOut"][];
-        };
-        /**
-         * MealUpdate
-         * @description Partial meal edit. Only supplied fields are changed (PATCH semantics).
-         */
-        MealUpdate: {
-            /**
-             * Ts
-             * @description When the meal was eaten (UTC ISO; naive assumed UTC).
-             */
-            ts?: string | null;
-            /** Name */
-            name?: string | null;
-        };
-        /** MuscleVolume */
-        MuscleVolume: {
-            /** Muscle */
-            muscle: string;
-            /** Volume Load */
-            volume_load: number;
-        };
-        /** RecommendationItem */
-        RecommendationItem: {
-            /** Code */
-            code: string;
-            /** Category */
-            category: string;
-            /** Severity */
-            severity: string;
-            /** Title */
-            title: string;
-            /** Detail */
-            detail: string;
-            /**
-             * Signals
-             * @default []
-             */
-            signals: string[];
-        };
-        /** RecommendationsOut */
-        RecommendationsOut: {
-            /**
-             * Date
-             * Format: date
-             */
-            date: string;
-            /** Generated At */
-            generated_at?: string | null;
-            /** Recommendations */
-            recommendations: components["schemas"]["RecommendationItem"][];
-            /** Context */
-            context?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        /**
-         * SleepNight
-         * @description A night's sleep summary tagged with the calendar day it ended on (for trends).
-         */
-        SleepNight: {
-            /** Total Min */
-            total_min?: number | null;
-            /** Deep Min */
-            deep_min?: number | null;
-            /** Rem Min */
-            rem_min?: number | null;
-            /** Light Min */
-            light_min?: number | null;
-            /** Awake Min */
-            awake_min?: number | null;
-            /** Efficiency */
-            efficiency?: number | null;
-            /**
-             * Day
-             * Format: date
-             */
-            day: string;
-        };
-        /** SleepSummary */
-        SleepSummary: {
-            /** Total Min */
-            total_min?: number | null;
-            /** Deep Min */
-            deep_min?: number | null;
-            /** Rem Min */
-            rem_min?: number | null;
-            /** Light Min */
-            light_min?: number | null;
-            /** Awake Min */
-            awake_min?: number | null;
-            /** Efficiency */
-            efficiency?: number | null;
-        };
-        /** TelemetryPoint */
-        TelemetryPoint: {
-            /**
-             * Ts
-             * Format: date-time
-             */
-            ts: string;
-            /** Metric */
-            metric: string;
-            /** Value */
-            value: number;
-            /** Unit */
-            unit?: string | null;
-            /** Source */
-            source: string;
-        };
-        /** TelemetrySummary */
-        TelemetrySummary: {
-            /** Steps */
-            steps?: number | null;
-            /** Avg Stress */
-            avg_stress?: number | null;
-            /** Avg Heart Rate */
-            avg_heart_rate?: number | null;
-            /** Avg Spo2 */
-            avg_spo2?: number | null;
-            /** Energy Expenditure */
-            energy_expenditure?: number | null;
-            sleep?: components["schemas"]["SleepSummary"] | null;
-        };
-        /** Totals */
-        Totals: {
-            /**
-             * Kcal
-             * @default 0
-             */
-            kcal: number;
-            /**
-             * Protein G
-             * @default 0
-             */
-            protein_g: number;
-            /**
-             * Carbs G
-             * @default 0
-             */
-            carbs_g: number;
-            /**
-             * Fat G
-             * @default 0
-             */
-            fat_g: number;
-        };
-        /** TrainingSessionIn */
-        TrainingSessionIn: {
-            /**
-             * Ts
-             * Format: date-time
-             * @description Session start (UTC ISO; naive is assumed UTC).
-             */
-            ts: string;
-            /**
-             * Type
-             * @enum {string}
-             */
-            type: "swim" | "gym";
-            /** Duration Min */
-            duration_min?: number | null;
-            /** Rpe */
-            rpe?: number | null;
-            /**
-             * Load
-             * @description Optional; auto-computed as duration_min × rpe when omitted.
-             */
-            load?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Sets
-             * @default []
-             */
-            sets: components["schemas"]["TrainingSetIn"][];
-        };
-        /** TrainingSessionOut */
-        TrainingSessionOut: {
-            /** Id */
-            id: number;
-            /**
-             * Ts
-             * Format: date-time
-             */
-            ts: string;
-            /** Type */
-            type: string;
-            /** Duration Min */
-            duration_min: number | null;
-            /** Rpe */
-            rpe: number | null;
-            /** Load */
-            load: number | null;
-            /** Notes */
-            notes: string | null;
-            /** Source */
-            source: string;
-            /** Kcal */
-            kcal: number | null;
-            /** Avg Hr */
-            avg_hr: number | null;
-            /** Max Hr */
-            max_hr: number | null;
-            /** Distance M */
-            distance_m: number | null;
-            /** Sets */
-            sets: components["schemas"]["TrainingSetOut"][];
-        };
-        /**
-         * TrainingSessionUpdate
-         * @description Partial session edit (PATCH). `load` recomputes from duration×rpe when those
-         *     change and no explicit load is given.
-         */
-        TrainingSessionUpdate: {
-            /** Ts */
-            ts?: string | null;
-            /** Type */
-            type?: ("swim" | "gym") | null;
-            /** Duration Min */
-            duration_min?: number | null;
-            /** Rpe */
-            rpe?: number | null;
-            /** Load */
-            load?: number | null;
-            /** Notes */
-            notes?: string | null;
-        };
-        /** TrainingSetIn */
-        TrainingSetIn: {
-            /**
-             * Exercise
-             * @description Free-text exercise / stroke, e.g. 'bench press', 'freestyle'.
-             */
-            exercise: string;
-            /** Set No */
-            set_no?: number | null;
-            /** Reps */
-            reps?: number | null;
-            /** Weight Kg */
-            weight_kg?: number | null;
-            /** Distance M */
-            distance_m?: number | null;
-            /** Pace */
-            pace?: string | null;
-            /** Rpe */
-            rpe?: number | null;
-            /**
-             * Is Warmup
-             * @default false
-             */
-            is_warmup: boolean;
-            /** Added Weight Kg */
-            added_weight_kg?: number | null;
-        };
-        /** TrainingSetOut */
-        TrainingSetOut: {
-            /** Id */
-            id: number;
-            /** Exercise */
-            exercise: string;
-            /** Set No */
-            set_no: number | null;
-            /** Reps */
-            reps: number | null;
-            /** Weight Kg */
-            weight_kg: number | null;
-            /** Distance M */
-            distance_m: number | null;
-            /** Pace */
-            pace: string | null;
-            /** Rpe */
-            rpe: number | null;
-            /** Is Warmup */
-            is_warmup: boolean;
-            /** Added Weight Kg */
-            added_weight_kg: number | null;
-        };
-        /**
-         * TrainingSetUpdate
-         * @description Partial set edit. Omitted fields are untouched.
-         */
-        TrainingSetUpdate: {
-            /** Exercise */
-            exercise?: string | null;
-            /** Set No */
-            set_no?: number | null;
-            /** Reps */
-            reps?: number | null;
-            /** Weight Kg */
-            weight_kg?: number | null;
-            /** Distance M */
-            distance_m?: number | null;
-            /** Pace */
-            pace?: string | null;
-            /** Rpe */
-            rpe?: number | null;
-            /** Is Warmup */
-            is_warmup?: boolean | null;
-            /** Added Weight Kg */
-            added_weight_kg?: number | null;
-        };
-        /** TrainingStats */
-        TrainingStats: {
-            /**
-             * From
-             * Format: date
-             */
-            from: string;
-            /**
-             * To
-             * Format: date
-             */
-            to: string;
-            /** Weekly Sets Per Muscle */
-            weekly_sets_per_muscle: components["schemas"]["WeeklyMuscleSets"][];
-            /** Volume Load Per Muscle */
-            volume_load_per_muscle: components["schemas"]["MuscleVolume"][];
-            /** Push Pull Ratio */
-            push_pull_ratio: number | null;
-            /** Upper Lower Ratio */
-            upper_lower_ratio: number | null;
-            /** Per Exercise */
-            per_exercise: components["schemas"]["ExerciseStat"][];
-            /** Unresolved Exercises */
-            unresolved_exercises: string[];
-        };
-        /** ValidationError */
-        ValidationError: {
-            /** Location */
-            loc: (string | number)[];
-            /** Message */
-            msg: string;
-            /** Error Type */
-            type: string;
-            /** Input */
-            input?: unknown;
-            /** Context */
-            ctx?: Record<string, never>;
-        };
-        /** WeeklyMuscleSets */
-        WeeklyMuscleSets: {
-            /**
-             * Week
-             * Format: date
-             */
-            week: string;
-            /** Muscle */
-            muscle: string;
-            /** Sets */
-            sets: number;
-        };
+  schemas: {
+    /** AddItemsIn */
+    AddItemsIn: {
+      /** Items */
+      items: components["schemas"]["MealItemAddIn"][];
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    /** AddSetsIn */
+    AddSetsIn: {
+      /** Sets */
+      sets: components["schemas"]["TrainingSetIn"][];
+    };
+    /**
+     * BodyCompositionPoint
+     * @description One smart-scale reading (sparse periodic series).
+     */
+    BodyCompositionPoint: {
+      /**
+       * Ts
+       * Format: date-time
+       */
+      ts: string;
+      /** Weight Kg */
+      weight_kg?: number | null;
+      /** Body Fat Pct */
+      body_fat_pct?: number | null;
+      /** Skeletal Muscle Kg */
+      skeletal_muscle_kg?: number | null;
+      /** Bmr Kcal */
+      bmr_kcal?: number | null;
+    };
+    /** Body_create_meal_from_photo_api_v1_meals_photo_post */
+    Body_create_meal_from_photo_api_v1_meals_photo_post: {
+      /**
+       * Image
+       * Format: binary
+       * @description Meal photo.
+       */
+      image: string;
+      /** Name */
+      name?: string | null;
+      /** Ts */
+      ts?: string | null;
+    };
+    /** Body_ingest_samsung_api_v1_ingest_samsung_post */
+    Body_ingest_samsung_api_v1_ingest_samsung_post: {
+      /**
+       * Files
+       * @description One or more Samsung Health export CSVs.
+       */
+      files: string[];
+    };
+    /**
+     * DailyRollup
+     * @description One day's rollup for a metric. `sum` is meaningful for additive metrics
+     *     (steps, energy_expenditure); `avg`/`min`/`max` for the rest.
+     */
+    DailyRollup: {
+      /**
+       * Day
+       * Format: date
+       */
+      day: string;
+      /** Metric */
+      metric: string;
+      /** Avg */
+      avg?: number | null;
+      /** Min */
+      min?: number | null;
+      /** Max */
+      max?: number | null;
+      /** Sum */
+      sum?: number | null;
+      /** Count */
+      count: number;
+    };
+    /** DashboardOut */
+    DashboardOut: {
+      /**
+       * Date
+       * Format: date
+       */
+      date: string;
+      telemetry: components["schemas"]["TelemetrySummary"];
+      /** Training */
+      training: components["schemas"]["TrainingSessionOut"][];
+      nutrition_totals: components["schemas"]["Totals"];
+      /** Meals */
+      meals: components["schemas"]["MealOut"][];
+      /** Recommendations */
+      recommendations: components["schemas"]["RecommendationItem"][];
+    };
+    /** DayNutrition */
+    DayNutrition: {
+      /**
+       * Date
+       * Format: date
+       */
+      date: string;
+      /** Meals */
+      meals: components["schemas"]["MealOut"][];
+      totals: components["schemas"]["Totals"];
+    };
+    /** ExerciseIn */
+    ExerciseIn: {
+      /** Name */
+      name: string;
+      /** Category */
+      category?: ("push" | "pull" | "squat" | "hinge" | "carry" | "core" | "swim" | "other") | null;
+      /** Primary Muscle */
+      primary_muscle?: string | null;
+      /** Equipment */
+      equipment?: string | null;
+      /**
+       * Is Unilateral
+       * @default false
+       */
+      is_unilateral: boolean;
+      /**
+       * Is Bodyweight
+       * @default false
+       */
+      is_bodyweight: boolean;
+      /** Aliases */
+      aliases?: string[] | null;
+      /**
+       * Muscles
+       * @default []
+       */
+      muscles: components["schemas"]["ExerciseMuscleIn"][];
+    };
+    /** ExerciseMuscleIn */
+    ExerciseMuscleIn: {
+      /** Muscle */
+      muscle: string;
+      /**
+       * Role
+       * @default primary
+       * @enum {string}
+       */
+      role: "primary" | "secondary";
+    };
+    /** ExerciseMuscleOut */
+    ExerciseMuscleOut: {
+      /** Muscle */
+      muscle: string;
+      /** Role */
+      role: string;
+    };
+    /** ExerciseOut */
+    ExerciseOut: {
+      /** Id */
+      id: number;
+      /** Name */
+      name: string;
+      /** Slug */
+      slug: string;
+      /** Category */
+      category: string | null;
+      /** Primary Muscle */
+      primary_muscle: string | null;
+      /** Equipment */
+      equipment: string | null;
+      /** Is Unilateral */
+      is_unilateral: boolean;
+      /** Is Bodyweight */
+      is_bodyweight: boolean;
+      /** Aliases */
+      aliases: string[] | null;
+      /** Is Active */
+      is_active: boolean;
+      /** Muscles */
+      muscles: components["schemas"]["ExerciseMuscleOut"][];
+    };
+    /** ExerciseStat */
+    ExerciseStat: {
+      /** Exercise */
+      exercise: string;
+      /** Slug */
+      slug: string | null;
+      /** Sets */
+      sets: number;
+      /** Top Weight Kg */
+      top_weight_kg: number | null;
+      /** Best E1Rm */
+      best_e1rm: number | null;
+      /** Best E1Rm Date */
+      best_e1rm_date: string | null;
+    };
+    /**
+     * ExerciseUpdate
+     * @description Partial catalog edit (PATCH). When `name` changes the slug is regenerated
+     *     (409 on collision). Supplying `muscles` replaces the muscle set wholesale.
+     */
+    ExerciseUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Category */
+      category?: ("push" | "pull" | "squat" | "hinge" | "carry" | "core" | "swim" | "other") | null;
+      /** Primary Muscle */
+      primary_muscle?: string | null;
+      /** Equipment */
+      equipment?: string | null;
+      /** Is Unilateral */
+      is_unilateral?: boolean | null;
+      /** Is Bodyweight */
+      is_bodyweight?: boolean | null;
+      /** Aliases */
+      aliases?: string[] | null;
+      /** Is Active */
+      is_active?: boolean | null;
+      /** Muscles */
+      muscles?: components["schemas"]["ExerciseMuscleIn"][] | null;
+    };
+    /** FeedbackIn */
+    FeedbackIn: {
+      /**
+       * Date
+       * Format: date
+       */
+      date: string;
+      /** Feedback */
+      feedback: string;
+    };
+    /** FileReport */
+    FileReport: {
+      /** Filename */
+      filename: string;
+      /** Data Type */
+      data_type?: string | null;
+      /** Target */
+      target?: string | null;
+      /**
+       * Parsed
+       * @default 0
+       */
+      parsed: number;
+      /**
+       * Written
+       * @default 0
+       */
+      written: number;
+      /**
+       * Skipped
+       * @default 0
+       */
+      skipped: number;
+      /**
+       * Errors
+       * @default []
+       */
+      errors: string[];
+    };
+    /** FoodOut */
+    FoodOut: {
+      /** Id */
+      id: number;
+      /** Name */
+      name: string;
+      /** Slug */
+      slug: string;
+      /** Aliases */
+      aliases: string[] | null;
+      /** Kcal 100G */
+      kcal_100g: number | null;
+      /** Protein 100G */
+      protein_100g: number | null;
+      /** Carbs 100G */
+      carbs_100g: number | null;
+      /** Fat 100G */
+      fat_100g: number | null;
+      /** Default Grams */
+      default_grams: number | null;
+      /** Portions */
+      portions: components["schemas"]["FoodPortionOut"][];
+    };
+    /** FoodPortionOut */
+    FoodPortionOut: {
+      /** Label */
+      label: string;
+      /** Grams */
+      grams: number;
+      /** Is Default */
+      is_default: boolean;
+    };
+    /** FoodResolveOut */
+    FoodResolveOut: {
+      /** Matched */
+      matched: boolean;
+      /** Query */
+      query: string;
+      food?: components["schemas"]["FoodOut"] | null;
+    };
+    /**
+     * GoalIn
+     * @description Create a goal. Most fields are optional — only `type` is required; the
+     *     service fills sensible defaults (category, metric, baseline, nutrition knobs)
+     *     from the type and current body composition.
+     */
+    GoalIn: {
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: "gain_muscle" | "gain_weight" | "lose_fat" | "recomp" | "maintain" | "improve_sleep";
+      /** Metric */
+      metric?:
+        | ("weight_kg" | "skeletal_muscle_kg" | "body_fat_pct" | "sleep_min" | "sleep_efficiency")
+        | null;
+      /** Baseline Value */
+      baseline_value?: number | null;
+      /** Target Value */
+      target_value?: number | null;
+      /** Target Rate Per Week */
+      target_rate_per_week?: number | null;
+      /** Target Date */
+      target_date?: string | null;
+      /**
+       * Calorie Delta
+       * @description Surplus(+)/deficit(-) kcal vs TDEE to aim for.
+       */
+      calorie_delta?: number | null;
+      /** Protein G Per Kg */
+      protein_g_per_kg?: number | null;
+      /** Notes */
+      notes?: string | null;
+    };
+    /** GoalOut */
+    GoalOut: {
+      /** Id */
+      id: number;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: "gain_muscle" | "gain_weight" | "lose_fat" | "recomp" | "maintain" | "improve_sleep";
+      /**
+       * Category
+       * @enum {string}
+       */
+      category: "body" | "sleep";
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "active" | "achieved" | "abandoned";
+      /** Metric */
+      metric?:
+        | ("weight_kg" | "skeletal_muscle_kg" | "body_fat_pct" | "sleep_min" | "sleep_efficiency")
+        | null;
+      /** Baseline Value */
+      baseline_value?: number | null;
+      /** Target Value */
+      target_value?: number | null;
+      /** Target Rate Per Week */
+      target_rate_per_week?: number | null;
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /** Target Date */
+      target_date?: string | null;
+      /** Calorie Delta */
+      calorie_delta?: number | null;
+      /** Protein G Per Kg */
+      protein_g_per_kg?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /**
+     * GoalProgressOut
+     * @description Computed progress for a goal: the fitted trend over its metric vs target.
+     */
+    GoalProgressOut: {
+      /**
+       * Status
+       * @enum {string}
+       */
+      status:
+        | "on_track"
+        | "behind"
+        | "ahead"
+        | "too_fast"
+        | "stalled"
+        | "achieved"
+        | "no_target"
+        | "no_data";
+      /** Metric */
+      metric?:
+        | ("weight_kg" | "skeletal_muscle_kg" | "body_fat_pct" | "sleep_min" | "sleep_efficiency")
+        | null;
+      /** Baseline Value */
+      baseline_value?: number | null;
+      /** Current Value */
+      current_value?: number | null;
+      /** Target Value */
+      target_value?: number | null;
+      /** Actual Rate Per Week */
+      actual_rate_per_week?: number | null;
+      /** Target Rate Per Week */
+      target_rate_per_week?: number | null;
+      /**
+       * Pct Complete
+       * @description 0..1 along baseline→target, when both known.
+       */
+      pct_complete?: number | null;
+      /**
+       * Projected Date
+       * @description Date the current trend reaches the target.
+       */
+      projected_date?: string | null;
+      /**
+       * Days Elapsed
+       * @default 0
+       */
+      days_elapsed: number;
+      /**
+       * N Readings
+       * @default 0
+       */
+      n_readings: number;
+      /**
+       * Summary
+       * @default
+       */
+      summary: string;
+    };
+    /**
+     * GoalUpdate
+     * @description Patch an existing goal. `status` flips a goal to achieved/abandoned.
+     */
+    GoalUpdate: {
+      /** Status */
+      status?: ("active" | "achieved" | "abandoned") | null;
+      /** Metric */
+      metric?:
+        | ("weight_kg" | "skeletal_muscle_kg" | "body_fat_pct" | "sleep_min" | "sleep_efficiency")
+        | null;
+      /** Baseline Value */
+      baseline_value?: number | null;
+      /** Target Value */
+      target_value?: number | null;
+      /** Target Rate Per Week */
+      target_rate_per_week?: number | null;
+      /** Target Date */
+      target_date?: string | null;
+      /** Calorie Delta */
+      calorie_delta?: number | null;
+      /** Protein G Per Kg */
+      protein_g_per_kg?: number | null;
+      /** Notes */
+      notes?: string | null;
+    };
+    /** GoalWithProgressOut */
+    GoalWithProgressOut: {
+      /** Id */
+      id: number;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: "gain_muscle" | "gain_weight" | "lose_fat" | "recomp" | "maintain" | "improve_sleep";
+      /**
+       * Category
+       * @enum {string}
+       */
+      category: "body" | "sleep";
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "active" | "achieved" | "abandoned";
+      /** Metric */
+      metric?:
+        | ("weight_kg" | "skeletal_muscle_kg" | "body_fat_pct" | "sleep_min" | "sleep_efficiency")
+        | null;
+      /** Baseline Value */
+      baseline_value?: number | null;
+      /** Target Value */
+      target_value?: number | null;
+      /** Target Rate Per Week */
+      target_rate_per_week?: number | null;
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /** Target Date */
+      target_date?: string | null;
+      /** Calorie Delta */
+      calorie_delta?: number | null;
+      /** Protein G Per Kg */
+      protein_g_per_kg?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      progress: components["schemas"]["GoalProgressOut"];
+    };
+    /** HTTPValidationError */
+    HTTPValidationError: {
+      /** Detail */
+      detail?: components["schemas"]["ValidationError"][];
+    };
+    /** HealthResponse */
+    HealthResponse: {
+      /**
+       * Status
+       * @default ok
+       */
+      status: string;
+      /** Version */
+      version: string;
+    };
+    /** IngestResponse */
+    IngestResponse: {
+      /** Files */
+      files: components["schemas"]["FileReport"][];
+      /** Parsed */
+      parsed: number;
+      /** Written */
+      written: number;
+      /** Skipped */
+      skipped: number;
+    };
+    /** MealCreateResponse */
+    MealCreateResponse: {
+      meal: components["schemas"]["MealOut"];
+      /**
+       * Degraded
+       * @default false
+       */
+      degraded: boolean;
+      /** Note */
+      note?: string | null;
+    };
+    /** MealIn */
+    MealIn: {
+      /**
+       * Ts
+       * Format: date-time
+       * @description When the meal was eaten (UTC ISO; naive assumed UTC).
+       */
+      ts: string;
+      /** Name */
+      name?: string | null;
+      /**
+       * Items
+       * @default []
+       */
+      items: components["schemas"]["MealItemIn"][];
+    };
+    /**
+     * MealItemAddIn
+     * @description Add an item by catalog food (food_id) with a portion×qty or grams, by
+     *     free-text food + grams (matcher-resolved), or a raw kcal-only quick entry.
+     */
+    MealItemAddIn: {
+      /** Food Id */
+      food_id?: number | null;
+      /** Food */
+      food?: string | null;
+      /** Portion Label */
+      portion_label?: string | null;
+      /** Qty */
+      qty?: number | null;
+      /** Grams */
+      grams?: number | null;
+      /** Kcal */
+      kcal?: number | null;
+      /** Protein G */
+      protein_g?: number | null;
+      /** Carbs G */
+      carbs_g?: number | null;
+      /** Fat G */
+      fat_g?: number | null;
+    };
+    /** MealItemIn */
+    MealItemIn: {
+      /**
+       * Food
+       * @description Food name; resolved against nutrition_core when macros omitted.
+       */
+      food: string;
+      /** Grams */
+      grams?: number | null;
+      /** Kcal */
+      kcal?: number | null;
+      /** Protein G */
+      protein_g?: number | null;
+      /** Carbs G */
+      carbs_g?: number | null;
+      /** Fat G */
+      fat_g?: number | null;
+    };
+    /** MealItemOut */
+    MealItemOut: {
+      /** Id */
+      id: number;
+      /** Food */
+      food: string;
+      /** Food Id */
+      food_id: number | null;
+      /** Grams */
+      grams: number | null;
+      /** Qty */
+      qty: number | null;
+      /** Portion Label */
+      portion_label: string | null;
+      /** Kcal */
+      kcal: number | null;
+      /** Protein G */
+      protein_g: number | null;
+      /** Carbs G */
+      carbs_g: number | null;
+      /** Fat G */
+      fat_g: number | null;
+      /** Estimated */
+      estimated: boolean;
+      /** Source */
+      source: string | null;
+    };
+    /**
+     * MealItemUpdate
+     * @description Partial item edit. Omitted fields are left untouched. When `grams` changes
+     *     and macros aren't supplied, macros are re-estimated from the catalog/matcher.
+     */
+    MealItemUpdate: {
+      /** Food */
+      food?: string | null;
+      /** Grams */
+      grams?: number | null;
+      /** Qty */
+      qty?: number | null;
+      /** Portion Label */
+      portion_label?: string | null;
+      /** Kcal */
+      kcal?: number | null;
+      /** Protein G */
+      protein_g?: number | null;
+      /** Carbs G */
+      carbs_g?: number | null;
+      /** Fat G */
+      fat_g?: number | null;
+    };
+    /** MealOut */
+    MealOut: {
+      /** Id */
+      id: number;
+      /**
+       * Ts
+       * Format: date-time
+       */
+      ts: string;
+      /** Name */
+      name: string | null;
+      /** Photo Path */
+      photo_path: string | null;
+      /** Source */
+      source: string;
+      /** Items */
+      items: components["schemas"]["MealItemOut"][];
+    };
+    /**
+     * MealUpdate
+     * @description Partial meal edit. Only supplied fields are changed (PATCH semantics).
+     */
+    MealUpdate: {
+      /**
+       * Ts
+       * @description When the meal was eaten (UTC ISO; naive assumed UTC).
+       */
+      ts?: string | null;
+      /** Name */
+      name?: string | null;
+    };
+    /** MuscleVolume */
+    MuscleVolume: {
+      /** Muscle */
+      muscle: string;
+      /** Volume Load */
+      volume_load: number;
+    };
+    /** RecommendationItem */
+    RecommendationItem: {
+      /** Code */
+      code: string;
+      /** Category */
+      category: string;
+      /** Severity */
+      severity: string;
+      /** Title */
+      title: string;
+      /** Detail */
+      detail: string;
+      /**
+       * Signals
+       * @default []
+       */
+      signals: string[];
+    };
+    /** RecommendationsOut */
+    RecommendationsOut: {
+      /**
+       * Date
+       * Format: date
+       */
+      date: string;
+      /** Generated At */
+      generated_at?: string | null;
+      /** Recommendations */
+      recommendations: components["schemas"]["RecommendationItem"][];
+      /** Context */
+      context?: {
+        [key: string]: unknown;
+      } | null;
+    };
+    /**
+     * SleepNight
+     * @description A night's sleep summary tagged with the calendar day it ended on (for trends).
+     */
+    SleepNight: {
+      /** Total Min */
+      total_min?: number | null;
+      /** Deep Min */
+      deep_min?: number | null;
+      /** Rem Min */
+      rem_min?: number | null;
+      /** Light Min */
+      light_min?: number | null;
+      /** Awake Min */
+      awake_min?: number | null;
+      /** Efficiency */
+      efficiency?: number | null;
+      /**
+       * Day
+       * Format: date
+       */
+      day: string;
+    };
+    /** SleepSummary */
+    SleepSummary: {
+      /** Total Min */
+      total_min?: number | null;
+      /** Deep Min */
+      deep_min?: number | null;
+      /** Rem Min */
+      rem_min?: number | null;
+      /** Light Min */
+      light_min?: number | null;
+      /** Awake Min */
+      awake_min?: number | null;
+      /** Efficiency */
+      efficiency?: number | null;
+    };
+    /** TelemetryPoint */
+    TelemetryPoint: {
+      /**
+       * Ts
+       * Format: date-time
+       */
+      ts: string;
+      /** Metric */
+      metric: string;
+      /** Value */
+      value: number;
+      /** Unit */
+      unit?: string | null;
+      /** Source */
+      source: string;
+    };
+    /** TelemetrySummary */
+    TelemetrySummary: {
+      /** Steps */
+      steps?: number | null;
+      /** Avg Stress */
+      avg_stress?: number | null;
+      /** Avg Heart Rate */
+      avg_heart_rate?: number | null;
+      /** Avg Spo2 */
+      avg_spo2?: number | null;
+      /** Energy Expenditure */
+      energy_expenditure?: number | null;
+      sleep?: components["schemas"]["SleepSummary"] | null;
+    };
+    /** Totals */
+    Totals: {
+      /**
+       * Kcal
+       * @default 0
+       */
+      kcal: number;
+      /**
+       * Protein G
+       * @default 0
+       */
+      protein_g: number;
+      /**
+       * Carbs G
+       * @default 0
+       */
+      carbs_g: number;
+      /**
+       * Fat G
+       * @default 0
+       */
+      fat_g: number;
+    };
+    /** TrainingSessionIn */
+    TrainingSessionIn: {
+      /**
+       * Ts
+       * Format: date-time
+       * @description Session start (UTC ISO; naive is assumed UTC).
+       */
+      ts: string;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: "swim" | "gym";
+      /** Duration Min */
+      duration_min?: number | null;
+      /** Rpe */
+      rpe?: number | null;
+      /**
+       * Load
+       * @description Optional; auto-computed as duration_min × rpe when omitted.
+       */
+      load?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Sets
+       * @default []
+       */
+      sets: components["schemas"]["TrainingSetIn"][];
+    };
+    /** TrainingSessionOut */
+    TrainingSessionOut: {
+      /** Id */
+      id: number;
+      /**
+       * Ts
+       * Format: date-time
+       */
+      ts: string;
+      /** Type */
+      type: string;
+      /** Duration Min */
+      duration_min: number | null;
+      /** Rpe */
+      rpe: number | null;
+      /** Load */
+      load: number | null;
+      /** Notes */
+      notes: string | null;
+      /** Source */
+      source: string;
+      /** Kcal */
+      kcal: number | null;
+      /** Avg Hr */
+      avg_hr: number | null;
+      /** Max Hr */
+      max_hr: number | null;
+      /** Distance M */
+      distance_m: number | null;
+      /** Sets */
+      sets: components["schemas"]["TrainingSetOut"][];
+    };
+    /**
+     * TrainingSessionUpdate
+     * @description Partial session edit (PATCH). `load` recomputes from duration×rpe when those
+     *     change and no explicit load is given.
+     */
+    TrainingSessionUpdate: {
+      /** Ts */
+      ts?: string | null;
+      /** Type */
+      type?: ("swim" | "gym") | null;
+      /** Duration Min */
+      duration_min?: number | null;
+      /** Rpe */
+      rpe?: number | null;
+      /** Load */
+      load?: number | null;
+      /** Notes */
+      notes?: string | null;
+    };
+    /** TrainingSetIn */
+    TrainingSetIn: {
+      /**
+       * Exercise
+       * @description Free-text exercise / stroke, e.g. 'bench press', 'freestyle'.
+       */
+      exercise: string;
+      /** Set No */
+      set_no?: number | null;
+      /** Reps */
+      reps?: number | null;
+      /** Weight Kg */
+      weight_kg?: number | null;
+      /** Distance M */
+      distance_m?: number | null;
+      /** Pace */
+      pace?: string | null;
+      /** Rpe */
+      rpe?: number | null;
+      /**
+       * Is Warmup
+       * @default false
+       */
+      is_warmup: boolean;
+      /** Added Weight Kg */
+      added_weight_kg?: number | null;
+    };
+    /** TrainingSetOut */
+    TrainingSetOut: {
+      /** Id */
+      id: number;
+      /** Exercise */
+      exercise: string;
+      /** Set No */
+      set_no: number | null;
+      /** Reps */
+      reps: number | null;
+      /** Weight Kg */
+      weight_kg: number | null;
+      /** Distance M */
+      distance_m: number | null;
+      /** Pace */
+      pace: string | null;
+      /** Rpe */
+      rpe: number | null;
+      /** Is Warmup */
+      is_warmup: boolean;
+      /** Added Weight Kg */
+      added_weight_kg: number | null;
+    };
+    /**
+     * TrainingSetUpdate
+     * @description Partial set edit. Omitted fields are untouched.
+     */
+    TrainingSetUpdate: {
+      /** Exercise */
+      exercise?: string | null;
+      /** Set No */
+      set_no?: number | null;
+      /** Reps */
+      reps?: number | null;
+      /** Weight Kg */
+      weight_kg?: number | null;
+      /** Distance M */
+      distance_m?: number | null;
+      /** Pace */
+      pace?: string | null;
+      /** Rpe */
+      rpe?: number | null;
+      /** Is Warmup */
+      is_warmup?: boolean | null;
+      /** Added Weight Kg */
+      added_weight_kg?: number | null;
+    };
+    /** TrainingStats */
+    TrainingStats: {
+      /**
+       * From
+       * Format: date
+       */
+      from: string;
+      /**
+       * To
+       * Format: date
+       */
+      to: string;
+      /** Weekly Sets Per Muscle */
+      weekly_sets_per_muscle: components["schemas"]["WeeklyMuscleSets"][];
+      /** Volume Load Per Muscle */
+      volume_load_per_muscle: components["schemas"]["MuscleVolume"][];
+      /** Push Pull Ratio */
+      push_pull_ratio: number | null;
+      /** Upper Lower Ratio */
+      upper_lower_ratio: number | null;
+      /** Per Exercise */
+      per_exercise: components["schemas"]["ExerciseStat"][];
+      /** Unresolved Exercises */
+      unresolved_exercises: string[];
+    };
+    /** ValidationError */
+    ValidationError: {
+      /** Location */
+      loc: (string | number)[];
+      /** Message */
+      msg: string;
+      /** Error Type */
+      type: string;
+      /** Input */
+      input?: unknown;
+      /** Context */
+      ctx?: Record<string, never>;
+    };
+    /** WeeklyMuscleSets */
+    WeeklyMuscleSets: {
+      /**
+       * Week
+       * Format: date
+       */
+      week: string;
+      /** Muscle */
+      muscle: string;
+      /** Sets */
+      sets: number;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    health_health_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HealthResponse"];
-                };
-            };
-        };
+  health_health_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    ready_health_ready_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["HealthResponse"];
         };
+      };
     };
-    list_points_api_v1_telemetry_get: {
-        parameters: {
-            query: {
-                /** @description e.g. steps | stress | spo2 | heart_rate | energy_expenditure */
-                metric: string;
-                /** @description ISO start (inclusive). */
-                from?: string | null;
-                /** @description ISO end (inclusive). */
-                to?: string | null;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TelemetryPoint"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  ready_health_ready_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    daily_rollup_api_v1_telemetry_daily_get: {
-        parameters: {
-            query: {
-                metric: string;
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DailyRollup"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": unknown;
         };
+      };
     };
-    sleep_series_api_v1_telemetry_sleep_get: {
-        parameters: {
-            query?: {
-                /** @description ISO start (inclusive). */
-                from?: string | null;
-                /** @description ISO end (inclusive). */
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SleepNight"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  list_points_api_v1_telemetry_get: {
+    parameters: {
+      query: {
+        /** @description e.g. steps | stress | spo2 | heart_rate | energy_expenditure */
+        metric: string;
+        /** @description ISO start (inclusive). */
+        from?: string | null;
+        /** @description ISO end (inclusive). */
+        to?: string | null;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    body_composition_api_v1_body_composition_get: {
-        parameters: {
-            query?: {
-                /** @description ISO start (inclusive). */
-                from?: string | null;
-                /** @description ISO end (inclusive). */
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BodyCompositionPoint"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["TelemetryPoint"][];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    training_stats_api_v1_training_stats_get: {
-        parameters: {
-            query?: {
-                /** @description Default: 8 weeks ago. */
-                from?: string | null;
-                /** @description Default: today. */
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingStats"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  daily_rollup_api_v1_telemetry_daily_get: {
+    parameters: {
+      query: {
+        metric: string;
+        from?: string | null;
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    list_training_api_v1_training_get: {
-        parameters: {
-            query?: {
-                /** @description Filter by session type. */
-                type?: ("swim" | "gym") | null;
-                from?: string | null;
-                to?: string | null;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingSessionOut"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["DailyRollup"][];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    create_training_api_v1_training_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TrainingSessionIn"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingSessionOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  sleep_series_api_v1_telemetry_sleep_get: {
+    parameters: {
+      query?: {
+        /** @description ISO start (inclusive). */
+        from?: string | null;
+        /** @description ISO end (inclusive). */
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    get_training_api_v1_training__session_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: number;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingSessionOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["SleepNight"][];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    delete_training_api_v1_training__session_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  body_composition_api_v1_body_composition_get: {
+    parameters: {
+      query?: {
+        /** @description ISO start (inclusive). */
+        from?: string | null;
+        /** @description ISO end (inclusive). */
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    update_training_api_v1_training__session_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: number;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TrainingSessionUpdate"];
-            };
+        content: {
+          "application/json": components["schemas"]["BodyCompositionPoint"][];
         };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingSessionOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    add_sets_api_v1_training__session_id__sets_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddSetsIn"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingSessionOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  training_stats_api_v1_training_stats_get: {
+    parameters: {
+      query?: {
+        /** @description Default: 8 weeks ago. */
+        from?: string | null;
+        /** @description Default: today. */
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    delete_set_api_v1_training__session_id__sets__set_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: number;
-                set_id: number;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingSessionOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingStats"];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    update_set_api_v1_training__session_id__sets__set_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: number;
-                set_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TrainingSetUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrainingSessionOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  list_training_api_v1_training_get: {
+    parameters: {
+      query?: {
+        /** @description Filter by session type. */
+        type?: ("swim" | "gym") | null;
+        from?: string | null;
+        to?: string | null;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    search_exercises_api_v1_exercises_get: {
-        parameters: {
-            query?: {
-                /** @description Name/alias substring for autocomplete. */
-                q?: string | null;
-                muscle?: string | null;
-                category?: string | null;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExerciseOut"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingSessionOut"][];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    create_exercise_api_v1_exercises_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ExerciseIn"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExerciseOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  create_training_api_v1_training_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    delete_exercise_api_v1_exercises__exercise_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                exercise_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: string;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TrainingSessionIn"];
+      };
     };
-    update_exercise_api_v1_exercises__exercise_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                exercise_id: number;
-            };
-            cookie?: never;
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ExerciseUpdate"];
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingSessionOut"];
         };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExerciseOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    meals_for_day_api_v1_meals_get: {
-        parameters: {
-            query: {
-                /** @description Day to summarize (YYYY-MM-DD, UTC). */
-                date: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DayNutrition"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  get_training_api_v1_training__session_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: number;
+      };
+      cookie?: never;
     };
-    create_meal_api_v1_meals_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["MealIn"];
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingSessionOut"];
         };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MealOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    create_meal_from_photo_api_v1_meals_photo_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["Body_create_meal_from_photo_api_v1_meals_photo_post"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MealCreateResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  delete_training_api_v1_training__session_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: number;
+      };
+      cookie?: never;
     };
-    get_meal_api_v1_meals__meal_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                meal_id: number;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MealOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    delete_meal_api_v1_meals__meal_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                meal_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  update_training_api_v1_training__session_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: number;
+      };
+      cookie?: never;
     };
-    update_meal_api_v1_meals__meal_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                meal_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["MealUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MealOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TrainingSessionUpdate"];
+      };
     };
-    add_meal_items_api_v1_meals__meal_id__items_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                meal_id: number;
-            };
-            cookie?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddItemsIn"];
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingSessionOut"];
         };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MealOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    delete_meal_item_api_v1_meals__meal_id__items__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                meal_id: number;
-                item_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MealOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  add_sets_api_v1_training__session_id__sets_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: number;
+      };
+      cookie?: never;
     };
-    update_meal_item_api_v1_meals__meal_id__items__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                meal_id: number;
-                item_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["MealItemUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MealOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddSetsIn"];
+      };
     };
-    search_foods_api_v1_foods_get: {
-        parameters: {
-            query?: {
-                /** @description Name/alias substring for autocomplete. */
-                q?: string | null;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FoodOut"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingSessionOut"];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    recent_foods_api_v1_foods_recent_get: {
-        parameters: {
-            query?: {
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FoodOut"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  delete_set_api_v1_training__session_id__sets__set_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: number;
+        set_id: number;
+      };
+      cookie?: never;
     };
-    resolve_food_api_v1_foods_resolve_get: {
-        parameters: {
-            query: {
-                /** @description Typed food name to resolve via the matcher. */
-                name: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FoodResolveOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingSessionOut"];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    get_recommendations_api_v1_recommendations_get: {
-        parameters: {
-            query: {
-                /** @description Day to fetch (YYYY-MM-DD, UTC). */
-                date: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecommendationsOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  update_set_api_v1_training__session_id__sets__set_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: number;
+        set_id: number;
+      };
+      cookie?: never;
     };
-    run_recommendations_api_v1_recommendations_run_post: {
-        parameters: {
-            query: {
-                /** @description Day to (re)generate. */
-                date: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecommendationsOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TrainingSetUpdate"];
+      };
     };
-    submit_feedback_api_v1_recommendations_feedback_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FeedbackIn"];
-            };
+        content: {
+          "application/json": components["schemas"]["TrainingSessionOut"];
         };
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
-    dashboard_api_v1_dashboard_get: {
-        parameters: {
-            query: {
-                /** @description Day to summarize (YYYY-MM-DD, UTC). */
-                date: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DashboardOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  search_exercises_api_v1_exercises_get: {
+    parameters: {
+      query?: {
+        /** @description Name/alias substring for autocomplete. */
+        q?: string | null;
+        muscle?: string | null;
+        category?: string | null;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    ingest_samsung_api_v1_ingest_samsung_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["Body_ingest_samsung_api_v1_ingest_samsung_post"];
-            };
+        content: {
+          "application/json": components["schemas"]["ExerciseOut"][];
         };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["IngestResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
+  };
+  create_exercise_api_v1_exercises_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ExerciseIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExerciseOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_exercise_api_v1_exercises__exercise_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        exercise_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            [key: string]: string;
+          };
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_exercise_api_v1_exercises__exercise_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        exercise_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ExerciseUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExerciseOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  meals_for_day_api_v1_meals_get: {
+    parameters: {
+      query: {
+        /** @description Day to summarize (YYYY-MM-DD, UTC). */
+        date: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DayNutrition"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_meal_api_v1_meals_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MealIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MealOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_meal_from_photo_api_v1_meals_photo_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["Body_create_meal_from_photo_api_v1_meals_photo_post"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MealCreateResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_meal_api_v1_meals__meal_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        meal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MealOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_meal_api_v1_meals__meal_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        meal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_meal_api_v1_meals__meal_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        meal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MealUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MealOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  add_meal_items_api_v1_meals__meal_id__items_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        meal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddItemsIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MealOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_meal_item_api_v1_meals__meal_id__items__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        meal_id: number;
+        item_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MealOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_meal_item_api_v1_meals__meal_id__items__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        meal_id: number;
+        item_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MealItemUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MealOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  search_foods_api_v1_foods_get: {
+    parameters: {
+      query?: {
+        /** @description Name/alias substring for autocomplete. */
+        q?: string | null;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["FoodOut"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  recent_foods_api_v1_foods_recent_get: {
+    parameters: {
+      query?: {
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["FoodOut"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  resolve_food_api_v1_foods_resolve_get: {
+    parameters: {
+      query: {
+        /** @description Typed food name to resolve via the matcher. */
+        name: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["FoodResolveOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_recommendations_api_v1_recommendations_get: {
+    parameters: {
+      query: {
+        /** @description Day to fetch (YYYY-MM-DD, UTC). */
+        date: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RecommendationsOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  run_recommendations_api_v1_recommendations_run_post: {
+    parameters: {
+      query: {
+        /** @description Day to (re)generate. */
+        date: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RecommendationsOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  submit_feedback_api_v1_recommendations_feedback_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FeedbackIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_goals_api_v1_goals_get: {
+    parameters: {
+      query?: {
+        /** @description Filter by active|achieved|abandoned. */
+        status?: string | null;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GoalOut"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_goal_api_v1_goals_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GoalIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GoalOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  active_goals_api_v1_goals_active_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GoalWithProgressOut"][];
+        };
+      };
+    };
+  };
+  get_goal_api_v1_goals__goal_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        goal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GoalWithProgressOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_goal_api_v1_goals__goal_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        goal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_goal_api_v1_goals__goal_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        goal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GoalUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GoalOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  goal_progress_api_v1_goals__goal_id__progress_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        goal_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GoalProgressOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  dashboard_api_v1_dashboard_get: {
+    parameters: {
+      query: {
+        /** @description Day to summarize (YYYY-MM-DD, UTC). */
+        date: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DashboardOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  ingest_samsung_api_v1_ingest_samsung_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["Body_ingest_samsung_api_v1_ingest_samsung_post"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["IngestResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
 }

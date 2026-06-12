@@ -35,4 +35,9 @@ export const queryKeys = {
   },
 
   recommendations: (date: string) => ["recommendations", date] as const,
+
+  goals: {
+    list: (status?: string) => ["goals", "list", status ?? "all"] as const,
+    active: ["goals", "active"] as const,
+  },
 } as const;

@@ -6,6 +6,7 @@ import {
   Dumbbell,
   LineChart,
   Sparkles,
+  Target,
   Upload,
   UtensilsCrossed,
 } from "lucide-react";
@@ -20,6 +21,7 @@ const NAV = [
   { href: "/training", label: "Training", icon: Dumbbell },
   { href: "/nutrition", label: "Nutrition", icon: UtensilsCrossed },
   { href: "/trends", label: "Trends", icon: LineChart },
+  { href: "/goals", label: "Goals", icon: Target },
   { href: "/recommendations", label: "Advice", icon: Sparkles },
   { href: "/import", label: "Import", icon: Upload },
 ] as const;
@@ -82,7 +84,7 @@ export function AppNav() {
       </header>
 
       {/* Phone: fixed bottom bar */}
-      <nav className="bg-background/95 fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t backdrop-blur sm:hidden">
+      <nav className="bg-background/95 fixed inset-x-0 bottom-0 z-40 grid grid-cols-7 border-t backdrop-blur sm:hidden">
         {NAV.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}

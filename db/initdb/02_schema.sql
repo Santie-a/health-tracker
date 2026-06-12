@@ -97,6 +97,34 @@ CREATE TABLE meal_items (
 );
 
 -- ─────────────────────────────────────────────────────────────────────────────
+-- Goals — the user's objective (lean bulk / gain weight / improve sleep / ...).
+-- Records intent plus an optional measurable target; the recommendation engine
+-- reads the active goal to turn descriptive signals into directional advice.
+-- At most one active goal per category (body / sleep) via a partial unique index.
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE goals (
+    id                    bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    type                  text NOT NULL CHECK (type IN
+                              ('gain_muscle','gain_weight','lose_fat','recomp','maintain','improve_sleep')),
+    category              text NOT NULL CHECK (category IN ('body','sleep')),
+    status                text NOT NULL DEFAULT 'active'
+                              CHECK (status IN ('active','achieved','abandoned')),
+    metric                text,            -- weight_kg | skeletal_muscle_kg | body_fat_pct | sleep_min | sleep_efficiency
+    baseline_value        numeric(7,2),    -- metric value when the goal was created
+    target_value          numeric(7,2),    -- metric value to reach
+    target_rate_per_week  numeric(6,3),    -- desired weekly change, e.g. +0.25 kg/wk
+    start_date            date NOT NULL DEFAULT CURRENT_DATE,
+    target_date           date,
+    calorie_delta         integer,         -- surplus(+)/deficit(-) vs TDEE the engine should aim for
+    protein_g_per_kg      numeric(4,2),    -- protein target override (e.g. 2.0 on a cut)
+    notes                 text,
+    created_at            timestamptz NOT NULL DEFAULT now()
+);
+-- One active goal per category keeps the derived thresholds unambiguous.
+CREATE UNIQUE INDEX goals_one_active_per_category ON goals (category) WHERE status = 'active';
+CREATE INDEX goals_status_idx ON goals (status);
+
+-- ─────────────────────────────────────────────────────────────────────────────
 -- Recommendations — one rule-based pass per day, stored for history + feedback.
 -- ─────────────────────────────────────────────────────────────────────────────
 CREATE TABLE recommendations (

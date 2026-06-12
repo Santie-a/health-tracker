@@ -1,15 +1,10 @@
 {
   "openapi": "3.1.0",
-  "info": {
-    "title": "Health Tracker \u2014 API Gateway",
-    "version": "0.1.0"
-  },
+  "info": { "title": "Health Tracker \u2014 API Gateway", "version": "0.1.0" },
   "paths": {
     "/health": {
       "get": {
-        "tags": [
-          "health"
-        ],
+        "tags": ["health"],
         "summary": "Health",
         "description": "Liveness: process is up. Dependency-light (no DB) on purpose.",
         "operationId": "health_health_get",
@@ -17,11 +12,7 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResponse"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/HealthResponse" } }
             }
           }
         }
@@ -29,36 +20,24 @@
     },
     "/health/ready": {
       "get": {
-        "tags": [
-          "health"
-        ],
+        "tags": ["health"],
         "summary": "Ready",
         "description": "Readiness: checks the DB so orchestration can gate traffic without\ncoupling liveness to it. 200 when ready, 503 when degraded.",
         "operationId": "ready_health_ready_get",
         "responses": {
           "200": {
             "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
+            "content": { "application/json": { "schema": {} } }
           }
         }
       }
     },
     "/api/v1/telemetry": {
       "get": {
-        "tags": [
-          "telemetry"
-        ],
+        "tags": ["telemetry"],
         "summary": "List Points",
         "operationId": "list_points_api_v1_telemetry_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "metric",
@@ -76,15 +55,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "description": "ISO start (inclusive).",
               "title": "From"
             },
@@ -95,15 +66,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "description": "ISO end (inclusive).",
               "title": "To"
             },
@@ -129,9 +92,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TelemetryPoint"
-                  },
+                  "items": { "$ref": "#/components/schemas/TelemetryPoint" },
                   "title": "Response List Points Api V1 Telemetry Get"
                 }
               }
@@ -141,9 +102,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -152,40 +111,23 @@
     },
     "/api/v1/telemetry/daily": {
       "get": {
-        "tags": [
-          "telemetry"
-        ],
+        "tags": ["telemetry"],
         "summary": "Daily Rollup",
         "operationId": "daily_rollup_api_v1_telemetry_daily_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "metric",
             "in": "query",
             "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Metric"
-            }
+            "schema": { "type": "string", "title": "Metric" }
           },
           {
             "name": "from",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "title": "From"
             }
           },
@@ -194,15 +136,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "title": "To"
             }
           }
@@ -214,9 +148,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DailyRollup"
-                  },
+                  "items": { "$ref": "#/components/schemas/DailyRollup" },
                   "title": "Response Daily Rollup Api V1 Telemetry Daily Get"
                 }
               }
@@ -226,9 +158,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -237,32 +167,18 @@
     },
     "/api/v1/telemetry/sleep": {
       "get": {
-        "tags": [
-          "telemetry"
-        ],
+        "tags": ["telemetry"],
         "summary": "Sleep Series",
         "description": "Per-night sleep summaries (total + stages) for the sleep trend.",
         "operationId": "sleep_series_api_v1_telemetry_sleep_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "from",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "description": "ISO start (inclusive).",
               "title": "From"
             },
@@ -273,15 +189,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "description": "ISO end (inclusive).",
               "title": "To"
             },
@@ -295,9 +203,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SleepNight"
-                  },
+                  "items": { "$ref": "#/components/schemas/SleepNight" },
                   "title": "Response Sleep Series Api V1 Telemetry Sleep Get"
                 }
               }
@@ -307,9 +213,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -318,32 +222,18 @@
     },
     "/api/v1/body-composition": {
       "get": {
-        "tags": [
-          "telemetry"
-        ],
+        "tags": ["telemetry"],
         "summary": "Body Composition",
         "description": "Smart-scale series (weight, body fat %, skeletal muscle, BMR) for trends.",
         "operationId": "body_composition_api_v1_body_composition_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "from",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "description": "ISO start (inclusive).",
               "title": "From"
             },
@@ -354,15 +244,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "description": "ISO end (inclusive).",
               "title": "To"
             },
@@ -376,9 +258,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BodyCompositionPoint"
-                  },
+                  "items": { "$ref": "#/components/schemas/BodyCompositionPoint" },
                   "title": "Response Body Composition Api V1 Body Composition Get"
                 }
               }
@@ -388,9 +268,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -399,31 +277,17 @@
     },
     "/api/v1/training/stats": {
       "get": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Training Stats",
         "operationId": "training_stats_api_v1_training_stats_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "from",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
               "description": "Default: 8 weeks ago.",
               "title": "From"
             },
@@ -434,15 +298,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
               "description": "Default: today.",
               "title": "To"
             },
@@ -453,20 +309,14 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingStats"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/TrainingStats" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -475,24 +325,14 @@
     },
     "/api/v1/training": {
       "post": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Create Training",
         "operationId": "create_training_api_v1_training_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TrainingSessionIn"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/TrainingSessionIn" } }
           }
         },
         "responses": {
@@ -500,9 +340,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingSessionOut"
-                }
+                "schema": { "$ref": "#/components/schemas/TrainingSessionOut" }
               }
             }
           },
@@ -510,43 +348,24 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "get": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "List Training",
         "operationId": "list_training_api_v1_training_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "type",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "swim",
-                    "gym"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "enum": ["swim", "gym"], "type": "string" }, { "type": "null" }],
               "description": "Filter by session type.",
               "title": "Type"
             },
@@ -557,15 +376,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "title": "From"
             }
           },
@@ -574,15 +385,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
               "title": "To"
             }
           },
@@ -606,9 +409,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TrainingSessionOut"
-                  },
+                  "items": { "$ref": "#/components/schemas/TrainingSessionOut" },
                   "title": "Response List Training Api V1 Training Get"
                 }
               }
@@ -618,9 +419,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -629,25 +428,16 @@
     },
     "/api/v1/training/{session_id}": {
       "get": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Get Training",
         "operationId": "get_training_api_v1_training__session_id__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "session_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Session Id"
-            }
+            "schema": { "type": "integer", "title": "Session Id" }
           }
         ],
         "responses": {
@@ -655,9 +445,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingSessionOut"
-                }
+                "schema": { "$ref": "#/components/schemas/TrainingSessionOut" }
               }
             }
           },
@@ -665,44 +453,31 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Update Training",
         "description": "Edit session fields; `load` recomputes from duration\u00d7rpe when unset explicitly.",
         "operationId": "update_training_api_v1_training__session_id__patch",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "session_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Session Id"
-            }
+            "schema": { "type": "integer", "title": "Session Id" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TrainingSessionUpdate"
-              }
+              "schema": { "$ref": "#/components/schemas/TrainingSessionUpdate" }
             }
           }
         },
@@ -711,9 +486,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingSessionOut"
-                }
+                "schema": { "$ref": "#/components/schemas/TrainingSessionOut" }
               }
             }
           },
@@ -721,47 +494,32 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Delete Training",
         "operationId": "delete_training_api_v1_training__session_id__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "session_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Session Id"
-            }
+            "schema": { "type": "integer", "title": "Session Id" }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
+          "204": { "description": "Successful Response" },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -770,36 +528,23 @@
     },
     "/api/v1/training/{session_id}/sets": {
       "post": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Add Sets",
         "description": "Log sets against a session; free-text exercise names resolve to the catalog.",
         "operationId": "add_sets_api_v1_training__session_id__sets_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "session_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Session Id"
-            }
+            "schema": { "type": "integer", "title": "Session Id" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddSetsIn"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddSetsIn" } }
           }
         },
         "responses": {
@@ -807,9 +552,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingSessionOut"
-                }
+                "schema": { "$ref": "#/components/schemas/TrainingSessionOut" }
               }
             }
           },
@@ -817,9 +560,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -828,45 +569,29 @@
     },
     "/api/v1/training/{session_id}/sets/{set_id}": {
       "patch": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Update Set",
         "description": "Edit one set; returns the updated session.",
         "operationId": "update_set_api_v1_training__session_id__sets__set_id__patch",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "session_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Session Id"
-            }
+            "schema": { "type": "integer", "title": "Session Id" }
           },
           {
             "name": "set_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Set Id"
-            }
+            "schema": { "type": "integer", "title": "Set Id" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TrainingSetUpdate"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/TrainingSetUpdate" } }
           }
         },
         "responses": {
@@ -874,9 +599,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingSessionOut"
-                }
+                "schema": { "$ref": "#/components/schemas/TrainingSessionOut" }
               }
             }
           },
@@ -884,44 +607,30 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Delete Set",
         "description": "Remove one set; returns the updated session.",
         "operationId": "delete_set_api_v1_training__session_id__sets__set_id__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "session_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Session Id"
-            }
+            "schema": { "type": "integer", "title": "Session Id" }
           },
           {
             "name": "set_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Set Id"
-            }
+            "schema": { "type": "integer", "title": "Set Id" }
           }
         ],
         "responses": {
@@ -929,9 +638,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingSessionOut"
-                }
+                "schema": { "$ref": "#/components/schemas/TrainingSessionOut" }
               }
             }
           },
@@ -939,9 +646,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -950,30 +655,17 @@
     },
     "/api/v1/exercises": {
       "get": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Search Exercises",
         "operationId": "search_exercises_api_v1_exercises_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "q",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string" }, { "type": "null" }],
               "description": "Name/alias substring for autocomplete.",
               "title": "Q"
             },
@@ -983,33 +675,13 @@
             "name": "muscle",
             "in": "query",
             "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Muscle"
-            }
+            "schema": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Muscle" }
           },
           {
             "name": "category",
             "in": "query",
             "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Category"
-            }
+            "schema": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Category" }
           },
           {
             "name": "limit",
@@ -1031,9 +703,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExerciseOut"
-                  },
+                  "items": { "$ref": "#/components/schemas/ExerciseOut" },
                   "title": "Response Search Exercises Api V1 Exercises Get"
                 }
               }
@@ -1043,53 +713,35 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "post": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Create Exercise",
         "operationId": "create_exercise_api_v1_exercises_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExerciseIn"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/ExerciseIn" } }
           }
         },
         "responses": {
           "201": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExerciseOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ExerciseOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1098,82 +750,54 @@
     },
     "/api/v1/exercises/{exercise_id}": {
       "patch": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Update Exercise",
         "description": "Edit a catalog exercise. Renaming regenerates the slug (409 on collision).",
         "operationId": "update_exercise_api_v1_exercises__exercise_id__patch",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "exercise_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Exercise Id"
-            }
+            "schema": { "type": "integer", "title": "Exercise Id" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExerciseUpdate"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/ExerciseUpdate" } }
           }
         },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExerciseOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ExerciseOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "training"
-        ],
+        "tags": ["training"],
         "summary": "Delete Exercise",
         "description": "Delete a catalog exercise. Soft-deletes (deactivates) instead when logged sets\nstill reference it, so history stays intact. Returns the action taken.",
         "operationId": "delete_exercise_api_v1_exercises__exercise_id__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "exercise_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Exercise Id"
-            }
+            "schema": { "type": "integer", "title": "Exercise Id" }
           }
         ],
         "responses": {
@@ -1183,9 +807,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
+                  "additionalProperties": { "type": "string" },
                   "title": "Response Delete Exercise Api V1 Exercises  Exercise Id  Delete"
                 }
               }
@@ -1195,9 +817,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1206,61 +826,37 @@
     },
     "/api/v1/meals": {
       "post": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Create Meal",
         "description": "Manual meal entry. Items with grams but no macros are resolved via nutrition_core.",
         "operationId": "create_meal_api_v1_meals_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "requestBody": {
           "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MealIn"
-              }
-            }
-          }
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MealIn" } } }
         },
         "responses": {
           "201": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MealOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/MealOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "get": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Meals For Day",
         "operationId": "meals_for_day_api_v1_meals_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "date",
@@ -1279,20 +875,14 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DayNutrition"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/DayNutrition" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1301,9 +891,7 @@
     },
     "/api/v1/meals/photo": {
       "post": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Create Meal From Photo",
         "description": "Photo meal entry: proxied to image-svc. If the GPU box is unreachable the\nresponse is a degraded empty manual meal (never a 5xx).",
         "operationId": "create_meal_from_photo_api_v1_meals_photo_post",
@@ -1322,9 +910,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MealCreateResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/MealCreateResponse" }
               }
             }
           },
@@ -1332,155 +918,102 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        "security": [{ "HTTPBearer": [] }]
       }
     },
     "/api/v1/meals/{meal_id}": {
       "get": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Get Meal",
         "operationId": "get_meal_api_v1_meals__meal_id__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "meal_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Meal Id"
-            }
+            "schema": { "type": "integer", "title": "Meal Id" }
           }
         ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MealOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/MealOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Update Meal",
         "description": "Edit a meal's name and/or timestamp (fix a wrong entry).",
         "operationId": "update_meal_api_v1_meals__meal_id__patch",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "meal_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Meal Id"
-            }
+            "schema": { "type": "integer", "title": "Meal Id" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MealUpdate"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/MealUpdate" } }
           }
         },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MealOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/MealOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Delete Meal",
         "operationId": "delete_meal_api_v1_meals__meal_id__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "meal_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Meal Id"
-            }
+            "schema": { "type": "integer", "title": "Meal Id" }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
+          "204": { "description": "Successful Response" },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1489,56 +1022,37 @@
     },
     "/api/v1/meals/{meal_id}/items": {
       "post": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Add Meal Items",
         "description": "Add items to a meal by catalog food (portion\u00d7qty or grams), free-text food +\ngrams, or a raw kcal-only quick entry.",
         "operationId": "add_meal_items_api_v1_meals__meal_id__items_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "meal_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Meal Id"
-            }
+            "schema": { "type": "integer", "title": "Meal Id" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddItemsIn"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddItemsIn" } }
           }
         },
         "responses": {
           "201": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MealOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/MealOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1547,120 +1061,80 @@
     },
     "/api/v1/meals/{meal_id}/items/{item_id}": {
       "patch": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Update Meal Item",
         "description": "Edit a single item; returns the updated meal. Macros re-estimate when grams\nchange and aren't pinned explicitly.",
         "operationId": "update_meal_item_api_v1_meals__meal_id__items__item_id__patch",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "meal_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Meal Id"
-            }
+            "schema": { "type": "integer", "title": "Meal Id" }
           },
           {
             "name": "item_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Item Id"
-            }
+            "schema": { "type": "integer", "title": "Item Id" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MealItemUpdate"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/MealItemUpdate" } }
           }
         },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MealOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/MealOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Delete Meal Item",
         "description": "Remove one item; returns the updated meal.",
         "operationId": "delete_meal_item_api_v1_meals__meal_id__items__item_id__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "meal_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Meal Id"
-            }
+            "schema": { "type": "integer", "title": "Meal Id" }
           },
           {
             "name": "item_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Item Id"
-            }
+            "schema": { "type": "integer", "title": "Item Id" }
           }
         ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MealOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/MealOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1669,30 +1143,17 @@
     },
     "/api/v1/foods": {
       "get": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Search Foods",
         "operationId": "search_foods_api_v1_foods_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "q",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string" }, { "type": "null" }],
               "description": "Name/alias substring for autocomplete.",
               "title": "Q"
             },
@@ -1718,9 +1179,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FoodOut"
-                  },
+                  "items": { "$ref": "#/components/schemas/FoodOut" },
                   "title": "Response Search Foods Api V1 Foods Get"
                 }
               }
@@ -1730,9 +1189,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1741,16 +1198,10 @@
     },
     "/api/v1/foods/recent": {
       "get": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Recent Foods",
         "operationId": "recent_foods_api_v1_foods_recent_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "limit",
@@ -1772,9 +1223,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FoodOut"
-                  },
+                  "items": { "$ref": "#/components/schemas/FoodOut" },
                   "title": "Response Recent Foods Api V1 Foods Recent Get"
                 }
               }
@@ -1784,9 +1233,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1795,16 +1242,10 @@
     },
     "/api/v1/foods/resolve": {
       "get": {
-        "tags": [
-          "nutrition"
-        ],
+        "tags": ["nutrition"],
         "summary": "Resolve Food",
         "operationId": "resolve_food_api_v1_foods_resolve_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "name",
@@ -1822,20 +1263,14 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FoodResolveOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/FoodResolveOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1844,17 +1279,11 @@
     },
     "/api/v1/recommendations": {
       "get": {
-        "tags": [
-          "recommendations"
-        ],
+        "tags": ["recommendations"],
         "summary": "Get Recommendations",
         "description": "Today's recommendations. Generated + stored lazily on first request for a day.",
         "operationId": "get_recommendations_api_v1_recommendations_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "date",
@@ -1874,9 +1303,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RecommendationsOut"
-                }
+                "schema": { "$ref": "#/components/schemas/RecommendationsOut" }
               }
             }
           },
@@ -1884,9 +1311,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1895,17 +1320,11 @@
     },
     "/api/v1/recommendations/run": {
       "post": {
-        "tags": [
-          "recommendations"
-        ],
+        "tags": ["recommendations"],
         "summary": "Run Recommendations",
         "description": "Force a regenerate + store (the daily-pass trigger).",
         "operationId": "run_recommendations_api_v1_recommendations_run_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "date",
@@ -1925,9 +1344,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RecommendationsOut"
-                }
+                "schema": { "$ref": "#/components/schemas/RecommendationsOut" }
               }
             }
           },
@@ -1935,9 +1352,7 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -1946,56 +1361,269 @@
     },
     "/api/v1/recommendations/feedback": {
       "post": {
-        "tags": [
-          "recommendations"
-        ],
+        "tags": ["recommendations"],
         "summary": "Submit Feedback",
         "operationId": "submit_feedback_api_v1_recommendations_feedback_post",
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackIn"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/FeedbackIn" } }
           },
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "Successful Response"
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "HTTPBearer": [] }]
+      }
+    },
+    "/api/v1/goals": {
+      "get": {
+        "tags": ["goals"],
+        "summary": "List Goals",
+        "operationId": "list_goals_api_v1_goals_get",
+        "security": [{ "HTTPBearer": [] }],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{ "type": "string" }, { "type": "null" }],
+              "description": "Filter by active|achieved|abandoned.",
+              "title": "Status"
+            },
+            "description": "Filter by active|achieved|abandoned."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/GoalOut" },
+                  "title": "Response List Goals Api V1 Goals Get"
+                }
+              }
+            }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["goals"],
+        "summary": "Create Goal",
+        "description": "Create a goal. Unspecified fields are filled from the goal type (category,\nmetric, surplus/deficit, protein target, baseline from latest body comp).",
+        "operationId": "create_goal_api_v1_goals_post",
+        "security": [{ "HTTPBearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GoalIn" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GoalOut" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/goals/active": {
+      "get": {
+        "tags": ["goals"],
+        "summary": "Active Goals",
+        "description": "The current active goal(s) (at most one body + one sleep) with live progress.",
+        "operationId": "active_goals_api_v1_goals_active_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
+                  "items": { "$ref": "#/components/schemas/GoalWithProgressOut" },
+                  "type": "array",
+                  "title": "Response Active Goals Api V1 Goals Active Get"
                 }
               }
             }
           }
         },
-        "security": [
+        "security": [{ "HTTPBearer": [] }]
+      }
+    },
+    "/api/v1/goals/{goal_id}": {
+      "get": {
+        "tags": ["goals"],
+        "summary": "Get Goal",
+        "operationId": "get_goal_api_v1_goals__goal_id__get",
+        "security": [{ "HTTPBearer": [] }],
+        "parameters": [
           {
-            "HTTPBearer": []
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Goal Id" }
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GoalWithProgressOut" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["goals"],
+        "summary": "Update Goal",
+        "description": "Edit a goal or change its status (active|achieved|abandoned).",
+        "operationId": "update_goal_api_v1_goals__goal_id__patch",
+        "security": [{ "HTTPBearer": [] }],
+        "parameters": [
+          {
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Goal Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/GoalUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GoalOut" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["goals"],
+        "summary": "Delete Goal",
+        "operationId": "delete_goal_api_v1_goals__goal_id__delete",
+        "security": [{ "HTTPBearer": [] }],
+        "parameters": [
+          {
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Goal Id" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/goals/{goal_id}/progress": {
+      "get": {
+        "tags": ["goals"],
+        "summary": "Goal Progress",
+        "operationId": "goal_progress_api_v1_goals__goal_id__progress_get",
+        "security": [{ "HTTPBearer": [] }],
+        "parameters": [
+          {
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Goal Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GoalProgressOut" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/dashboard": {
       "get": {
-        "tags": [
-          "dashboard"
-        ],
+        "tags": ["dashboard"],
         "summary": "Dashboard",
         "description": "One call powering the frontend home: telemetry summary + training + nutrition\ntotals + recommendations for the day.",
         "operationId": "dashboard_api_v1_dashboard_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
+        "security": [{ "HTTPBearer": [] }],
         "parameters": [
           {
             "name": "date",
@@ -2014,20 +1642,14 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DashboardOut"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/DashboardOut" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
@@ -2036,9 +1658,7 @@
     },
     "/api/v1/ingest/samsung": {
       "post": {
-        "tags": [
-          "ingest"
-        ],
+        "tags": ["ingest"],
         "summary": "Ingest Samsung",
         "description": "Import complementary telemetry from a Samsung Health export.\n\nRoutes each file by its metadata line-1 data type; unknown types are reported\nas skipped, not errors. Upload the sleep_stage file alongside sleep to enrich\ndeep/awake stage minutes. Idempotent: re-uploading the same export is safe.",
         "operationId": "ingest_samsung_api_v1_ingest_samsung_post",
@@ -2056,29 +1676,19 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IngestResponse"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/IngestResponse" } }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        "security": [{ "HTTPBearer": [] }]
       }
     }
   },
@@ -2087,93 +1697,48 @@
       "AddItemsIn": {
         "properties": {
           "items": {
-            "items": {
-              "$ref": "#/components/schemas/MealItemAddIn"
-            },
+            "items": { "$ref": "#/components/schemas/MealItemAddIn" },
             "type": "array",
             "minItems": 1,
             "title": "Items"
           }
         },
         "type": "object",
-        "required": [
-          "items"
-        ],
+        "required": ["items"],
         "title": "AddItemsIn"
       },
       "AddSetsIn": {
         "properties": {
           "sets": {
-            "items": {
-              "$ref": "#/components/schemas/TrainingSetIn"
-            },
+            "items": { "$ref": "#/components/schemas/TrainingSetIn" },
             "type": "array",
             "minItems": 1,
             "title": "Sets"
           }
         },
         "type": "object",
-        "required": [
-          "sets"
-        ],
+        "required": ["sets"],
         "title": "AddSetsIn"
       },
       "BodyCompositionPoint": {
         "properties": {
-          "ts": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Ts"
-          },
+          "ts": { "type": "string", "format": "date-time", "title": "Ts" },
           "weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Weight Kg"
           },
           "body_fat_pct": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Body Fat Pct"
           },
           "skeletal_muscle_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Skeletal Muscle Kg"
           },
-          "bmr_kcal": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Bmr Kcal"
-          }
+          "bmr_kcal": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Bmr Kcal" }
         },
         "type": "object",
-        "required": [
-          "ts"
-        ],
+        "required": ["ts"],
         "title": "BodyCompositionPoint",
         "description": "One smart-scale reading (sparse periodic series)."
       },
@@ -2185,154 +1750,61 @@
             "description": "Meal photo.",
             "format": "binary"
           },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name"
-          },
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" },
           "ts": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
             "title": "Ts"
           }
         },
         "type": "object",
-        "required": [
-          "image"
-        ],
+        "required": ["image"],
         "title": "Body_create_meal_from_photo_api_v1_meals_photo_post"
       },
       "Body_ingest_samsung_api_v1_ingest_samsung_post": {
         "properties": {
           "files": {
-            "items": {
-              "type": "string",
-              "format": "binary"
-            },
+            "items": { "type": "string", "format": "binary" },
             "type": "array",
             "title": "Files",
             "description": "One or more Samsung Health export CSVs."
           }
         },
         "type": "object",
-        "required": [
-          "files"
-        ],
+        "required": ["files"],
         "title": "Body_ingest_samsung_api_v1_ingest_samsung_post"
       },
       "DailyRollup": {
         "properties": {
-          "day": {
-            "type": "string",
-            "format": "date",
-            "title": "Day"
-          },
-          "metric": {
-            "type": "string",
-            "title": "Metric"
-          },
-          "avg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Avg"
-          },
-          "min": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Min"
-          },
-          "max": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Max"
-          },
-          "sum": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sum"
-          },
-          "count": {
-            "type": "integer",
-            "title": "Count"
-          }
+          "day": { "type": "string", "format": "date", "title": "Day" },
+          "metric": { "type": "string", "title": "Metric" },
+          "avg": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Avg" },
+          "min": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Min" },
+          "max": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Max" },
+          "sum": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Sum" },
+          "count": { "type": "integer", "title": "Count" }
         },
         "type": "object",
-        "required": [
-          "day",
-          "metric",
-          "count"
-        ],
+        "required": ["day", "metric", "count"],
         "title": "DailyRollup",
         "description": "One day's rollup for a metric. `sum` is meaningful for additive metrics\n(steps, energy_expenditure); `avg`/`min`/`max` for the rest."
       },
       "DashboardOut": {
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date",
-            "title": "Date"
-          },
-          "telemetry": {
-            "$ref": "#/components/schemas/TelemetrySummary"
-          },
+          "date": { "type": "string", "format": "date", "title": "Date" },
+          "telemetry": { "$ref": "#/components/schemas/TelemetrySummary" },
           "training": {
-            "items": {
-              "$ref": "#/components/schemas/TrainingSessionOut"
-            },
+            "items": { "$ref": "#/components/schemas/TrainingSessionOut" },
             "type": "array",
             "title": "Training"
           },
-          "nutrition_totals": {
-            "$ref": "#/components/schemas/Totals"
-          },
+          "nutrition_totals": { "$ref": "#/components/schemas/Totals" },
           "meals": {
-            "items": {
-              "$ref": "#/components/schemas/MealOut"
-            },
+            "items": { "$ref": "#/components/schemas/MealOut" },
             "type": "array",
             "title": "Meals"
           },
           "recommendations": {
-            "items": {
-              "$ref": "#/components/schemas/RecommendationItem"
-            },
+            "items": { "$ref": "#/components/schemas/RecommendationItem" },
             "type": "array",
             "title": "Recommendations"
           }
@@ -2350,235 +1822,102 @@
       },
       "DayNutrition": {
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date",
-            "title": "Date"
-          },
+          "date": { "type": "string", "format": "date", "title": "Date" },
           "meals": {
-            "items": {
-              "$ref": "#/components/schemas/MealOut"
-            },
+            "items": { "$ref": "#/components/schemas/MealOut" },
             "type": "array",
             "title": "Meals"
           },
-          "totals": {
-            "$ref": "#/components/schemas/Totals"
-          }
+          "totals": { "$ref": "#/components/schemas/Totals" }
         },
         "type": "object",
-        "required": [
-          "date",
-          "meals",
-          "totals"
-        ],
+        "required": ["date", "meals", "totals"],
         "title": "DayNutrition"
       },
       "ExerciseIn": {
         "properties": {
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
+          "name": { "type": "string", "title": "Name" },
           "category": {
             "anyOf": [
               {
                 "type": "string",
-                "enum": [
-                  "push",
-                  "pull",
-                  "squat",
-                  "hinge",
-                  "carry",
-                  "core",
-                  "swim",
-                  "other"
-                ]
+                "enum": ["push", "pull", "squat", "hinge", "carry", "core", "swim", "other"]
               },
-              {
-                "type": "null"
-              }
+              { "type": "null" }
             ],
             "title": "Category"
           },
           "primary_muscle": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Primary Muscle"
           },
           "equipment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Equipment"
           },
-          "is_unilateral": {
-            "type": "boolean",
-            "title": "Is Unilateral",
-            "default": false
-          },
-          "is_bodyweight": {
-            "type": "boolean",
-            "title": "Is Bodyweight",
-            "default": false
-          },
+          "is_unilateral": { "type": "boolean", "title": "Is Unilateral", "default": false },
+          "is_bodyweight": { "type": "boolean", "title": "Is Bodyweight", "default": false },
           "aliases": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
             "title": "Aliases"
           },
           "muscles": {
-            "items": {
-              "$ref": "#/components/schemas/ExerciseMuscleIn"
-            },
+            "items": { "$ref": "#/components/schemas/ExerciseMuscleIn" },
             "type": "array",
             "title": "Muscles",
             "default": []
           }
         },
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "ExerciseIn"
       },
       "ExerciseMuscleIn": {
         "properties": {
-          "muscle": {
-            "type": "string",
-            "title": "Muscle"
-          },
+          "muscle": { "type": "string", "title": "Muscle" },
           "role": {
             "type": "string",
-            "enum": [
-              "primary",
-              "secondary"
-            ],
+            "enum": ["primary", "secondary"],
             "title": "Role",
             "default": "primary"
           }
         },
         "type": "object",
-        "required": [
-          "muscle"
-        ],
+        "required": ["muscle"],
         "title": "ExerciseMuscleIn"
       },
       "ExerciseMuscleOut": {
         "properties": {
-          "muscle": {
-            "type": "string",
-            "title": "Muscle"
-          },
-          "role": {
-            "type": "string",
-            "title": "Role"
-          }
+          "muscle": { "type": "string", "title": "Muscle" },
+          "role": { "type": "string", "title": "Role" }
         },
         "type": "object",
-        "required": [
-          "muscle",
-          "role"
-        ],
+        "required": ["muscle", "role"],
         "title": "ExerciseMuscleOut"
       },
       "ExerciseOut": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "slug": {
-            "type": "string",
-            "title": "Slug"
-          },
-          "category": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Category"
-          },
+          "id": { "type": "integer", "title": "Id" },
+          "name": { "type": "string", "title": "Name" },
+          "slug": { "type": "string", "title": "Slug" },
+          "category": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Category" },
           "primary_muscle": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Primary Muscle"
           },
           "equipment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Equipment"
           },
-          "is_unilateral": {
-            "type": "boolean",
-            "title": "Is Unilateral"
-          },
-          "is_bodyweight": {
-            "type": "boolean",
-            "title": "Is Bodyweight"
-          },
+          "is_unilateral": { "type": "boolean", "title": "Is Unilateral" },
+          "is_bodyweight": { "type": "boolean", "title": "Is Bodyweight" },
           "aliases": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
             "title": "Aliases"
           },
-          "is_active": {
-            "type": "boolean",
-            "title": "Is Active"
-          },
+          "is_active": { "type": "boolean", "title": "Is Active" },
           "muscles": {
-            "items": {
-              "$ref": "#/components/schemas/ExerciseMuscleOut"
-            },
+            "items": { "$ref": "#/components/schemas/ExerciseMuscleOut" },
             "type": "array",
             "title": "Muscles"
           }
@@ -2601,185 +1940,67 @@
       },
       "ExerciseStat": {
         "properties": {
-          "exercise": {
-            "type": "string",
-            "title": "Exercise"
-          },
-          "slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Slug"
-          },
-          "sets": {
-            "type": "integer",
-            "title": "Sets"
-          },
+          "exercise": { "type": "string", "title": "Exercise" },
+          "slug": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Slug" },
+          "sets": { "type": "integer", "title": "Sets" },
           "top_weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Top Weight Kg"
           },
           "best_e1rm": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Best E1Rm"
           },
           "best_e1rm_date": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
             "title": "Best E1Rm Date"
           }
         },
         "type": "object",
-        "required": [
-          "exercise",
-          "slug",
-          "sets",
-          "top_weight_kg",
-          "best_e1rm",
-          "best_e1rm_date"
-        ],
+        "required": ["exercise", "slug", "sets", "top_weight_kg", "best_e1rm", "best_e1rm_date"],
         "title": "ExerciseStat"
       },
       "ExerciseUpdate": {
         "properties": {
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name"
-          },
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" },
           "category": {
             "anyOf": [
               {
                 "type": "string",
-                "enum": [
-                  "push",
-                  "pull",
-                  "squat",
-                  "hinge",
-                  "carry",
-                  "core",
-                  "swim",
-                  "other"
-                ]
+                "enum": ["push", "pull", "squat", "hinge", "carry", "core", "swim", "other"]
               },
-              {
-                "type": "null"
-              }
+              { "type": "null" }
             ],
             "title": "Category"
           },
           "primary_muscle": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Primary Muscle"
           },
           "equipment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Equipment"
           },
           "is_unilateral": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
             "title": "Is Unilateral"
           },
           "is_bodyweight": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
             "title": "Is Bodyweight"
           },
           "aliases": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
             "title": "Aliases"
           },
           "is_active": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
             "title": "Is Active"
           },
           "muscles": {
             "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/ExerciseMuscleIn"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
+              { "items": { "$ref": "#/components/schemas/ExerciseMuscleIn" }, "type": "array" },
+              { "type": "null" }
             ],
             "title": "Muscles"
           }
@@ -2790,168 +2011,63 @@
       },
       "FeedbackIn": {
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date",
-            "title": "Date"
-          },
-          "feedback": {
-            "type": "string",
-            "title": "Feedback"
-          }
+          "date": { "type": "string", "format": "date", "title": "Date" },
+          "feedback": { "type": "string", "title": "Feedback" }
         },
         "type": "object",
-        "required": [
-          "date",
-          "feedback"
-        ],
+        "required": ["date", "feedback"],
         "title": "FeedbackIn"
       },
       "FileReport": {
         "properties": {
-          "filename": {
-            "type": "string",
-            "title": "Filename"
-          },
+          "filename": { "type": "string", "title": "Filename" },
           "data_type": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Data Type"
           },
-          "target": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Target"
-          },
-          "parsed": {
-            "type": "integer",
-            "title": "Parsed",
-            "default": 0
-          },
-          "written": {
-            "type": "integer",
-            "title": "Written",
-            "default": 0
-          },
-          "skipped": {
-            "type": "integer",
-            "title": "Skipped",
-            "default": 0
-          },
+          "target": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Target" },
+          "parsed": { "type": "integer", "title": "Parsed", "default": 0 },
+          "written": { "type": "integer", "title": "Written", "default": 0 },
+          "skipped": { "type": "integer", "title": "Skipped", "default": 0 },
           "errors": {
-            "items": {
-              "type": "string"
-            },
+            "items": { "type": "string" },
             "type": "array",
             "title": "Errors",
             "default": []
           }
         },
         "type": "object",
-        "required": [
-          "filename"
-        ],
+        "required": ["filename"],
         "title": "FileReport"
       },
       "FoodOut": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "slug": {
-            "type": "string",
-            "title": "Slug"
-          },
+          "id": { "type": "integer", "title": "Id" },
+          "name": { "type": "string", "title": "Name" },
+          "slug": { "type": "string", "title": "Slug" },
           "aliases": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
             "title": "Aliases"
           },
           "kcal_100g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Kcal 100G"
           },
           "protein_100g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Protein 100G"
           },
           "carbs_100g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Carbs 100G"
           },
-          "fat_100g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Fat 100G"
-          },
+          "fat_100g": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Fat 100G" },
           "default_grams": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Default Grams"
           },
           "portions": {
-            "items": {
-              "$ref": "#/components/schemas/FoodPortionOut"
-            },
+            "items": { "$ref": "#/components/schemas/FoodPortionOut" },
             "type": "array",
             "title": "Portions"
           }
@@ -2973,61 +2089,355 @@
       },
       "FoodPortionOut": {
         "properties": {
-          "label": {
-            "type": "string",
-            "title": "Label"
-          },
-          "grams": {
-            "type": "number",
-            "title": "Grams"
-          },
-          "is_default": {
-            "type": "boolean",
-            "title": "Is Default"
-          }
+          "label": { "type": "string", "title": "Label" },
+          "grams": { "type": "number", "title": "Grams" },
+          "is_default": { "type": "boolean", "title": "Is Default" }
         },
         "type": "object",
-        "required": [
-          "label",
-          "grams",
-          "is_default"
-        ],
+        "required": ["label", "grams", "is_default"],
         "title": "FoodPortionOut"
       },
       "FoodResolveOut": {
         "properties": {
-          "matched": {
-            "type": "boolean",
-            "title": "Matched"
-          },
-          "query": {
-            "type": "string",
-            "title": "Query"
-          },
-          "food": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FoodOut"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
+          "matched": { "type": "boolean", "title": "Matched" },
+          "query": { "type": "string", "title": "Query" },
+          "food": { "anyOf": [{ "$ref": "#/components/schemas/FoodOut" }, { "type": "null" }] }
         },
         "type": "object",
-        "required": [
-          "matched",
-          "query"
-        ],
+        "required": ["matched", "query"],
         "title": "FoodResolveOut"
+      },
+      "GoalIn": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "gain_muscle",
+              "gain_weight",
+              "lose_fat",
+              "recomp",
+              "maintain",
+              "improve_sleep"
+            ],
+            "title": "Type"
+          },
+          "metric": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "weight_kg",
+                  "skeletal_muscle_kg",
+                  "body_fat_pct",
+                  "sleep_min",
+                  "sleep_efficiency"
+                ]
+              },
+              { "type": "null" }
+            ],
+            "title": "Metric"
+          },
+          "baseline_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Baseline Value"
+          },
+          "target_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Value"
+          },
+          "target_rate_per_week": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Rate Per Week"
+          },
+          "target_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Target Date"
+          },
+          "calorie_delta": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Calorie Delta",
+            "description": "Surplus(+)/deficit(-) kcal vs TDEE to aim for."
+          },
+          "protein_g_per_kg": {
+            "anyOf": [{ "type": "number", "maximum": 4.0, "minimum": 0.0 }, { "type": "null" }],
+            "title": "Protein G Per Kg"
+          },
+          "notes": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Notes" }
+        },
+        "type": "object",
+        "required": ["type"],
+        "title": "GoalIn",
+        "description": "Create a goal. Most fields are optional \u2014 only `type` is required; the\nservice fills sensible defaults (category, metric, baseline, nutrition knobs)\nfrom the type and current body composition."
+      },
+      "GoalOut": {
+        "properties": {
+          "id": { "type": "integer", "title": "Id" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "gain_muscle",
+              "gain_weight",
+              "lose_fat",
+              "recomp",
+              "maintain",
+              "improve_sleep"
+            ],
+            "title": "Type"
+          },
+          "category": { "type": "string", "enum": ["body", "sleep"], "title": "Category" },
+          "status": {
+            "type": "string",
+            "enum": ["active", "achieved", "abandoned"],
+            "title": "Status"
+          },
+          "metric": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "weight_kg",
+                  "skeletal_muscle_kg",
+                  "body_fat_pct",
+                  "sleep_min",
+                  "sleep_efficiency"
+                ]
+              },
+              { "type": "null" }
+            ],
+            "title": "Metric"
+          },
+          "baseline_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Baseline Value"
+          },
+          "target_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Value"
+          },
+          "target_rate_per_week": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Rate Per Week"
+          },
+          "start_date": { "type": "string", "format": "date", "title": "Start Date" },
+          "target_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Target Date"
+          },
+          "calorie_delta": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Calorie Delta"
+          },
+          "protein_g_per_kg": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Protein G Per Kg"
+          },
+          "notes": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Notes" },
+          "created_at": { "type": "string", "format": "date-time", "title": "Created At" }
+        },
+        "type": "object",
+        "required": ["id", "type", "category", "status", "start_date", "created_at"],
+        "title": "GoalOut"
+      },
+      "GoalProgressOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "on_track",
+              "behind",
+              "ahead",
+              "too_fast",
+              "stalled",
+              "achieved",
+              "no_target",
+              "no_data"
+            ],
+            "title": "Status"
+          },
+          "metric": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "weight_kg",
+                  "skeletal_muscle_kg",
+                  "body_fat_pct",
+                  "sleep_min",
+                  "sleep_efficiency"
+                ]
+              },
+              { "type": "null" }
+            ],
+            "title": "Metric"
+          },
+          "baseline_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Baseline Value"
+          },
+          "current_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Current Value"
+          },
+          "target_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Value"
+          },
+          "actual_rate_per_week": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Actual Rate Per Week"
+          },
+          "target_rate_per_week": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Rate Per Week"
+          },
+          "pct_complete": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Pct Complete",
+            "description": "0..1 along baseline\u2192target, when both known."
+          },
+          "projected_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Projected Date",
+            "description": "Date the current trend reaches the target."
+          },
+          "days_elapsed": { "type": "integer", "title": "Days Elapsed", "default": 0 },
+          "n_readings": { "type": "integer", "title": "N Readings", "default": 0 },
+          "summary": { "type": "string", "title": "Summary", "default": "" }
+        },
+        "type": "object",
+        "required": ["status"],
+        "title": "GoalProgressOut",
+        "description": "Computed progress for a goal: the fitted trend over its metric vs target."
+      },
+      "GoalUpdate": {
+        "properties": {
+          "status": {
+            "anyOf": [
+              { "type": "string", "enum": ["active", "achieved", "abandoned"] },
+              { "type": "null" }
+            ],
+            "title": "Status"
+          },
+          "metric": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "weight_kg",
+                  "skeletal_muscle_kg",
+                  "body_fat_pct",
+                  "sleep_min",
+                  "sleep_efficiency"
+                ]
+              },
+              { "type": "null" }
+            ],
+            "title": "Metric"
+          },
+          "baseline_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Baseline Value"
+          },
+          "target_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Value"
+          },
+          "target_rate_per_week": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Rate Per Week"
+          },
+          "target_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Target Date"
+          },
+          "calorie_delta": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Calorie Delta"
+          },
+          "protein_g_per_kg": {
+            "anyOf": [{ "type": "number", "maximum": 4.0, "minimum": 0.0 }, { "type": "null" }],
+            "title": "Protein G Per Kg"
+          },
+          "notes": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Notes" }
+        },
+        "type": "object",
+        "title": "GoalUpdate",
+        "description": "Patch an existing goal. `status` flips a goal to achieved/abandoned."
+      },
+      "GoalWithProgressOut": {
+        "properties": {
+          "id": { "type": "integer", "title": "Id" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "gain_muscle",
+              "gain_weight",
+              "lose_fat",
+              "recomp",
+              "maintain",
+              "improve_sleep"
+            ],
+            "title": "Type"
+          },
+          "category": { "type": "string", "enum": ["body", "sleep"], "title": "Category" },
+          "status": {
+            "type": "string",
+            "enum": ["active", "achieved", "abandoned"],
+            "title": "Status"
+          },
+          "metric": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "weight_kg",
+                  "skeletal_muscle_kg",
+                  "body_fat_pct",
+                  "sleep_min",
+                  "sleep_efficiency"
+                ]
+              },
+              { "type": "null" }
+            ],
+            "title": "Metric"
+          },
+          "baseline_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Baseline Value"
+          },
+          "target_value": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Value"
+          },
+          "target_rate_per_week": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Target Rate Per Week"
+          },
+          "start_date": { "type": "string", "format": "date", "title": "Start Date" },
+          "target_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Target Date"
+          },
+          "calorie_delta": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Calorie Delta"
+          },
+          "protein_g_per_kg": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Protein G Per Kg"
+          },
+          "notes": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Notes" },
+          "created_at": { "type": "string", "format": "date-time", "title": "Created At" },
+          "progress": { "$ref": "#/components/schemas/GoalProgressOut" }
+        },
+        "type": "object",
+        "required": ["id", "type", "category", "status", "start_date", "created_at", "progress"],
+        "title": "GoalWithProgressOut"
       },
       "HTTPValidationError": {
         "properties": {
           "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
+            "items": { "$ref": "#/components/schemas/ValidationError" },
             "type": "array",
             "title": "Detail"
           }
@@ -3037,79 +2447,36 @@
       },
       "HealthResponse": {
         "properties": {
-          "status": {
-            "type": "string",
-            "title": "Status",
-            "default": "ok"
-          },
-          "version": {
-            "type": "string",
-            "title": "Version"
-          }
+          "status": { "type": "string", "title": "Status", "default": "ok" },
+          "version": { "type": "string", "title": "Version" }
         },
         "type": "object",
-        "required": [
-          "version"
-        ],
+        "required": ["version"],
         "title": "HealthResponse"
       },
       "IngestResponse": {
         "properties": {
           "files": {
-            "items": {
-              "$ref": "#/components/schemas/FileReport"
-            },
+            "items": { "$ref": "#/components/schemas/FileReport" },
             "type": "array",
             "title": "Files"
           },
-          "parsed": {
-            "type": "integer",
-            "title": "Parsed"
-          },
-          "written": {
-            "type": "integer",
-            "title": "Written"
-          },
-          "skipped": {
-            "type": "integer",
-            "title": "Skipped"
-          }
+          "parsed": { "type": "integer", "title": "Parsed" },
+          "written": { "type": "integer", "title": "Written" },
+          "skipped": { "type": "integer", "title": "Skipped" }
         },
         "type": "object",
-        "required": [
-          "files",
-          "parsed",
-          "written",
-          "skipped"
-        ],
+        "required": ["files", "parsed", "written", "skipped"],
         "title": "IngestResponse"
       },
       "MealCreateResponse": {
         "properties": {
-          "meal": {
-            "$ref": "#/components/schemas/MealOut"
-          },
-          "degraded": {
-            "type": "boolean",
-            "title": "Degraded",
-            "default": false
-          },
-          "note": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Note"
-          }
+          "meal": { "$ref": "#/components/schemas/MealOut" },
+          "degraded": { "type": "boolean", "title": "Degraded", "default": false },
+          "note": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Note" }
         },
         "type": "object",
-        "required": [
-          "meal"
-        ],
+        "required": ["meal"],
         "title": "MealCreateResponse"
       },
       "MealIn": {
@@ -3120,137 +2487,48 @@
             "title": "Ts",
             "description": "When the meal was eaten (UTC ISO; naive assumed UTC)."
           },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name"
-          },
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" },
           "items": {
-            "items": {
-              "$ref": "#/components/schemas/MealItemIn"
-            },
+            "items": { "$ref": "#/components/schemas/MealItemIn" },
             "type": "array",
             "title": "Items",
             "default": []
           }
         },
         "type": "object",
-        "required": [
-          "ts"
-        ],
+        "required": ["ts"],
         "title": "MealIn"
       },
       "MealItemAddIn": {
         "properties": {
-          "food_id": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Food Id"
-          },
-          "food": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Food"
-          },
+          "food_id": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Food Id" },
+          "food": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Food" },
           "portion_label": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Portion Label"
           },
           "qty": {
-            "anyOf": [
-              {
-                "type": "number",
-                "exclusiveMinimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "exclusiveMinimum": 0.0 }, { "type": "null" }],
             "title": "Qty"
           },
           "grams": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Grams"
           },
           "kcal": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Kcal"
           },
           "protein_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Protein G"
           },
           "carbs_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Carbs G"
           },
           "fat_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Fat G"
           }
         },
@@ -3266,185 +2544,50 @@
             "description": "Food name; resolved against nutrition_core when macros omitted."
           },
           "grams": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Grams"
           },
           "kcal": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Kcal"
           },
           "protein_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Protein G"
           },
           "carbs_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Carbs G"
           },
           "fat_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Fat G"
           }
         },
         "type": "object",
-        "required": [
-          "food"
-        ],
+        "required": ["food"],
         "title": "MealItemIn"
       },
       "MealItemOut": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "food": {
-            "type": "string",
-            "title": "Food"
-          },
-          "food_id": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Food Id"
-          },
-          "grams": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Grams"
-          },
-          "qty": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Qty"
-          },
+          "id": { "type": "integer", "title": "Id" },
+          "food": { "type": "string", "title": "Food" },
+          "food_id": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Food Id" },
+          "grams": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Grams" },
+          "qty": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Qty" },
           "portion_label": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Portion Label"
           },
-          "kcal": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Kcal"
-          },
+          "kcal": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Kcal" },
           "protein_g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Protein G"
           },
-          "carbs_g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Carbs G"
-          },
-          "fat_g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Fat G"
-          },
-          "estimated": {
-            "type": "boolean",
-            "title": "Estimated"
-          },
-          "source": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Source"
-          }
+          "carbs_g": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Carbs G" },
+          "fat_g": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Fat G" },
+          "estimated": { "type": "boolean", "title": "Estimated" },
+          "source": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Source" }
         },
         "type": "object",
         "required": [
@@ -3465,98 +2608,33 @@
       },
       "MealItemUpdate": {
         "properties": {
-          "food": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Food"
-          },
+          "food": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Food" },
           "grams": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Grams"
           },
           "qty": {
-            "anyOf": [
-              {
-                "type": "number",
-                "exclusiveMinimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "exclusiveMinimum": 0.0 }, { "type": "null" }],
             "title": "Qty"
           },
           "portion_label": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Portion Label"
           },
           "kcal": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Kcal"
           },
           "protein_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Protein G"
           },
           "carbs_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Carbs G"
           },
           "fat_g": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "minimum": 0.0 }, { "type": "null" }],
             "title": "Fat G"
           }
         },
@@ -3566,86 +2644,32 @@
       },
       "MealOut": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "ts": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Ts"
-          },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name"
-          },
+          "id": { "type": "integer", "title": "Id" },
+          "ts": { "type": "string", "format": "date-time", "title": "Ts" },
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" },
           "photo_path": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Photo Path"
           },
-          "source": {
-            "type": "string",
-            "title": "Source"
-          },
+          "source": { "type": "string", "title": "Source" },
           "items": {
-            "items": {
-              "$ref": "#/components/schemas/MealItemOut"
-            },
+            "items": { "$ref": "#/components/schemas/MealItemOut" },
             "type": "array",
             "title": "Items"
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "ts",
-          "name",
-          "photo_path",
-          "source",
-          "items"
-        ],
+        "required": ["id", "ts", "name", "photo_path", "source", "items"],
         "title": "MealOut"
       },
       "MealUpdate": {
         "properties": {
           "ts": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
             "title": "Ts",
             "description": "When the meal was eaten (UTC ISO; naive assumed UTC)."
           },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name"
-          }
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" }
         },
         "type": "object",
         "title": "MealUpdate",
@@ -3653,256 +2677,97 @@
       },
       "MuscleVolume": {
         "properties": {
-          "muscle": {
-            "type": "string",
-            "title": "Muscle"
-          },
-          "volume_load": {
-            "type": "number",
-            "title": "Volume Load"
-          }
+          "muscle": { "type": "string", "title": "Muscle" },
+          "volume_load": { "type": "number", "title": "Volume Load" }
         },
         "type": "object",
-        "required": [
-          "muscle",
-          "volume_load"
-        ],
+        "required": ["muscle", "volume_load"],
         "title": "MuscleVolume"
       },
       "RecommendationItem": {
         "properties": {
-          "code": {
-            "type": "string",
-            "title": "Code"
-          },
-          "category": {
-            "type": "string",
-            "title": "Category"
-          },
-          "severity": {
-            "type": "string",
-            "title": "Severity"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "detail": {
-            "type": "string",
-            "title": "Detail"
-          },
+          "code": { "type": "string", "title": "Code" },
+          "category": { "type": "string", "title": "Category" },
+          "severity": { "type": "string", "title": "Severity" },
+          "title": { "type": "string", "title": "Title" },
+          "detail": { "type": "string", "title": "Detail" },
           "signals": {
-            "items": {
-              "type": "string"
-            },
+            "items": { "type": "string" },
             "type": "array",
             "title": "Signals",
             "default": []
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "category",
-          "severity",
-          "title",
-          "detail"
-        ],
+        "required": ["code", "category", "severity", "title", "detail"],
         "title": "RecommendationItem"
       },
       "RecommendationsOut": {
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date",
-            "title": "Date"
-          },
+          "date": { "type": "string", "format": "date", "title": "Date" },
           "generated_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
             "title": "Generated At"
           },
           "recommendations": {
-            "items": {
-              "$ref": "#/components/schemas/RecommendationItem"
-            },
+            "items": { "$ref": "#/components/schemas/RecommendationItem" },
             "type": "array",
             "title": "Recommendations"
           },
           "context": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "additionalProperties": true, "type": "object" }, { "type": "null" }],
             "title": "Context"
           }
         },
         "type": "object",
-        "required": [
-          "date",
-          "recommendations"
-        ],
+        "required": ["date", "recommendations"],
         "title": "RecommendationsOut"
       },
       "SleepNight": {
         "properties": {
           "total_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Total Min"
           },
-          "deep_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Deep Min"
-          },
-          "rem_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rem Min"
-          },
+          "deep_min": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Deep Min" },
+          "rem_min": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Rem Min" },
           "light_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Light Min"
           },
           "awake_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Awake Min"
           },
           "efficiency": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Efficiency"
           },
-          "day": {
-            "type": "string",
-            "format": "date",
-            "title": "Day"
-          }
+          "day": { "type": "string", "format": "date", "title": "Day" }
         },
         "type": "object",
-        "required": [
-          "day"
-        ],
+        "required": ["day"],
         "title": "SleepNight",
         "description": "A night's sleep summary tagged with the calendar day it ended on (for trends)."
       },
       "SleepSummary": {
         "properties": {
           "total_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Total Min"
           },
-          "deep_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Deep Min"
-          },
-          "rem_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rem Min"
-          },
+          "deep_min": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Deep Min" },
+          "rem_min": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Rem Min" },
           "light_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Light Min"
           },
           "awake_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Awake Min"
           },
           "efficiency": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Efficiency"
           }
         },
@@ -3911,110 +2776,34 @@
       },
       "TelemetryPoint": {
         "properties": {
-          "ts": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Ts"
-          },
-          "metric": {
-            "type": "string",
-            "title": "Metric"
-          },
-          "value": {
-            "type": "number",
-            "title": "Value"
-          },
-          "unit": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Unit"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source"
-          }
+          "ts": { "type": "string", "format": "date-time", "title": "Ts" },
+          "metric": { "type": "string", "title": "Metric" },
+          "value": { "type": "number", "title": "Value" },
+          "unit": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Unit" },
+          "source": { "type": "string", "title": "Source" }
         },
         "type": "object",
-        "required": [
-          "ts",
-          "metric",
-          "value",
-          "source"
-        ],
+        "required": ["ts", "metric", "value", "source"],
         "title": "TelemetryPoint"
       },
       "TelemetrySummary": {
         "properties": {
-          "steps": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Steps"
-          },
+          "steps": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Steps" },
           "avg_stress": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Avg Stress"
           },
           "avg_heart_rate": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Avg Heart Rate"
           },
-          "avg_spo2": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Avg Spo2"
-          },
+          "avg_spo2": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Avg Spo2" },
           "energy_expenditure": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Energy Expenditure"
           },
           "sleep": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SleepSummary"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "anyOf": [{ "$ref": "#/components/schemas/SleepSummary" }, { "type": "null" }]
           }
         },
         "type": "object",
@@ -4022,26 +2811,10 @@
       },
       "Totals": {
         "properties": {
-          "kcal": {
-            "type": "number",
-            "title": "Kcal",
-            "default": 0
-          },
-          "protein_g": {
-            "type": "number",
-            "title": "Protein G",
-            "default": 0
-          },
-          "carbs_g": {
-            "type": "number",
-            "title": "Carbs G",
-            "default": 0
-          },
-          "fat_g": {
-            "type": "number",
-            "title": "Fat G",
-            "default": 0
-          }
+          "kcal": { "type": "number", "title": "Kcal", "default": 0 },
+          "protein_g": { "type": "number", "title": "Protein G", "default": 0 },
+          "carbs_g": { "type": "number", "title": "Carbs G", "default": 0 },
+          "fat_g": { "type": "number", "title": "Fat G", "default": 0 }
         },
         "type": "object",
         "title": "Totals"
@@ -4054,188 +2827,54 @@
             "title": "Ts",
             "description": "Session start (UTC ISO; naive is assumed UTC)."
           },
-          "type": {
-            "type": "string",
-            "enum": [
-              "swim",
-              "gym"
-            ],
-            "title": "Type"
-          },
+          "type": { "type": "string", "enum": ["swim", "gym"], "title": "Type" },
           "duration_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Duration Min"
           },
           "rpe": {
-            "anyOf": [
-              {
-                "type": "number",
-                "maximum": 10.0,
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "maximum": 10.0, "minimum": 0.0 }, { "type": "null" }],
             "title": "Rpe"
           },
           "load": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Load",
             "description": "Optional; auto-computed as duration_min \u00d7 rpe when omitted."
           },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          },
+          "notes": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Notes" },
           "sets": {
-            "items": {
-              "$ref": "#/components/schemas/TrainingSetIn"
-            },
+            "items": { "$ref": "#/components/schemas/TrainingSetIn" },
             "type": "array",
             "title": "Sets",
             "default": []
           }
         },
         "type": "object",
-        "required": [
-          "ts",
-          "type"
-        ],
+        "required": ["ts", "type"],
         "title": "TrainingSessionIn"
       },
       "TrainingSessionOut": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "ts": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Ts"
-          },
-          "type": {
-            "type": "string",
-            "title": "Type"
-          },
+          "id": { "type": "integer", "title": "Id" },
+          "ts": { "type": "string", "format": "date-time", "title": "Ts" },
+          "type": { "type": "string", "title": "Type" },
           "duration_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Duration Min"
           },
-          "rpe": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rpe"
-          },
-          "load": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Load"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source"
-          },
-          "kcal": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Kcal"
-          },
-          "avg_hr": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Avg Hr"
-          },
-          "max_hr": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Max Hr"
-          },
+          "rpe": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Rpe" },
+          "load": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Load" },
+          "notes": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Notes" },
+          "source": { "type": "string", "title": "Source" },
+          "kcal": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Kcal" },
+          "avg_hr": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Avg Hr" },
+          "max_hr": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Max Hr" },
           "distance_m": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Distance M"
           },
           "sets": {
-            "items": {
-              "$ref": "#/components/schemas/TrainingSetOut"
-            },
+            "items": { "$ref": "#/components/schemas/TrainingSetOut" },
             "type": "array",
             "title": "Sets"
           }
@@ -4261,78 +2900,23 @@
       "TrainingSessionUpdate": {
         "properties": {
           "ts": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
             "title": "Ts"
           },
           "type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "swim",
-                  "gym"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string", "enum": ["swim", "gym"] }, { "type": "null" }],
             "title": "Type"
           },
           "duration_min": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Duration Min"
           },
           "rpe": {
-            "anyOf": [
-              {
-                "type": "number",
-                "maximum": 10.0,
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "maximum": 10.0, "minimum": 0.0 }, { "type": "null" }],
             "title": "Rpe"
           },
-          "load": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Load"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          }
+          "load": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Load" },
+          "notes": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Notes" }
         },
         "type": "object",
         "title": "TrainingSessionUpdate",
@@ -4345,186 +2929,50 @@
             "title": "Exercise",
             "description": "Free-text exercise / stroke, e.g. 'bench press', 'freestyle'."
           },
-          "set_no": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Set No"
-          },
-          "reps": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reps"
-          },
+          "set_no": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Set No" },
+          "reps": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Reps" },
           "weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Weight Kg"
           },
           "distance_m": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Distance M"
           },
-          "pace": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Pace"
-          },
+          "pace": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Pace" },
           "rpe": {
-            "anyOf": [
-              {
-                "type": "number",
-                "maximum": 10.0,
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "maximum": 10.0, "minimum": 0.0 }, { "type": "null" }],
             "title": "Rpe"
           },
-          "is_warmup": {
-            "type": "boolean",
-            "title": "Is Warmup",
-            "default": false
-          },
+          "is_warmup": { "type": "boolean", "title": "Is Warmup", "default": false },
           "added_weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Added Weight Kg"
           }
         },
         "type": "object",
-        "required": [
-          "exercise"
-        ],
+        "required": ["exercise"],
         "title": "TrainingSetIn"
       },
       "TrainingSetOut": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "exercise": {
-            "type": "string",
-            "title": "Exercise"
-          },
-          "set_no": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Set No"
-          },
-          "reps": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reps"
-          },
+          "id": { "type": "integer", "title": "Id" },
+          "exercise": { "type": "string", "title": "Exercise" },
+          "set_no": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Set No" },
+          "reps": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Reps" },
           "weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Weight Kg"
           },
           "distance_m": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Distance M"
           },
-          "pace": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Pace"
-          },
-          "rpe": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rpe"
-          },
-          "is_warmup": {
-            "type": "boolean",
-            "title": "Is Warmup"
-          },
+          "pace": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Pace" },
+          "rpe": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Rpe" },
+          "is_warmup": { "type": "boolean", "title": "Is Warmup" },
           "added_weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Added Weight Kg"
           }
         },
@@ -4545,105 +2993,28 @@
       },
       "TrainingSetUpdate": {
         "properties": {
-          "exercise": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Exercise"
-          },
-          "set_no": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Set No"
-          },
-          "reps": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reps"
-          },
+          "exercise": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Exercise" },
+          "set_no": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Set No" },
+          "reps": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Reps" },
           "weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Weight Kg"
           },
           "distance_m": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Distance M"
           },
-          "pace": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Pace"
-          },
+          "pace": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Pace" },
           "rpe": {
-            "anyOf": [
-              {
-                "type": "number",
-                "maximum": 10.0,
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number", "maximum": 10.0, "minimum": 0.0 }, { "type": "null" }],
             "title": "Rpe"
           },
           "is_warmup": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
             "title": "Is Warmup"
           },
           "added_weight_kg": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Added Weight Kg"
           }
         },
@@ -4653,63 +3024,33 @@
       },
       "TrainingStats": {
         "properties": {
-          "from": {
-            "type": "string",
-            "format": "date",
-            "title": "From"
-          },
-          "to": {
-            "type": "string",
-            "format": "date",
-            "title": "To"
-          },
+          "from": { "type": "string", "format": "date", "title": "From" },
+          "to": { "type": "string", "format": "date", "title": "To" },
           "weekly_sets_per_muscle": {
-            "items": {
-              "$ref": "#/components/schemas/WeeklyMuscleSets"
-            },
+            "items": { "$ref": "#/components/schemas/WeeklyMuscleSets" },
             "type": "array",
             "title": "Weekly Sets Per Muscle"
           },
           "volume_load_per_muscle": {
-            "items": {
-              "$ref": "#/components/schemas/MuscleVolume"
-            },
+            "items": { "$ref": "#/components/schemas/MuscleVolume" },
             "type": "array",
             "title": "Volume Load Per Muscle"
           },
           "push_pull_ratio": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Push Pull Ratio"
           },
           "upper_lower_ratio": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Upper Lower Ratio"
           },
           "per_exercise": {
-            "items": {
-              "$ref": "#/components/schemas/ExerciseStat"
-            },
+            "items": { "$ref": "#/components/schemas/ExerciseStat" },
             "type": "array",
             "title": "Per Exercise"
           },
           "unresolved_exercises": {
-            "items": {
-              "type": "string"
-            },
+            "items": { "type": "string" },
             "type": "array",
             "title": "Unresolved Exercises"
           }
@@ -4730,65 +3071,27 @@
       "ValidationError": {
         "properties": {
           "loc": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
-            },
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
             "type": "array",
             "title": "Location"
           },
-          "msg": {
-            "type": "string",
-            "title": "Message"
-          },
-          "type": {
-            "type": "string",
-            "title": "Error Type"
-          },
-          "input": {
-            "title": "Input"
-          },
-          "ctx": {
-            "type": "object",
-            "title": "Context"
-          }
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" },
+          "input": { "title": "Input" },
+          "ctx": { "type": "object", "title": "Context" }
         },
         "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError"
       },
       "WeeklyMuscleSets": {
         "properties": {
-          "week": {
-            "type": "string",
-            "format": "date",
-            "title": "Week"
-          },
-          "muscle": {
-            "type": "string",
-            "title": "Muscle"
-          },
-          "sets": {
-            "type": "number",
-            "title": "Sets"
-          }
+          "week": { "type": "string", "format": "date", "title": "Week" },
+          "muscle": { "type": "string", "title": "Muscle" },
+          "sets": { "type": "number", "title": "Sets" }
         },
         "type": "object",
-        "required": [
-          "week",
-          "muscle",
-          "sets"
-        ],
+        "required": ["week", "muscle", "sets"],
         "title": "WeeklyMuscleSets"
       }
     },

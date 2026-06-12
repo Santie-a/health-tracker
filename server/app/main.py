@@ -25,6 +25,7 @@ from .core.db import create_engine, create_sessionmaker, ping
 from .core.errors import install_request_id_middleware, register_exception_handlers
 from .core.logging_config import configure_logging
 from .domains.dashboard.router import router as dashboard_router
+from .domains.goals.router import router as goals_router
 from .domains.ingest.router import router as ingest_router
 from .domains.nutrition.foods_seed import seed_foods
 from .domains.nutrition.router import foods_router
@@ -163,6 +164,7 @@ def create_app() -> FastAPI:
     app.include_router(nutrition_router, prefix="/api/v1")
     app.include_router(foods_router, prefix="/api/v1")
     app.include_router(recommendations_router, prefix="/api/v1")
+    app.include_router(goals_router, prefix="/api/v1")
     app.include_router(dashboard_router, prefix="/api/v1")
     app.include_router(ingest_router, prefix="/api/v1")
 

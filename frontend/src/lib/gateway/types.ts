@@ -43,3 +43,12 @@ export type MealCreateResponse = S["MealCreateResponse"];
 
 export type Food = S["FoodOut"];
 export type FoodResolve = S["FoodResolveOut"];
+
+export type Goal = S["GoalOut"];
+export type GoalIn = S["GoalIn"];
+export type GoalUpdate = S["GoalUpdate"];
+export type GoalProgress = S["GoalProgressOut"];
+export type GoalWithProgress = S["GoalWithProgressOut"];
+export type GoalType = Goal["type"];
+export type GoalMetric = NonNullable<Goal["metric"]>;
+export type GoalProgressStatus = GoalProgress["status"];

@@ -24,5 +24,9 @@ class Thresholds:
     imbalance_low: float = 0.5   # ratio below this = under-trained side
     imbalance_high: float = 2.0  # ratio above this = over-trained side
 
+    # goal progress
+    progress_kcal_bump: int = 150          # daily kcal nudge when a body goal stalls
+    sleep_goal_tolerance_min: float = 30.0  # within this of the sleep goal = "met"
+
 
 DEFAULT = Thresholds()

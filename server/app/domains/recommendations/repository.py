@@ -11,6 +11,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.timerange import day_bounds
+from app.domains.goals import service as goals_service
 from app.domains.nutrition.models import Meal, MealItem
 from app.domains.telemetry.models import BodyComposition, SleepSession, Telemetry
 from app.domains.training import service as training_service
@@ -91,6 +92,27 @@ async def build_context(session: AsyncSession, day: date_cls) -> DayContext:
     # --- weekly training balance (trailing 7 days incl. today) ---------------
     stats = await training_service.get_stats(session, day - timedelta(days=6), day)
 
+    # --- active goals (optional) → directional advice ------------------------
+    active = await goals_service.load_active(session)
+    body = active.get("body")
+    sleep_goal = active.get("sleep")
+
+    goal_fields: dict = {}
+    if body is not None:
+        prog = await goals_service.progress_for(session, body)
+        goal_fields = {
+            "goal_type": body.type,
+            "goal_metric": body.metric,
+            "goal_calorie_delta": body.calorie_delta,
+            "goal_protein_g_per_kg": _f(body.protein_g_per_kg),
+            "goal_target_rate_per_week": _f(body.target_rate_per_week),
+            "goal_actual_rate_per_week": prog.actual_rate_per_week,
+            "goal_progress_status": prog.status,
+        }
+    sleep_target = None
+    if sleep_goal is not None and sleep_goal.metric == "sleep_min":
+        sleep_target = _f(sleep_goal.target_value)
+
     return DayContext(
         date=day,
         sleep_min=sleep_min,
@@ -104,6 +126,8 @@ async def build_context(session: AsyncSession, day: date_cls) -> DayContext:
         kcal_in=_f(kcal),
         push_pull_ratio=stats.push_pull_ratio,
         upper_lower_ratio=stats.upper_lower_ratio,
+        sleep_goal_target_min=sleep_target,
+        **goal_fields,
     )
 
 
